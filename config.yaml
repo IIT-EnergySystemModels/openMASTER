@@ -1,0 +1,4 @@
+path_data_in:      './data/input'
+path_model_in:     './data/tmp/input'
+path_model_out:    './data/tmp/output'
+path_results:      './data/output'
