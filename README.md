@@ -1,8 +1,10 @@
 **The open-source Model for the Analysis of SusTainable Energy Roadmaps (openMASTER)**
+================================
 
 The **openMASTER** model has been developed at the `Instituto de Investigación Tecnológica (IIT) <https://www.iit.comillas.edu/index.php.en>` of the `Universidad Pontificia Comillas <https://www.comillas.edu/en/>`_.
 
 **Developers**
+================================
 
 | Member                     | Username  | Tasks             |
 | -------------------------- | --------- | ----------------- |
@@ -10,6 +12,7 @@ The **openMASTER** model has been developed at the `Instituto de Investigación 
 | Manuel Pérez Bravo         | @mperezb  | Developer         |
 
 **Description**
+================================
 
 **openMASTER** is a Pyomo-based model designed for sustainable energy policy analysis. It operates as a dynamic, bottom-up, partial equilibrium, linear programming (LP) model, with the primary objective of meeting externally-given energy services demand across various sectors. It achieves this by adhering to technical and policy constraints while minimizing a comprehensive objective function. This function encompasses the total economic costs of energy supply, the social costs associated with greenhouse gas emissions and pollutant releases, as well as to intangible costs such as discomfort.
 
@@ -53,26 +56,23 @@ Results are shown in csv files and graphical plots. An interactive Dashboard is 
 A careful implementation has been done to avoid numerical problems by scaling parameters, variables and equations of the optimization problem allowing the model to be used for large-scale cases.
 
 **Solvers**
-
-GLPK
 ================================
+
+**GLPK**
 As an easy option for installation, we have the free and open-source `GLPK solver <https://www.gnu.org/software/glpk/>`_. However, it takes too much time for large-scale problems. It can be installed using: ``conda install -c conda-forge glpk``.
 
-CBC
-================================
+**CBC**
 The `CBC solver <https://github.com/coin-or/Cbc>`_ is our recommendation if you want a free and open-source solver. For Windows users, the effective way to install the CBC solver is downloading the binaries from `this link <https://www.coin-or.org/download/binary/Cbc/Cbc-2.10.5-x86_64-w64-mingw32.zip>`_, copy and paste the *cbc.exe* file to the PATH that is the "bin" directory of the Anaconda or Miniconda environment. It can be installed using: ``conda install -c conda-forge coincbc``.
 
-Gurobi
-================================
+**Gurobi**
 Another recommendation is the use of `Gurobi solver <https://www.gurobi.com/>`_. However, it is commercial solver but most powerful than GPLK and CBC for large-scale problems.
 As a commercial solver it needs a license that is free of charge for academic usage by signing up in `Gurobi webpage <https://pages.gurobi.com/registration/>`_.
 It can be installed using: ``conda install -c gurobi gurobi`` and then ask for an academic or commercial license. Activate the license in your computer using the ``grbgetkey`` command (you need to be in the university domain if you are installing an academic license).
 
-Mosek
-================================
+**Mosek**
 Another alternative is the `Mosek solver <https://www.mosek.com/>`_. Note that it is a commercial solver and you need a license for it. Mosek is a good alternative to deal with QPs, SOCPs, and SDPs problems. You only need to use ``conda install -c mosek mosek`` for installation and request a license (academic or commercial).
 To request the academic one, you can request `here <https://www.mosek.com/products/academic-licenses/>`_. Moreover, Mosek brings a `license guide <https://docs.mosek.com/9.2/licensing/index.html>`_. But if you are request an academic license, you will receive the license by email, and you only need to locate it in the following path ``C:\Users\(your user)\mosek`` in your computer.
 
-**Get started**
-
+Get started
+================================
 By cloning the `openMASTER <https://github.com/IIT-EnergySystemModels/openMASTER>`_ repository, you can create branches and propose pull-request. Any help will be very appreciated. We suggest the use of `Gurobi <https://www.gurobi.com/academia/academic-program-and-licenses/>`_ (for Academics and Researchers) as a solver to deal with LP problems instead of GLPK.
