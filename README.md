@@ -2,16 +2,14 @@
 
 The **openMASTER** model has been developed at the `Instituto de Investigación Tecnológica (IIT) <https://www.iit.comillas.edu/index.php.en>` of the `Universidad Pontificia Comillas <https://www.comillas.edu/en/>`_.
 
-Developers
-############
+**Developers**
 
 | Member                     | Username  | Tasks             |
 | -------------------------- | --------- | ----------------- |
 | Antonio F. Rodríguez Matas | @afrmatas | Developer         |
 | Manuel Pérez Bravo         | @mperezb  | Developer         |
 
-Description
-############
+**Description**
 
 **openMASTER** is a Pyomo-based model designed for sustainable energy policy analysis. It operates as a dynamic, bottom-up, partial equilibrium, linear programming (LP) model, with the primary objective of meeting externally-given energy services demand across various sectors. It achieves this by adhering to technical and policy constraints while minimizing a comprehensive objective function. This function encompasses the total economic costs of energy supply, the social costs associated with greenhouse gas emissions and pollutant releases, as well as to intangible costs such as discomfort.
 
@@ -54,8 +52,7 @@ Results are shown in csv files and graphical plots. An interactive Dashboard is 
 
 A careful implementation has been done to avoid numerical problems by scaling parameters, variables and equations of the optimization problem allowing the model to be used for large-scale cases.
 
-Solvers
-###########
+**Solvers**
 
 GLPK
 ================================
@@ -76,7 +73,6 @@ Mosek
 Another alternative is the `Mosek solver <https://www.mosek.com/>`_. Note that it is a commercial solver and you need a license for it. Mosek is a good alternative to deal with QPs, SOCPs, and SDPs problems. You only need to use ``conda install -c mosek mosek`` for installation and request a license (academic or commercial).
 To request the academic one, you can request `here <https://www.mosek.com/products/academic-licenses/>`_. Moreover, Mosek brings a `license guide <https://docs.mosek.com/9.2/licensing/index.html>`_. But if you are request an academic license, you will receive the license by email, and you only need to locate it in the following path ``C:\Users\(your user)\mosek`` in your computer.
 
-Get started
-###########
+**Get started**
 
 By cloning the `openMASTER <https://github.com/IIT-EnergySystemModels/openMASTER>`_ repository, you can create branches and propose pull-request. Any help will be very appreciated. We suggest the use of `Gurobi <https://www.gurobi.com/academia/academic-program-and-licenses/>`_ (for Academics and Researchers) as a solver to deal with LP problems instead of GLPK.
