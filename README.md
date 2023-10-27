@@ -76,3 +76,35 @@ To request the academic one, you can request `here <https://www.mosek.com/produc
 Get started
 ================================
 By cloning the `openMASTER <https://github.com/IIT-EnergySystemModels/openMASTER>`_ repository, you can create branches and propose pull-request. Any help will be very appreciated. We suggest the use of `Gurobi <https://www.gurobi.com/academia/academic-program-and-licenses/>`_ (for Academics and Researchers) as a solver to deal with LP problems instead of GLPK.
+
+# How to install
+
+Hacer una parte para crear el entorno virtual
+
+```
+python -m venv .venv
+```
+
+```
+.venv/Scripts/activate
+```
+
+
+Instalar paquetes necesarios para el proyecto
+```bash
+pip install -r requirements.txt
+```
+
+Instalar jupyter y el ipykernel
+```bash
+pip install jupyter ipykernel
+```
+
+# How to use
+
+Abrir jupyter notebook
+```bash
+jupyter notebook
+```
+Abrir el navegador en la dirección que aparece en la terminal
+Normalmente es: (http://localhost:8888/tree/src)
