@@ -134,7 +134,6 @@ def input_data():
         """
         # Loading the INDEX page
         index_sheetname = "INDEX"
-        print(excel_filepath)
         index_sheet = pd.read_excel(excel_filepath, sheet_name=index_sheetname)
 
         # Create new columnn to store the index names
