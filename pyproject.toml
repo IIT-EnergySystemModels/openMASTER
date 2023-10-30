@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "OpenMASTER"
+authors = [ # Sorted by name
+    {name = "Antonio Francisco Rodríguez Matas", email = "afrmatas@comillas.edu"},
+    {name = "Manuel Pérez Bravo", email = "mperezb@comillas.edu"},
+]
+description = ""
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = [""]
+license = {file = "LICENSE"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "pandas~=1.5",
+    "pyomo~=6.5",
+    "openpyxl~=3.1",
+    "matplotlib~=3.7",
+    "PyYAML~=6.0",
+    "numpy~=1.21",
+    "pyinstaller~=5.7",
+    "pyinstaller-hooks-contrib~=2022.15",
+    "scipy~=1.7",
+]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "openMASTER.__version__"}
+
+# Needed only if src/ folder is not present
+# [tool.setuptools.packages]
+# find = {}  # Scanning implicit namespaces is active by default
+
+[project.optional-dependencies]
+graphicTool = [ # Only for executing the notebooks (and visualization things)
+    "gunicorn",
+    "dash~=2.7",
+    "dash-bootstrap-components~=1.2",
+    "dash-core-components~=2.0",
+    "dash-html-components~=2.0",
+    "dash-table~=5.0",
+    "plotly~=5.7",
+]
+
+#[project.scripts]
+#my-script = "my_package.module:function"
+
+# ... other project metadata fields as specified in:
+#     https://packaging.python.org/en/latest/specifications/declaring-project-metadata/
+
+[tool.setuptools]
+packages = ["openMASTER"]
+package-dir = {"" = "src"}
