@@ -6,6 +6,7 @@ def input_data():
     import csv
 
     # Tratamiento de paths
+    import os
     from pathlib import Path
     with open("config.yaml", 'r') as file:
         cfg = yaml.safe_load(file)
@@ -114,6 +115,7 @@ def input_data():
         # Path del fichero a exportar
         filename=str(path_model_in.joinpath(sheetname))+".csv"
         # Exportado de los datos en formato .csv
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
         data_list.to_csv(filename, index = False)
 
         return set_names

@@ -100,6 +100,8 @@ def pyomo_vars_to_dataframe(path, output_path, sheetname, m_instance):
         col_values = [value for value in col_values if not ((isinstance(value, float) and math.isnan(float(value))) or value.replace(" ","") == "")]
         d_vars_sets[index] = col_values
 
+    # Make the folder if does not exist
+    os.makedirs(output_path, exist_ok=True)
     # Iterating all variables in the instance of the model
     for v in m_instance.component_objects(Var):
         if (v.name) in df_vars.index:
