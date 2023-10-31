@@ -44,7 +44,8 @@ graphicTool = [ # Only for executing the notebooks (and visualization things)
     "dash-core-components~=2.0",
     "dash-html-components~=2.0",
     "dash-table~=5.0",
-    "plotly~=5.7",
+    "plotly~=5.18",
+    "nbformat~=5.9"
 ]
 
 #[project.scripts]
