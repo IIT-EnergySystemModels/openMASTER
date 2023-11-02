@@ -79,7 +79,15 @@ By cloning the `openMASTER <https://github.com/IIT-EnergySystemModels/openMASTER
 
 # How to install
 
-Hacer una parte para crear el entorno virtual
+openMASTER can be installed from its Github repository following these steps:
+1. Clone the openMASTER repository, which includes the folder structure and all necessary functions to run the model.
+2. Launch the command prompt (Windows: Win+R, type "cmd", Enter).
+3. Set up the path to where the repository was cloned, using cd "C:\Users\<username>\...\openMASTER".
+4. Install openMASTER via pip by ``pip install .`` (the openMASTER package is contained in this repository, locally). Please note that the openMASTER package has optional dependencies for the graphic tools included to visualize results. To install these optional dependencies, it can also be done via pip by ``pip install .[graphicTool]``
+
+```
+.venv/Scripts/activate
+```
 
 ```
 python -m venv .venv
@@ -101,6 +109,16 @@ pip install jupyter ipykernel
 ```
 
 # How to use
+
+The openMASTER repository provides a quickstart guide (in the form of a jupyter notebook) for a new user to run their first case with the model. This quickstart guide is under the `\notebooks folder  <https://openenergymodels.net/](https://github.com/IIT-EnergySystemModels/openMASTER/tree/main/notebooks/>`, named `quickstart_openMASTER.ipnyb <https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/notebooks/quickstart_openMASTER.ipynb>`. Before running the cells in this notebook, it is advisable to:
+1. Create and activate a virtual environment in the system command prompt on which the dependencies will be installed. To do so, please follow the instructions detailed in the `Python Documentation <https://docs.python.org/3/library/venv.html>`. This virtual python environment will not affect the python version or packages installed in the machine being used, and will avoid incompatibilities between versions of packages being used in openMASTER.
+2. Install the openMASTER packages following the `instructions hereby detailed <#How to install>`.
+3. Please follow the order of cells in this notebook to create the abstract model, load a DataPortal, solve the instance, and create the model results.
+4. The user can create scenarios using the functionality provided by openMASTER. A scenario is defined in openMASTER as a set of inputs which will create a specific output. To help the user keep track of multiple runs of the model, this functionality creates a new folder within the /scenarios folder in the local clone of the repository. This folder contains the code used to run the scenario, as well as all the inputs and outputs for future use and development.
+   a. To use this functionality of the model, please follow the notebook `scenarios_from_results.ipynb <https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/notebooks/quickstart_openMASTER.ipynb](https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/notebooks/scenarios_from_results.ipynb>`.
+6. The user can also visualize results using a second notebook also under the notebooks folder, named `scenarios_from_results.ipynb <https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/notebooks/quickstart_openMASTER.ipynb](https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/notebooks/scenarios_from_results.ipynb>`.
+   a. To use this notebook, the user will have to install optional dependencies via pip by ``pip install .[graphicTool]``.
+   b. Follow the order of cells in this notebook which will 
 
 Abrir jupyter notebook
 ```bash
