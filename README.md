@@ -13,6 +13,8 @@ The **openMASTER** model has been developed at the `Instituto de Investigación 
 
 ##### Table of Contents  
 [Description](#Description)  
+[Solvers](#Solvers)
+
 
 
 **Description**
