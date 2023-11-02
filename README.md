@@ -11,6 +11,10 @@ The **openMASTER** model has been developed at the `Instituto de Investigación 
 | Antonio F. Rodríguez Matas | @afrmatas | Developer         |
 | Manuel Pérez Bravo         | @mperezb  | Developer         |
 
+##### Table of Contents  
+[Description](#Description)  
+
+
 **Description**
 ================================
 
@@ -85,47 +89,24 @@ openMASTER can be installed from its Github repository following these steps:
 3. Set up the path to where the repository was cloned, using cd "C:\Users\<username>\...\openMASTER".
 4. Install openMASTER via pip by ``pip install .`` (the openMASTER package is contained in this repository, locally). Please note that the openMASTER package has optional dependencies for the graphic tools included to visualize results. To install these optional dependencies, it can also be done via pip by ``pip install .[graphicTool]``
 
-```
-.venv/Scripts/activate
-```
-
-```
-python -m venv .venv
-```
-
-```
-.venv/Scripts/activate
-```
-
-
-Instalar paquetes necesarios para el proyecto
-```bash
-pip install -r requirements.txt
-```
-
-Instalar jupyter y el ipykernel
-```bash
-pip install jupyter ipykernel
-```
-
 # How to use
 
 The openMASTER repository provides a quickstart guide (in the form of a jupyter notebook) for a new user to run their first case with the model. This quickstart guide is under the `\notebooks folder  <https://openenergymodels.net/](https://github.com/IIT-EnergySystemModels/openMASTER/tree/main/notebooks/>`, named `quickstart_openMASTER.ipnyb <https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/notebooks/quickstart_openMASTER.ipynb>`. Before running the cells in this notebook, it is advisable to:
 1. Create and activate a virtual environment in the system command prompt on which the dependencies will be installed. To do so, please follow the instructions detailed in the `Python Documentation <https://docs.python.org/3/library/venv.html>`. This virtual python environment will not affect the python version or packages installed in the machine being used, and will avoid incompatibilities between versions of packages being used in openMASTER.
 2. Install the openMASTER packages following the `instructions hereby detailed <#How to install>`.
-3. Please follow the order of cells in this notebook to create the abstract model, load a DataPortal, solve the instance, and create the model results.
-4. The user can create scenarios using the functionality provided by openMASTER. A scenario is defined in openMASTER as a set of inputs which will create a specific output. To help the user keep track of different runs of the model, this functionality creates a new folder within the /scenarios folder in the local clone of the repository. This folder contains a copy of the code used to run the scenario, as well as all the inputs and outputs for future use and development.
-   * To use this functionality of the model, please follow the notebook `scenarios_from_results.ipynb <https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/notebooks/scenarios_from_results.ipynb>`.
-5. openMASTER also provides the user with visualization tools for the results obtained with the model, among which:
-   * Creation of charts from templates: Within the `\Charts folder <https://github.com/IIT-EnergySystemModels/openMASTER/tree/main/Charts>`, the user will find python functions to create basic charts (pie, bar, and area charts), as well as Sankey diagrams of energy and emissions flows resulting from the model results. Although the functions to create these charts are available in separate python files, two jupyter notebooks are also provided to facilitate their use. The notebook `scenario_charts.ipnynb <https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/Charts/scenario_charts.ipynb>` guides the creation of the more basic charts from different variables within the model, such as pie charts of primary energy use, bar charts of renewable power installed, etc. On the other hand, the notebook `scenario_sankey.ipynb <https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/Charts/scenario_sankey.ipynb>` guides the creation of Sankey diagrams, which imply the intermediate step of creating nodes and flows in a .json file.
-   * Visualization of results in a Dashboard: openMASTER facilitates the visualization of the main results by means of a dashboard in which several charts are presented. In this dashboard tool, the user can interact with charts by selecting different scenarios, zooming into the timeframes of interest, etc. The data for these charts are imported from the scenarios created by the user, for that reason it is important to first create a result scenario after each run (see above). The steps to follow are:
-           1. Run the model and create a scenario (see steps 1-5) after every run.
+3. Please follow the order of cells in this notebook to create the abstract model, load a DataPortal, solve the instance, and save the model results.
+
+## Scenarios management
+
+The user can create scenarios using the functionality provided by openMASTER. A scenario is defined in openMASTER as a set of inputs which will create a specific output. To help the user keep track of different runs of the model, this functionality creates a new folder within the /scenarios folder in the local clone of the repository. This folder contains a copy of the code used to run the scenario, as well as all the inputs and outputs for future use and development.
+To use this functionality of the model, please follow the notebook `scenarios_from_results.ipynb <https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/notebooks/scenarios_from_results.ipynb>`.
+
+## Visualization of results
+
+openMASTER also provides the user with visualization tools for the results obtained with the model, among which:
+
+   * Visualization of results in a Dashboard: openMASTER facilitates the visualization of the main results by means of a dashboard in which several charts are presented. In this dashboard tool, the user can interact with the results by selecting different scenarios, zooming into the timeframes of interest, etc. The data for these charts are imported from the scenarios created by the user, for that reason it is important to first create a result scenario after each run (see above). The steps to follow are:
+           1. Run the model and create a scenario (see <## Scenarios managment>) after every run.
            2. Run the ``index.py`` file within the folder `\Dashboard\app <https://github.com/IIT-EnergySystemModels/openMASTER/tree/main/Dashboard/app>`.
            3. A local server will be raised, and its localhost address will be shown on the command prompt window. Please follow this address on your explorer to visualize these results dashboard.
-     
-Abrir jupyter notebook
-```bash
-jupyter notebook
-```
-Abrir el navegador en la dirección que aparece en la terminal
-Normalmente es: (http://localhost:8888/tree/src)
+   * Creation of charts from templates: Within the `\Charts folder <https://github.com/IIT-EnergySystemModels/openMASTER/tree/main/Charts>`, the user will find python functions to create basic charts (pie, bar, and area charts), as well as Sankey diagrams of energy flows resulting from the model. Although the functions to create these charts are available in separate python files, two jupyter notebooks are also provided to facilitate their use. The notebook `scenario_charts.ipnynb <https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/Charts/scenario_charts.ipynb>` guides the creation of the more basic charts from different variables within the model, such as pie charts of primary energy use, bar charts of renewable power installed, etc. On the other hand, the notebook `scenario_sankey.ipynb <https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/Charts/scenario_sankey.ipynb>` guides the creation of Sankey diagrams, which imply the intermediate step of creating nodes and flows in a .json file.
