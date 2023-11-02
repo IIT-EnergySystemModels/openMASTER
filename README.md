@@ -117,4 +117,5 @@ openMASTER also provides the user with visualization tools for the results obtai
 
 # Expected results
 
+![Alt text](https://github.com/IIT-EnergySystemModels/openMASTER/Results_Dashboard_example.PNG?raw=true)
 
