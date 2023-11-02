@@ -1,10 +1,11 @@
+<img src="https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/docs/openMASTER_Dalle_icon.png" width="300" height="300">
+   
 **The open-source Model for the Analysis of SusTainable Energy Roadmaps (openMASTER)**
 ================================
 
 The **openMASTER** model has been developed at the [Instituto de Investigación Tecnológica (IIT)](https://www.iit.comillas.edu/index.php.en) of the [Universidad Pontificia Comillas](https://www.comillas.edu/en/).
-
+   
 # Developers
-
 | Member                     | Username  | Tasks             |
 | -------------------------- | --------- | ----------------- |
 | Antonio F. Rodríguez Matas | [@afrmatas](https://github.com/afrmatas) | Developer         |
