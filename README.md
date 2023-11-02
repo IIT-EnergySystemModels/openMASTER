@@ -18,6 +18,7 @@ The **openMASTER** model has been developed at the [Instituto de Investigación 
     * [Quick start guide](##Quick)
     * [Scenarios management](##Scenarios)
     * [Visualization of results](##Visualization)
+* [Expected Results](#Expected)
   
 # Description
 
@@ -61,6 +62,9 @@ The main results of the model can be structured in these topics:
 Results are shown in csv files and graphical plots. An interactive Dashboard is available, as well as a Sankey Diagram generator tool.
 
 A careful implementation has been done to avoid numerical problems by scaling parameters, variables and equations of the optimization problem allowing the model to be used for large-scale cases.
+
+An overview of the model structure can be appreciated in this flow diagram:
+
 
 # Installation
 
@@ -117,5 +121,4 @@ openMASTER also provides the user with visualization tools for the results obtai
 
 # Expected results
 
-![Alt text](https://github.com/IIT-EnergySystemModels/openMASTER/Results_Dashboard_example.PNG?raw=true)
-
+![Alt text](https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/Results_Dashboard_example.PNG "Dashboard results, an example")
