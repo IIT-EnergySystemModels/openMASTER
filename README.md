@@ -15,10 +15,9 @@ The **openMASTER** model has been developed at the `Instituto de Investigación 
 [Description](#Description)  
 [Solvers](#Solvers)
 
+/Charts
 
-
-Description
-================================
+# Description
 
 **openMASTER** is a Pyomo-based model designed for sustainable energy policy analysis. It operates as a dynamic, bottom-up, partial equilibrium, linear programming (LP) model, with the primary objective of meeting externally-given energy services demand across various sectors. It achieves this by adhering to technical and policy constraints while minimizing a comprehensive objective function. This function encompasses the total economic costs of energy supply, the social costs associated with greenhouse gas emissions and pollutant releases, as well as to intangible costs such as discomfort.
 
@@ -61,7 +60,7 @@ Results are shown in csv files and graphical plots. An interactive Dashboard is 
 
 A careful implementation has been done to avoid numerical problems by scaling parameters, variables and equations of the optimization problem allowing the model to be used for large-scale cases.
 
-Solvers
+#Solvers
 ================================
 
 **GLPK**
