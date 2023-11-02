@@ -8,8 +8,8 @@ The **openMASTER** model has been developed at the `Instituto de Investigación 
 
 | Member                     | Username  | Tasks             |
 | -------------------------- | --------- | ----------------- |
-| Antonio F. Rodríguez Matas | @afrmatas | Developer         |
-| Manuel Pérez Bravo         | @mperezb  | Developer         |
+| Antonio F. Rodríguez Matas | [@afrmatas](https://github.com/afrmatas) | Developer         |
+| Manuel Pérez Bravo         | [@mperezbravo](https://github.com/mperezbravo)  | Developer         |
 
 ##### Table of Contents  
 [Description](#Description)  
@@ -17,7 +17,7 @@ The **openMASTER** model has been developed at the `Instituto de Investigación 
 
 
 
-**Description**
+Description
 ================================
 
 **openMASTER** is a Pyomo-based model designed for sustainable energy policy analysis. It operates as a dynamic, bottom-up, partial equilibrium, linear programming (LP) model, with the primary objective of meeting externally-given energy services demand across various sectors. It achieves this by adhering to technical and policy constraints while minimizing a comprehensive objective function. This function encompasses the total economic costs of energy supply, the social costs associated with greenhouse gas emissions and pollutant releases, as well as to intangible costs such as discomfort.
@@ -61,39 +61,38 @@ Results are shown in csv files and graphical plots. An interactive Dashboard is 
 
 A careful implementation has been done to avoid numerical problems by scaling parameters, variables and equations of the optimization problem allowing the model to be used for large-scale cases.
 
-**Solvers**
+Solvers
 ================================
 
 **GLPK**
-As an easy option for installation, we have the free and open-source `GLPK solver <https://www.gnu.org/software/glpk/>`_. However, it takes too much time for large-scale problems. It can be installed using: ``conda install -c conda-forge glpk``.
+As an easy option for installation, we have the free and open-source [GLPK solver](https://www.gnu.org/software/glpk/). However, it takes too much time for large-scale problems. It can be installed using: ``conda install -c conda-forge glpk``.
 
 **CBC**
-The `CBC solver <https://github.com/coin-or/Cbc>`_ is our recommendation if you want a free and open-source solver. For Windows users, the effective way to install the CBC solver is downloading the binaries from `this link <https://www.coin-or.org/download/binary/Cbc/Cbc-2.10.5-x86_64-w64-mingw32.zip>`_, copy and paste the *cbc.exe* file to the PATH that is the "bin" directory of the Anaconda or Miniconda environment. It can be installed using: ``conda install -c conda-forge coincbc``.
+The [CBC solver](https://github.com/coin-or/Cbc) is our recommendation if you want a free and open-source solver. For Windows users, the effective way to install the CBC solver is downloading the binaries from [this link](https://www.coin-or.org/download/binary/Cbc/Cbc-2.10.5-x86_64-w64-mingw32.zip), copy and paste the *cbc.exe* file to the PATH that is the "bin" directory of the Anaconda or Miniconda environment. It can be installed using: ``conda install -c conda-forge coincbc``.
 
 **Gurobi**
-Another recommendation is the use of `Gurobi solver <https://www.gurobi.com/>`_. However, it is commercial solver but most powerful than GPLK and CBC for large-scale problems.
-As a commercial solver it needs a license that is free of charge for academic usage by signing up in `Gurobi webpage <https://pages.gurobi.com/registration/>`_.
+Another recommendation is the use of [Gurobi solver](https://www.gurobi.com/). However, it is commercial solver but most powerful than GPLK and CBC for large-scale problems.
+As a commercial solver it needs a license that is free of charge for academic usage by signing up in [Gurobi webpage](https://pages.gurobi.com/registration/).
 It can be installed using: ``conda install -c gurobi gurobi`` and then ask for an academic or commercial license. Activate the license in your computer using the ``grbgetkey`` command (you need to be in the university domain if you are installing an academic license).
 
 **Mosek**
-Another alternative is the `Mosek solver <https://www.mosek.com/>`_. Note that it is a commercial solver and you need a license for it. Mosek is a good alternative to deal with QPs, SOCPs, and SDPs problems. You only need to use ``conda install -c mosek mosek`` for installation and request a license (academic or commercial).
-To request the academic one, you can request `here <https://www.mosek.com/products/academic-licenses/>`_. Moreover, Mosek brings a `license guide <https://docs.mosek.com/9.2/licensing/index.html>`_. But if you are request an academic license, you will receive the license by email, and you only need to locate it in the following path ``C:\Users\(your user)\mosek`` in your computer.
+Another alternative is the [Mosek solver](https://www.mosek.com/). Note that it is a commercial solver and you need a license for it. Mosek is a good alternative to deal with QPs, SOCPs, and SDPs problems. You only need to use ``conda install -c mosek mosek`` for installation and request a license (academic or commercial).
+To request the academic one, you can request [here](https://www.mosek.com/products/academic-licenses/). Moreover, Mosek brings a [license guide](https://docs.mosek.com/9.2/licensing/index.html). But if you are request an academic license, you will receive the license by email, and you only need to locate it in the following path ``C:\Users\(your user)\mosek`` in your computer.
 
-Get started
+Installation
 ================================
-By cloning the `openMASTER <https://github.com/IIT-EnergySystemModels/openMASTER>`_ repository, you can create branches and propose pull-request. Any help will be very appreciated. We suggest the use of `Gurobi <https://www.gurobi.com/academia/academic-program-and-licenses/>`_ (for Academics and Researchers) as a solver to deal with LP problems instead of GLPK.
-
-# How to install
-
 openMASTER can be installed from its Github repository following these steps:
 1. Clone the openMASTER repository, which includes the folder structure and all necessary functions to run the model.
 2. Launch the command prompt (Windows: Win+R, type "cmd", Enter).
 3. Set up the path to where the repository was cloned, using cd "C:\Users\<username>\...\openMASTER".
 4. Install openMASTER via pip by ``pip install .`` (the openMASTER package is contained in this repository, locally). Please note that the openMASTER package has optional dependencies for the graphic tools included to visualize results. To install these optional dependencies, it can also be done via pip by ``pip install .[graphicTool]``
+5. Be aware the openMASTER_Data.xlsx file has to be downloaded using [git-lfs](https://git-lfs.com/) or this [link](https://github.com/IIT-EnergySystemModels/openMASTER/raw/main/data/input/openMASTER_Data.xlsx?download=).
 
-# How to use
+Get started
+================================
+By cloning the openMASTER repository, you can create branches and propose pull-request. Any help will be very appreciated. We suggest the use of [Gurobi](https://www.gurobi.com/academia/academic-program-and-licenses/) (for Academics and Researchers) as a solver to deal with LP problems instead of GLPK.
 
-The openMASTER repository provides a quickstart guide (in the form of a jupyter notebook) for a new user to run their first case with the model. This quickstart guide is under the `\notebooks folder  <https://openenergymodels.net/](https://github.com/IIT-EnergySystemModels/openMASTER/tree/main/notebooks/>`, named `quickstart_openMASTER.ipnyb <https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/notebooks/quickstart_openMASTER.ipynb>`. Before running the cells in this notebook, it is advisable to:
+The openMASTER repository provides a quickstart guide (in the form of a jupyter notebook) for a new user to run their first case with the model. This quickstart guide is under the /notebooks, named `quickstart_openMASTER.ipnyb <https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/notebooks/quickstart_openMASTER.ipynb>`. Before running the cells in this notebook, it is advisable to:
 1. Create and activate a virtual environment in the system command prompt on which the dependencies will be installed. To do so, please follow the instructions detailed in the `Python Documentation <https://docs.python.org/3/library/venv.html>`. This virtual python environment will not affect the python version or packages installed in the machine being used, and will avoid incompatibilities between versions of packages being used in openMASTER.
 2. Install the openMASTER packages following the `instructions hereby detailed <#How to install>`.
 3. Please follow the order of cells in this notebook to create the abstract model, load a DataPortal, solve the instance, and save the model results.
