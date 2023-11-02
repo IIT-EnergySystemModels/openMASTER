@@ -63,8 +63,9 @@ Results are shown in csv files and graphical plots. An interactive Dashboard is 
 
 A careful implementation has been done to avoid numerical problems by scaling parameters, variables and equations of the optimization problem allowing the model to be used for large-scale cases.
 
-An overview of the model structure can be appreciated in this flow diagram:
+The mathematical formulation can be found [in this document](https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/docs/openMASTER_formulation.pdf), and an overview of the model structure is captured in this diagram:
 
+![Alt text](https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/docs/openMASTER_arch.svg "openMASTER model structure")
 
 # Installation
 
@@ -121,4 +122,4 @@ openMASTER also provides the user with visualization tools for the results obtai
 
 # Expected results
 
-![Alt text](https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/Results_Dashboard_example.PNG "Dashboard results, an example")
+![Alt text](https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/docs/openMASTER_ResultsDashboard.PNG "Dashboard results, an example")
