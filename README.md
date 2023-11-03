@@ -1,4 +1,4 @@
-<img src="https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/docs/openMASTER_Dalle_icon.png" width="300" height="300">
+<p align="center"><img src="https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/docs/openMASTER_Dalle_icon.png" width="300" height="300"></p>
    
 **The open-source Model for the Analysis of SusTainable Energy Roadmaps (openMASTER)**
 ================================
@@ -15,11 +15,11 @@ The **openMASTER** model has been developed at the [Instituto de Investigación 
 * [Description](#Description)  
 * [Installation](#Installation)
 * [Solvers](#Solvers)
-* [Get started](#Get)
-    * [Quick start guide](##Quick)
-    * [Scenarios management](##Scenarios)
-    * [Visualization of results](##Visualization)
-* [Expected Results](#Expected)
+* [Get started](#Get-started)
+    * [Quick start guide](#Quickstart-guide)
+    * [Scenarios management](#Scenarios-management)
+    * [Visualization of results](#Visualization-of-results)
+* [Expected Results](#Expected-results)
   
 # Description
 
@@ -40,15 +40,16 @@ It determines optimal roadmaps that satisfy simultaneously several attributes. I
 - **Non-energy raw material consumption and circular economy in the industrial sector**: the industrial sector is also represented, like all other sectors, on the basis of the demand for energy services (in this case, production of tons of materials). This not only facilitates modelling the reduction in material consumption through recycling but also energy and emissions savings through less energy-intensive processes.
 
 The **objective function**, which represents the costs of the energy sector, includes:
-(i)    the domestic consumption and import of primary energy (PE); 
-(ii)   fixed and variable O&M costs of conversion technologies (CE); 
-(iii)  the cost of raw materials (RM) consumed by industrial supply technologies (ST); 
-(iv)   fixed and variable O&M costs of supply technologies (ST); 
-(v)    the investment cost of new conversion technology capacity (CE); 
-(vi)   the cost of reactivating hibernated capacity of conversion technologies (CE); 
-(vii)  the investment cost of new supply technology capacity (ST); 
-(viii) the penalty cost of slack variables, which include unsupplied energy services (ESNS), as well as exceeding emission caps and carbon budget constraints; 
-(ix)   the cost of agents’ behavioural measures, including both economic costs (such as housing insulation) and intangible costs (such as discomfort).
+
+1. the domestic consumption and import of primary energy (PE)
+2. fixed and variable O&M costs of conversion technologies (CE)
+3. the cost of raw materials (RM) consumed by industrial supply technologies (ST)
+4. fixed and variable O&M costs of supply technologies (ST)
+5. the investment cost of new conversion technology capacity (CE)
+6. the cost of reactivating hibernated capacity of conversion technologies (CE)
+7. the investment cost of new supply technology capacity (ST)
+8. the penalty cost of slack variables, which include unsupplied energy services (ESNS), as well as exceeding emission caps and carbon budget constraints
+9. the cost of agents’ behavioural measures, including both economic costs (such as housing insulation) and intangible costs (such as discomfort).
 
 The model formulates an optimization problem including investment (installation/decommission capacity), operation (generation and storage) and behavioural decisions. The model considers electricity generation reliability constraints, technological and modal choice constraints, and emission caps and carbon budget constraints.
 
@@ -68,12 +69,21 @@ The mathematical formulation can be found in [this document](https://github.com/
 
 # Installation
 
-openMASTER can be installed from its Github repository following these steps:
+openMASTER package can be installed from its GitHub repository following these steps:
+
 1. Clone the openMASTER repository, which includes the folder structure and all necessary functions to run the model.
 2. Launch the command prompt (Windows: Win+R, type "cmd", Enter).
 3. Set up the path to where the repository was cloned, using cd "C:\Users\<username>\...\openMASTER".
-4. Install openMASTER via pip by ``pip install .``. The openMASTER package is contained in this repository, locally. Please note that the openMASTER package has optional dependencies for the graphic tools included to visualize results. To install these optional dependencies, it can also be done via pip by ``pip install .[graphicTool]``
-5. Be aware the openMASTER_Data.xlsx file has to be downloaded using [git-lfs](https://git-lfs.com/) or this [link](https://github.com/IIT-EnergySystemModels/openMASTER/raw/main/data/input/openMASTER_Data.xlsx?download=).
+4. Create a virtual environment using conda or another tool like the built-in package [venv](https://docs.python.org/3/library/venv.html) or [virtualenv](https://virtualenv.pypa.io/en/latest/). This option is not mandatory but highly recommended so you don't mess things up with the python on your system. You can skip this part if you already have one for this project. Notice that the minimum python version tested to use openMASTER is 3.10.
+```bash
+python -m venv .venv
+```
+5. Activate your virtual environment (Skip this step if you decide to skip step 4).
+```bash
+.venv\Scripts\activate
+```
+6. Install openMASTER via pip by ``pip install .``. The openMASTER package is contained in this repository, locally. Please note that the openMASTER package has optional dependencies for the graphic tools included to visualize results. To install these optional dependencies, it can also be done via pip by ``pip install .[graphicTool]``
+7. Be aware the openMASTER_Data.xlsx file has to be downloaded using [git-lfs](https://git-lfs.com/) or directly with this [link](https://github.com/IIT-EnergySystemModels/openMASTER/raw/main/data/input/openMASTER_Data.xlsx?download=).
 
 # Solvers
 
@@ -95,7 +105,7 @@ To request the academic one, you can request [here](https://www.mosek.com/produc
 
 # Get started
 
-By cloning the openMASTER repository, you can create branches and propose pull-requests. Any help will be very appreciated. We suggest the use of [Gurobi](https://www.gurobi.com/academia/academic-program-and-licenses/) (for Academics and Researchers) as a solver to deal with LP problems instead of GLPK.
+By forking and cloning the openMASTER repository, you can create branches and propose pull-requests. Any help will be very appreciated. We suggest the use of [Gurobi](https://www.gurobi.com/academia/academic-program-and-licenses/) (for Academics and Researchers) as a solver to deal with LP problems instead of GLPK.
 
 ## Quickstart guide
 
@@ -114,9 +124,10 @@ To use this functionality of the model, please follow the notebook ``scenarios_f
 openMASTER also provides the user with visualization tools for the results obtained with the model, among which:
 
    * Visualization of results in a Dashboard: openMASTER facilitates the visualization of the main results by means of a dashboard in which several charts are presented. In this dashboard tool, the user can interact with the results by selecting different scenarios, zooming into the timeframes of interest, etc. The data for these charts are imported from the scenarios created by the user, for that reason it is important to first create a result scenario after each run (see above). The steps to follow are:
-           1. Run the model and create a scenario (see <## Scenarios managment>) after every run.
-           2. Run the ``index.py`` file within the folder [Dashboard\app](https://github.com/IIT-EnergySystemModels/openMASTER/tree/main/Dashboard/app).
-           3. A local server will be raised, and its localhost address will be shown on the command prompt window. Please follow this address on your explorer to visualize these results dashboard.
+
+     1. Run the model and create a scenario (see [Scenarios management](#Scenarios-management)) after every run.
+     2. Run the ``index.py`` file within the folder [Dashboard\app](https://github.com/IIT-EnergySystemModels/openMASTER/tree/main/Dashboard/app).
+     3. A local server will be raised, and its localhost address will be shown on the command prompt window. Please follow this address on your explorer to visualize these results dashboard.
    * Creation of charts from templates: Within the folder [Charts](https://github.com/IIT-EnergySystemModels/openMASTER/tree/main/Charts), the user will find python functions to create basic charts (pie, bar, and area charts), as well as Sankey diagrams of energy flows resulting from the model. Although the functions to create these charts are available in separate python files, two jupyter notebooks are also provided to facilitate their use. The notebook ``scenario_charts.ipnynb`` guides the creation of the more basic charts from different variables within the model, such as pie charts of primary energy use, bar charts of renewable power installed, etc. On the other hand, the notebook ``scenario_sankey.ipynb`` guides the creation of Sankey diagrams, which imply the intermediate step of creating nodes and flows in a .json file.
 
 # Expected results
