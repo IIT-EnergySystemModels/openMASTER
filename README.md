@@ -74,7 +74,7 @@ openMASTER package can be installed from its GitHub repository following these s
 1. Clone the openMASTER repository, which includes the folder structure and all necessary functions to run the model.
 2. Launch the command prompt (Windows: Win+R, type "cmd", Enter).
 3. Set up the path to where the repository was cloned, using cd "C:\Users\<username>\...\openMASTER".
-4. Create a virtual environment using conda or another tool like the built-in package [venv](https://docs.python.org/3/library/venv.html) or [virtualenv](https://virtualenv.pypa.io/en/latest/). This option is not mandatory but highly recommended so you don't mess things up with the python on your system. You can skip this part if you already have one for this project. Notice that the minimum python version tested to use openMASTER is 3.10.
+4. Create a virtual environment using conda or another tool like the built-in package [venv](https://docs.python.org/3/library/venv.html) or [virtualenv](https://virtualenv.pypa.io/en/latest/). This option is not mandatory but highly recommended so you don't mess things up with the python on your system. You can skip this part if you already have one for this project. Notice that the minimum python version tested to use openMASTER is 3.10. Additionally, it's essential to have Jupyter Notebook installed as it is required for running the model. If you don't have it installed already, you will need to install it via ``pip install notebook``.
 ```bash
 python -m venv .venv
 ```
