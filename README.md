@@ -23,7 +23,7 @@ The **openMASTER** model has been developed at the [Instituto de Investigación 
   
 # Description
 
-**openMASTER** is a Pyomo-based model designed for sustainable energy policy analysis. It operates as a dynamic, bottom-up, partial equilibrium, linear programming (LP) model, with the primary objective of meeting externally-given energy services demand across various sectors. It achieves this by adhering to technical and policy constraints while minimizing a comprehensive objective function. This function encompasses the total economic costs of energy supply, the social costs associated with greenhouse gas emissions and pollutant releases, as well as to intangible costs such as discomfort.
+**openMASTER** is a Pyomo-based model designed for sustainable energy policy analysis. It operates as a dynamic, bottom-up, partial equilibrium, linear programming (LP) model, with the primary objective of meeting externally-given energy services demand across various sectors. It achieves this by adhering to technical and policy constraints while minimizing a comprehensive objective function. This function encompasses the total economic costs of energy supply, the social costs associated with greenhouse gas emissions and pollutant releases, as well as intangible costs such as discomfort.
 
 It is structured according to a scheme of processes and flows, which encompasses the entire energy sector, including the import and domestic consumption of primary energy, energy conversion and storage technologies for final energy production, energy services supply technologies, and the exogenous demand for energy services from various sectors of the economy.
 
@@ -31,7 +31,7 @@ It determines optimal roadmaps that satisfy simultaneously several attributes. I
 
 - **Dynamic planning**: the scope of the model corresponds to several periods (years) at a long-term horizon, 2030 to 2050 for example.
 
-- **Technological granularity**: the model considers the vintage of end-use technologies. This approach facilitates the representation of technological innovation, including learning curves for efficiency improvements and emissions reductions. Consequently, improvements in vehicle emission standards or household appliances efficiency, among others, can be incorporated along with a detailed definition of technology decommissioning over their lifecycle.  
+- **Technological granularity**: the model considers the vintage of end-use technologies. This approach facilitates the representation of technological innovation, including learning curves for efficiency improvements and emissions reductions. Consequently, improvements in vehicle emission standards or household appliance efficiency, among others, can be incorporated along with a detailed definition of technology decommissioning over their lifecycle.  
 
 - **Exogenous demand of energy services**: the model introduces all exogenous demand in the form of energy services, allowing for the implementation of energy efficiency measures and emissions reduction through the investment and operation of end-use technologies. In this regard, it also enables modal shifts in transportation, a crucial aspect for effective decarbonization of this sector.
 
@@ -55,13 +55,13 @@ The model formulates an optimization problem including investment (installation/
 
 The main results of the model can be structured in these topics:
 
-- **Investment**: installation and decommission decisions on capacity for Conversion Energy Technologies (CE) and Supply Technologies (ST); hibernation and reactivation decisions on capacity for Conversion Energy Technologies (CE)
+- **Investment**: installation and decommission decisions on the capacity for Conversion Energy Technologies (CE) and Supply Technologies (ST); hibernation and reactivation decisions on the capacity for Conversion Energy Technologies (CE)
 - **Operation**: primary energy consumption (imports and domestic consumption), final energy generation and storage, energy services supplied, ESNS, etc.
 - **Emissions**: CO2 and pollutants (NOx, SOx and PM 2.5) emissions
 - **Behavioural changes**: change in energy services demand due to agents' behavioural changes
-- **Economic**: investment, operation and behavoiural changes costs
+- **Economic**: investment, operation and behavioural changes costs
 
-Results are shown in csv files and graphical plots. An interactive Dashboard is available, as well as a Sankey Diagram generator tool.
+Results are shown in CSV files and graphical plots. An interactive Dashboard is available, as well as a Sankey Diagram generator tool.
 
 A careful implementation has been done to avoid numerical problems by scaling parameters, variables and equations of the optimization problem allowing the model to be used for large-scale cases.
 
@@ -74,7 +74,7 @@ openMASTER package can be installed from its GitHub repository following these s
 1. Clone the openMASTER repository, which includes the folder structure and all necessary functions to run the model.
 2. Launch the command prompt (Windows: Win+R, type "cmd", Enter).
 3. Set up the path to where the repository was cloned, using cd "C:\Users\<username>\...\openMASTER".
-4. Create a virtual environment using conda or another tool like the built-in package [venv](https://docs.python.org/3/library/venv.html) or [virtualenv](https://virtualenv.pypa.io/en/latest/). This option is not mandatory but highly recommended so you don't mess things up with the python on your system. You can skip this part if you already have one for this project. Notice that the minimum python version tested to use openMASTER is 3.10.
+4. Create a virtual environment using conda or another tool like the built-in package [venv](https://docs.python.org/3/library/venv.html) or [virtualenv](https://virtualenv.pypa.io/en/latest/). This option is not mandatory but highly recommended so you don't mess things up with the Python on your system. You can skip this part if you already have one for this project. Notice that the minimum Python version tested to use openMASTER is 3.10.
 ```bash
 python -m venv .venv
 ```
@@ -94,13 +94,13 @@ As an easy option for installation, we have the free and open-source [GLPK solve
 The [CBC solver](https://github.com/coin-or/Cbc) is our recommendation if you want a free and open-source solver. For Windows users, the effective way to install the CBC solver is downloading the binaries from [this link](https://www.coin-or.org/download/binary/Cbc/Cbc-2.10.5-x86_64-w64-mingw32.zip), copy and paste the *cbc.exe* file to the PATH that is the "bin" directory of the Anaconda or Miniconda environment. It can be installed using: ``conda install -c conda-forge coincbc``.
 
 **Gurobi**
-Another recommendation is the use of [Gurobi solver](https://www.gurobi.com/). However, it is commercial solver but most powerful than GPLK and CBC for large-scale problems.
-As a commercial solver it needs a license that is free of charge for academic usage by signing up in [Gurobi webpage](https://pages.gurobi.com/registration/).
-It can be installed using: ``conda install -c gurobi gurobi`` and then ask for an academic or commercial license. Activate the license in your computer using the ``grbgetkey`` command (you need to be in the university domain if you are installing an academic license).
+Another recommendation is the use of [Gurobi solver](https://www.gurobi.com/). However, it is a commercial solver but more powerful than GPLK and CBC for large-scale problems.
+As a commercial solver, it needs a license that is free of charge for academic usage by signing up on [Gurobi webpage](https://pages.gurobi.com/registration/).
+It can be installed using: ``conda install -c gurobi gurobi`` and then ask for an academic or commercial license. Activate the license on your computer using the ``grbgetkey`` command (you need to be in the university domain if you are installing an academic license).
 
 **Mosek**
 Another alternative is the [Mosek solver](https://www.mosek.com/). Note that it is a commercial solver and you need a license for it. Mosek is a good alternative to deal with QPs, SOCPs, and SDPs problems. You only need to use ``conda install -c mosek mosek`` for installation and request a license (academic or commercial).
-To request the academic one, you can request [here](https://www.mosek.com/products/academic-licenses/). Moreover, Mosek brings a [license guide](https://docs.mosek.com/9.2/licensing/index.html). But if you are request an academic license, you will receive the license by email, and you only need to locate it in the following path ``C:\Users\(your user)\mosek`` in your computer.
+To request the academic one, you can request [here](https://www.mosek.com/products/academic-licenses/). Moreover, Mosek brings a [license guide](https://docs.mosek.com/9.2/licensing/index.html). But if you request an academic license, you will receive the license by email, and you only need to locate it in the following path ``C:\Users\(your user)\mosek`` in your computer.
 
 
 # Get started
@@ -109,8 +109,8 @@ By forking and cloning the openMASTER repository, you can create branches and pr
 
 ## Quickstart guide
 
-The openMASTER repository provides a quickstart guide (in the form of a jupyter notebook) for a new user to run their first case with the model. This quickstart guide is under the [notebooks folder](https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/notebooks/), named ``quickstart_openMASTER.ipnyb``. Before running the cells in this notebook, it is advisable to:
-1. Create and activate a virtual environment in the system command prompt on which the dependencies will be installed. To do so, please follow the instructions detailed in the [Python Documentation](https://docs.python.org/3/library/venv.html). This virtual python environment will not affect the python version or packages installed in the machine being used, and will avoid incompatibilities between versions of packages being used in openMASTER.
+The openMASTER repository provides a quickstart guide (in the form of a Jupyter notebook) for new users to run their first case with the model. This quickstart guide is under the [notebooks folder](https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/notebooks/), named ``quickstart_openMASTER.ipnyb``. Before running the cells in this notebook, it is advisable to:
+1. Create and activate a virtual environment in the system command prompt on which the dependencies will be installed. To do so, please follow the instructions detailed in the [Python Documentation](https://docs.python.org/3/library/venv.html). This virtual Python environment will not affect the Python version or packages installed in the machine being used and will avoid incompatibilities between versions of packages being used in openMASTER.
 2. Install the openMASTER packages following the [instructions hereby detailed](#Installation).
 3. Please follow the order of cells in this notebook to create the abstract model, load a DataPortal, solve the instance, and save the model results.
 
@@ -128,7 +128,7 @@ openMASTER also provides the user with visualization tools for the results obtai
      1. Run the model and create a scenario (see [Scenarios management](#Scenarios-management)) after every run.
      2. Run the ``index.py`` file within the folder [Dashboard\app](https://github.com/IIT-EnergySystemModels/openMASTER/tree/main/Dashboard/app).
      3. A local server will be raised, and its localhost address will be shown on the command prompt window. Please follow this address on your explorer to visualize these results dashboard.
-   * Creation of charts from templates: Within the folder [Charts](https://github.com/IIT-EnergySystemModels/openMASTER/tree/main/Charts), the user will find python functions to create basic charts (pie, bar, and area charts), as well as Sankey diagrams of energy flows resulting from the model. Although the functions to create these charts are available in separate python files, two jupyter notebooks are also provided to facilitate their use. The notebook ``scenario_charts.ipnynb`` guides the creation of the more basic charts from different variables within the model, such as pie charts of primary energy use, bar charts of renewable power installed, etc. On the other hand, the notebook ``scenario_sankey.ipynb`` guides the creation of Sankey diagrams, which imply the intermediate step of creating nodes and flows in a .json file.
+   * Creation of charts from templates: Within the folder [Charts](https://github.com/IIT-EnergySystemModels/openMASTER/tree/main/Charts), the user will find Python functions to create basic charts (pie, bar, and area charts), as well as Sankey diagrams of energy flows resulting from the model. Although the functions to create these charts are available in separate Python files, two Jupyter notebooks are also provided to facilitate their use. The notebook ``scenario_charts.ipnynb`` guides the creation of the more basic charts from different variables within the model, such as pie charts of primary energy use, bar charts of renewable power installed, etc. On the other hand, the notebook ``scenario_sankey.ipynb`` guides the creation of Sankey diagrams, which implies the intermediate step of creating nodes and flows in a .json file.
 
 # Expected results
 
