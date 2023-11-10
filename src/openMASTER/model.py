@@ -534,6 +534,8 @@ def make_model():
     #G€
     d['EQ_InvCostCE']            = Constraint(m.sCE, m.sYear,  rule = EQ_InvCostCE,           doc = 'Annual Total CE Investment Cost [G€]')
     
+
+
     
     def EQ_InvCostST         (m, sST, sYear        ):
          return m.vInvCostST[sST,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
@@ -543,6 +545,8 @@ def make_model():
     #G€
     d['EQ_InvCostST']            = Constraint(m.sST, m.sYear,  rule = EQ_InvCostST,           doc = 'Annual Total ST Investment Cost [G€]')
     
+
+
     
     def EQ_OpCost         (m, sYear        ):
         return m.vOpCost[sYear] ==   m.pYrGap * (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) *(
@@ -558,6 +562,8 @@ def make_model():
     d['EQ_OpCost']               = Constraint(m.sYear,         rule = EQ_OpCost,              doc = 'Annual Total Operation Cost [M€]')
     
     
+
+    
     def EQ_OpVarom         (m, sYear        ):
         return m.vOpVarom[sYear] ==  (
     
@@ -570,6 +576,9 @@ def make_model():
     d['EQ_OpVarom']              = Constraint(m.sYear,         rule = EQ_OpVarom,             doc = 'Annual Total Varom Cost [k€]')
     
     
+    #Definition of a new equation including uncertain parameters (pCECost and pCECapex)
+
+
     # Primary energy (PE)-related constraints
     
     
