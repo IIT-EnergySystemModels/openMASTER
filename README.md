@@ -1,6 +1,6 @@
-<p align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Comillas_Universidad_Pontificia_logo_%282018%29.jpg" width="300"></p>
+<p align="center"><img src="https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/docs/openMASTER_Dalle_icon.png" width="300" height="300"></p>
    
-**Análisis de los Determinantes de Compra de Vehículos Eléctricos a partir de los Microdatos de Matriculaciones**
+****The open-source Model for the Analysis of SusTainable Energy Roadmaps (openMASTER)**
 ================================
 
 The **openMASTER** model has been developed at the [Instituto de Investigación Tecnológica (IIT)](https://www.iit.comillas.edu/index.php.en) of the [Universidad Pontificia Comillas](https://www.comillas.edu/en/).
