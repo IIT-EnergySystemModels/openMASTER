@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/IIT-EnergySystemModels/openMASTER/blob/main/docs/openMASTER_Dalle_icon.png" width="300" height="300"></p>
+<p align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Comillas_Universidad_Pontificia_logo_%282018%29.jpg" width="300" height="300"></p>
    
 **The open-source Model for the Analysis of SusTainable Energy Roadmaps (openMASTER)**
 ================================
