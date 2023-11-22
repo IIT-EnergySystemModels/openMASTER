@@ -35,7 +35,7 @@ external_stylesheets = [dbc.themes.LUX]
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
 
 # SCENARIOS DATA PATH
-SCENARIOS_DATA_PATH = ".scenarios"
+SCENARIOS_DATA_PATH = "scenarios"
 scenarios_folders = [folder for folder in os.listdir(SCENARIOS_DATA_PATH) if "DS_STORE" not in str(folder.upper())] 
 
 # This function loads the data based on the selected scenario
