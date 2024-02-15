@@ -86,8 +86,8 @@ def make_model():
     m.sSD_Tra_IntRail     = Set  (within=m.sSD,                          doc = "Transportation Service Demand Commodities IntRail"     )
     m.sSD_Tra_RoadFreight = Set  (within=m.sSD,                          doc = "Transportation Service Demand Commodities RoadFreight" )
     m.sSD_Oth             = Set  (within=m.sSD,                          doc = "Others Service Demand Commodities"                     )
-    m.sSD_Oth_HE          = Set  (within=m.sSD,                          doc = "Others Service Demand Commodities. High Efficiency"    )
-    m.sSD_Oth_LE          = Set  (within=m.sSD,                          doc = "Others Service Demand Commodities. Low  Efficiency"    )
+    m.sSD_Oth_NEWB        = Set  (within=m.sSD,                          doc = "Others Service Demand Commodities. High Efficiency"    )
+    m.sSD_Oth_OLDB        = Set  (within=m.sSD,                          doc = "Others Service Demand Commodities. Low  Efficiency"    )
     m.sSD_Ind             = Set  (within=m.sSD,                          doc = "Industrial Service Demand Commodities"                 )
     
     m.sMD_Tra             = Set  (within=m.sMD,                          doc = "Transportation Macro Data Commodities"                 )
