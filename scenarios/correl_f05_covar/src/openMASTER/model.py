@@ -1683,9 +1683,9 @@ def make_model():
 
     l_eq = [
         'EQ_TotalCost_Unc',
-        'EQ_UncCost',
-        #'EQ_UncCost_Cher',
-        #'EQ_UncCost_Cher2',
+        #'EQ_UncCost',
+        'EQ_UncCost_Cher',
+        'EQ_UncCost_Cher2',
         'EQ_InvCostCE_Unc',   
         'EQ_OpCost_Unc',
         'EQ_FObj',
