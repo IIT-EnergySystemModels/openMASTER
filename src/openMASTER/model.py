@@ -60,6 +60,7 @@ def make_model():
     m.sST_Tra_Sea         = Set  (within=m.sST,                          doc = "Transportation Supply Technologies. Sea"               )
     m.sST_Tra_UrbanRail   = Set  (within=m.sST,                          doc = "Transportation Supply Technologies. UrbanRail"         )
     m.sST_Oth             = Set  (within=m.sST,                          doc = "Others Supply Technologies"                            )
+    m.sST_Res             = Set  (within=m.sST,                          doc = "Residential Supply Technologies"                       )
     m.sST_Ind             = Set  (within=m.sST,                          doc = "Industrial Supply Technologies"                        )
     
     m.sST_Cap             = Set  (within=m.sST,                          doc = "Supply Technologies measured by capacity units"        )
@@ -68,13 +69,14 @@ def make_model():
     m.sES_Tra             = Set  (within=m.sES,                          doc = "Transportation Energy Service Commodities"             )
     m.sES_Tra_Car         = Set  (within=m.sES,                          doc = "Transportation Energy Service Commodities"             )
     m.sES_Oth             = Set  (within=m.sES,                          doc = "Others Energy Service Commodities"                     )
+    m.sES_Res             = Set  (within=m.sES,                          doc = "Residential Energy Service Commodities"                )
     m.sES_Ind             = Set  (within=m.sES,                          doc = "Industrial Energy Service Commodities"                 )
     
     m.sBM_Tra             = Set  (within=m.sBM,                          doc = "Behavioural Measures in Transportation"                )
-    m.sBM_Oth             = Set  (within=m.sBM,                          doc = "Behavioural Measures in Others"                        )
+    m.sBM_Res             = Set  (within=m.sBM,                          doc = "Behavioural Measures in Others"                        )
     
     m.sDM_Tra             = Set  (within=m.sDM,                          doc = "Demand Shift Measures in Transportation"               )
-    m.sDM_Oth             = Set  (within=m.sDM,                          doc = "Demand Shift Measures in Others"                       )
+    m.sDM_Res             = Set  (within=m.sDM,                          doc = "Demand Shift Measures in Others"                       )
     
     m.sSD_Tra             = Set  (within=m.sSD,                          doc = "Transportation Service Demand Commodities"             )
     m.sSD_Tra_Car         = Set  (within=m.sSD,                          doc = "Transportation Service Demand Commodities Car"         )
@@ -86,11 +88,13 @@ def make_model():
     m.sSD_Tra_IntRail     = Set  (within=m.sSD,                          doc = "Transportation Service Demand Commodities IntRail"     )
     m.sSD_Tra_RoadFreight = Set  (within=m.sSD,                          doc = "Transportation Service Demand Commodities RoadFreight" )
     m.sSD_Oth             = Set  (within=m.sSD,                          doc = "Others Service Demand Commodities"                     )
+    m.sSD_Res             = Set  (within=m.sSD,                          doc = "Residential Service Demand Commodities"                )
     m.sSD_Oth_NEWB        = Set  (within=m.sSD,                          doc = "Others Service Demand Commodities. High Efficiency"    )
     m.sSD_Oth_OLDB        = Set  (within=m.sSD,                          doc = "Others Service Demand Commodities. Low  Efficiency"    )
     m.sSD_Ind             = Set  (within=m.sSD,                          doc = "Industrial Service Demand Commodities"                 )
     
     m.sMD_Tra             = Set  (within=m.sMD,                          doc = "Transportation Macro Data Commodities"                 )
+    m.sMD_Res             = Set  (within=m.sMD,                          doc = "Residential Macro Data Commodities"                    )
     m.sMD_Oth             = Set  (within=m.sMD,                          doc = "Others Macro Data Commodities"                         )
     m.sMD_Ind             = Set  (within=m.sMD,                          doc = "Industrial Macro Data Commodities"                     )
       
@@ -114,12 +118,14 @@ def make_model():
     m.sQSTInRM_Cir        = Set  (within=m.sRM*m.sST*m.sES,              doc = "Input     RM to           ST producing ES. Circularity")
     m.sQSTOUT             = Set  (within=m.sST*m.sES,                    doc = "          ST to Output    ES"                          )
     m.sQSTOUT_Tra         = Set  (within=m.sST*m.sES,                    doc = "          ST to Output    ES"                          )
+    m.sQSTOUT_Res         = Set  (within=m.sST*m.sES,                    doc = "          ST to Output    ES"                          )
     m.sQSTOUT_Oth         = Set  (within=m.sST*m.sES,                    doc = "          ST to Output    ES"                          )
     m.sQSTOUT_Ind         = Set  (within=m.sST*m.sES,                    doc = "          ST to Output    ES"                          )
     m.sQTESTES            = Set  (within=m.sTE*m.sST*m.sES,              doc = "          TE to           ST to ES relational set"     )
     m.sQTESTES_Ele        = Set  (within=m.sTE*m.sST*m.sES,              doc = " Electr  (TE)to           ST to ES relational set"     )
     m.sQTESTES_Ind        = Set  (within=m.sTE*m.sST*m.sES,              doc = " Industry(TE)to           ST to ES relational set"     )
     m.sQESSD              = Set  (within=m.sES*m.sSD,                    doc = "          ES to           SD"                          )
+    m.sQSTESSDMD_Res      = Set  (within=m.sST*m.sES*m.sSD*m.sMD,        doc = "          ST to           ES to SD to MD"              )
     m.sQSTESSD            = Set  (within=m.sST*m.sES*m.sSD,              doc = "          ST to           ES to SD"                    )
     m.sQSTESSD_Tra        = Set  (within=m.sST*m.sES*m.sSD,              doc = "          ST to           ES to SD. Transportation"    )
     m.sQESSDMD_Oth        = Set  (within=m.sES*m.sSD*m.sMD,              doc = "          ES to           SD to MD. Others"            )
@@ -144,9 +150,22 @@ def make_model():
     m.sQCESecIN_indexed                = Set(m.sTE,                             dimen=2)
     m.sQCEStoIN_indexed                = Set(m.sTE,                             dimen=2)
     m.sSTESVin_indexed                 = Set(m.sTE, m.sYear,                    dimen=5)
+    m.sSTTraESVin_indexed                 = Set(m.sTE, m.sYear,                    dimen=5)
+    m.sSTOthESVin_indexed                 = Set(m.sTE, m.sYear,                    dimen=5)
+    m.sSTIndESVin_indexed                 = Set(m.sTE, m.sYear,                    dimen=5)
+    m.sSTResESVin_indexed                 = Set(m.sTE, m.sYear,                    dimen=5)
     m.sQSTInRM_indexed                 = Set(m.sYear,                           dimen=8)
     m.sQSTVin_indexed                  = Set(m.sYear,                           dimen=3)
+    m.sQSTVinTra_indexed               = Set(m.sYear,                           dimen=3)
+    m.sQSTVinOth_indexed               = Set(m.sYear,                           dimen=3)
+    m.sQSTVinInd_indexed               = Set(m.sYear,                           dimen=3)
+    m.sQSTVinRes_indexed               = Set(m.sYear,                           dimen=6)
+    m.sQSTOUTTra_indexed               = Set(m.sYear,                           dimen=3) 
     m.sQSTOUT_VinTime_indexed          = Set(m.sYear,                           dimen=7)
+    m.sQSTOUTTra_VinTime_indexed       = Set(m.sYear,                           dimen=7)
+    m.sQSTOUTInd_VinTime_indexed       = Set(m.sYear,                           dimen=7)
+    m.sQSTOUTRes_VinTime_indexed       = Set(m.sYear,                           dimen=9)
+    m.sQSTOUTOth_VinTime_indexed       = Set(m.sYear,                           dimen=7)
     m.sQSTOUT_Time_indexed             = Set(m.sYear,                           dimen=6)
     m.sQCEPriOUT_Time_indexed          = Set(m.sYear,                           dimen=6)
     m.sQCESecOUT_Time_indexed          = Set(m.sYear,                           dimen=6)
@@ -186,6 +205,7 @@ def make_model():
     m.sQSTOUT_AFTraMoped_indexed       = Set(m.sSD_Tra,                         dimen=3)
     m.sQSTOUT_AFTraAir_indexed         = Set(m.sSD_Tra,                         dimen=3)
     m.sQSTOUT_AFTraSea_indexed         = Set(m.sSD_Tra,                         dimen=3)
+    m.sQESSDMD_Res_indexed             = Set(m.sST_Res,                         dimen=4)
     
     # Parameter definition
     m.pYr                = Param(m.sVin,                                            doc = 'Year number'                                                                                                                 )
@@ -296,10 +316,25 @@ def make_model():
     m.pSTMaxCap          = Param(m.sST,                                             doc = 'ST maximum allowed capacity                                                                          [ST units             ]')        
     m.pSTMaxPro          = Param(m.sST,                                             doc = 'Maximum ST annual production                                                                         [ES units             ]')
     m.pSTCapex           = Param(m.sST,m.sYear,                                     doc = 'ST CAPEX cost                                                                                        [G€ per ST unit       ]')
+    m.pSTCapexRes        = Param(m.sST_Oth,m.sYear,                                 doc = 'ST CAPEX cost for residential sector                                                                 [G€ per ST unit       ]')
+    m.pSTCapexInd        = Param(m.sST_Ind,m.sYear,                                 doc = 'ST CAPEX cost for industrial sector                                                                  [G€ per ST unit       ]')
+    m.pSTCapexTra        = Param(m.sST_Tra,m.sYear,                                 doc = 'ST CAPEX cost for transportation sector                                                              [G€ per ST unit       ]')
     m.pSTDecom           = Param(m.sST,m.sYear,                                     doc = 'ST Decommission cost                                                                                 [G€ per ST unit       ]')
+    m.pSTDecomRes        = Param(m.sST_Oth,m.sYear,                                 doc = 'ST Decommission cost for residential sector                                                          [G€ per ST unit       ]')
+    m.pSTDecomInd        = Param(m.sST_Ind,m.sYear,                                 doc = 'ST Decommission cost for industrial sector                                                           [G€ per ST unit       ]')
+    m.pSTDecomTra        = Param(m.sST_Tra,m.sYear,                                 doc = 'ST Decommission cost for transportation sector                                                       [G€ per ST unit       ]')
     m.pSTDecProb         = Param(m.sST,m.sAge,                                      doc = 'ST decommission probability                                                                          [%                    ]')
     m.pSTFixom           = Param(m.sST,                                             doc = 'ST Fixom cost                                                                                        [k€ per ST unit       ]') 
+    m.pSTFixomRes        = Param(m.sST_Res,                                         doc = 'ST Fixom cost for residential sector                                                                 [k€ per ST unit       ]')   
+    m.pSTFixomOth        = Param(m.sST_Oth,                                         doc = 'ST Fixom cost for others sector                                                                      [k€ per ST unit       ]')
+    m.pSTFixomInd        = Param(m.sST_Ind,                                         doc = 'ST Fixom cost for industrial sector                                                                  [k€ per ST unit       ]')
+    m.pSTFixomTra        = Param(m.sST_Tra,                                         doc = 'ST Fixom cost for transportation sector                                                              [k€ per ST unit       ]')
     m.pSTVarom           = Param(m.sST,m.sES,                                       doc = 'ST Varom cost                                                                                        [ € per ES unit       ]')         
+    m.pSTVaromRes        = Param(m.sST_Res,m.sES_Res,                               doc = 'ST Varom cost for residential sector                                                                 [ € per ES unit       ]')
+    m.pSTVaromOth        = Param(m.sST_Oth,m.sES_Oth,                               doc = 'ST Varom cost for others sector                                                                      [ € per ES unit       ]')
+    m.pSTVaromInd        = Param(m.sST_Ind,m.sES_Ind,                               doc = 'ST Varom cost for industrial sector                                                                  [ € per ES unit       ]')
+    m.pSTVaromTra        = Param(m.sST_Tra,m.sES_Tra,                               doc = 'ST Varom cost for transportation sector                                                              [ € per ES unit       ]')
+
     m.pESLoad            = Param(m.sES,m.sSeason,m.sDay,m.sHour,                    doc = 'ES load curve                                                                                        [%                    ]')         
                                                  
     #Activity factors                                                                                             
@@ -320,7 +355,8 @@ def make_model():
     m.pDC                = Param(m.sSD,m.sMD,                                       doc = 'Demand characterization                                                                              [DC unit              ]')
     m.pMD                = Param(m.sMD,m.sYear,                                     doc = 'Macro data                                                                                           [MD unit              ]')
     
-    
+    # Budget of End.Users
+    m.pBudgetRes         = Param(m.sYear,                                           doc = 'Budget of Residential sector                                                                         [G€ per year          ]')
     # Variables definition
     
     #O.F. Variables
@@ -333,7 +369,10 @@ def make_model():
     m.vInvCostST          = Var  (      m.sST,                     m.sYear,                within = Reals,            doc = "Annual Total ST investment cost                                                              [G€              ]")
     m.vOpCost             = Var  (                                 m.sYear,                within = Reals,            doc = "Annual Total operation cost                                                                  [M€              ]")
     m.vOpVarom            = Var  (                                 m.sYear,                within = Reals,            doc = "Annual Total Varom cost                                                                      [k€              ]")
-                    
+    m.vInvCostSTRes       = Var  (      m.sST_Res, m.sES_Res,m.sSD_Res, m.sMD_Res,m.sYear, within = Reals,            doc = "Annual Total ST investment cost for residential sector                                       [G€              ]") 
+    m.vInvCostSTOth       = Var  (      m.sST_Oth,                 m.sYear,                within = Reals,            doc = "Annual Total ST investment cost for residential sector                                       [G€              ]")
+    m.vInvCostSTInd       = Var  (      m.sST_Ind,                 m.sYear,                within = Reals,            doc = "Annual Total ST investment cost for industrial sector                                        [G€              ]")
+    m.vInvCostSTTra       = Var  (      m.sST_Tra,                 m.sYear,                within = Reals,            doc = "Annual Total ST investment cost for transportation sector                                    [G€              ]")               
                                     
     #Origin of PE - variables                                 
     m.vQPEDom             = Var  (m.sPE,                           m.sTime,                within = NonNegativeReals, doc = "PE domestic consumption                                                                      [GWh             ]")
@@ -358,19 +397,28 @@ def make_model():
                             
     #ST balance - variables                         
     m.vQSTInTE            = Var  (           m.sQTESTES,           m.sVinTime,             within = NonNegativeReals, doc = "TE consumed by ST                                                                            [GWh             ]")
+    m.vQSTTraInTE
     m.vQSTInRM            = Var  (           m.sQSTInRM,           m.sVinTime,             within = NonNegativeReals, doc = "RM consumed by ST (industrial)                                                               [Tons            ]")
     m.vQSTOut             = Var  (           m.sQSTOUT,            m.sVinTime,             within = NonNegativeReals, doc = "ES produced by ST                                                                            [ES units        ]")
-                                
+    m.vQSTOut_Res         = Var  (           m.sQSTOUT,            m.sVinTime,             within = NonNegativeReals, doc = "ES produced by ST for residential sector                                                     [ES units        ]")
+    m.vQSTOut_Ind         = Var  (           m.sQSTOUT,            m.sVinTime,             within = NonNegativeReals, doc = "ES produced by ST for industrial sector                                                      [ES units        ]")
+    m.vQSTOut_Tra         = Var  (           m.sQSTOUT,            m.sVinTime,             within = NonNegativeReals, doc = "ES produced by ST for transportation sector                                                  [ES units        ]")
+    m.vQSTOut_Oth         = Var  (           m.sQSTOUT,            m.sVinTime,             within = NonNegativeReals, doc = "ES produced by ST for others                                                                 [ES units        ]")
+
     #ES                              
     m.vQESNS              = Var  (           m.sQSTOUT,            m.sTime,                within = NonNegativeReals, doc = "ES not supplied (slack variable)                                                             [ES units        ]")
     m.vQES                = Var  (           m.sQSTOUT,            m.sYear,                within = NonNegativeReals, doc = "ES                                                                                           [ES units        ]")
-    
+    m.vQES_Res            = Var  (           m.sQSTESSDMD_Res,     m.sYear,                within = NonNegativeReals, doc = "ES for residential sector                                                                     [ES units        ]")
+    m.vQES_Ind            = Var  (           m.sQSTOUT,            m.sYear,                within = NonNegativeReals, doc = "ES for industrial sector                                                                      [ES units        ]")
+    m.vQES_Tra            = Var  (           m.sQSTOUT,            m.sYear,                within = NonNegativeReals, doc = "ES for transportation sector                                                                  [ES units        ]")
+    m.vQES_Oth            = Var  (           m.sQSTESSDMD_Oth,     m.sYear,                within = NonNegativeReals, doc = "ES for others                                                                                 [ES units        ]")
+
     #BM
     m.vBMTra              = Var  (        m.sQSTESSD_Tra,m.sBM_Tra,m.sYear,                within = NonNegativeReals, doc = "Behavioural Measures. Transportation                                                         [ES units        ]")
-    m.vBMOth              = Var  (        m.sQESSDMD_Oth,m.sBM_Oth,m.sYear,                within = NonNegativeReals, doc = "Behavioural Measures. Others                                                                 [ES units        ]")
-    m.vBMOth_WAMAC        = Var  (          m.sQSDMD_Oth,m.sBM_Oth,m.sYear,                within = NonNegativeReals, doc = "Behavioural Measures. Others. Cold cycle Washing Machine                                     [ES units        ]")
-    m.vBMOth_DIWAC        = Var  (          m.sQSDMD_Oth,m.sBM_Oth,m.sYear,                within = NonNegativeReals, doc = "Behavioural Measures. Others. Cold cycle Dish Washer                                         [ES units        ]")
-    m.vBMOth_TW           = Var  (        m.sQESSDMD_Oth,          m.sYear,                within = NonNegativeReals, doc = "Behavioural Measures. Others. Telework                                                       [ES units        ]")
+    m.vBMRes              = Var  (        m.sQESSDMD_Res,m.sBM_Res,m.sYear,                within = NonNegativeReals, doc = "Behavioural Measures. Others                                                                 [ES units        ]")
+    m.vBMRes_WAMAC        = Var  (          m.sQSDMD_Res,m.sBM_Res,m.sYear,                within = NonNegativeReals, doc = "Behavioural Measures. Others. Cold cycle Washing Machine                                     [ES units        ]")
+    m.vBMRes_DIWAC        = Var  (          m.sQSDMD_Res,m.sBM_Res,m.sYear,                within = NonNegativeReals, doc = "Behavioural Measures. Others. Cold cycle Dish Washer                                         [ES units        ]")
+    m.vBMRes_TW           = Var  (        m.sQESSDMD_Res,          m.sYear,                within = NonNegativeReals, doc = "Behavioural Measures. Others. Telework                                                       [ES units        ]")
     
     #SD                    
     m.vQSDTra             = Var  (           m.sSD_Tra,            m.sYear,                within = NonNegativeReals, doc = "Transportation SD                                                                            [SD units        ]")
@@ -397,9 +445,22 @@ def make_model():
     
     #ST capacity variables                          
     m.vSTNewCap           = Var  (      m.sST,                     m.sYear,                within = NonNegativeReals, doc = "ST new installed capacity                                                                    [GW              ]")
+    m.vSTNewCapRes        = Var  (m.sES_Res,m.sMD_Res, m.sSD_Res,      m.sST_Res,                 m.sYear,                within = NonNegativeReals, doc = "ST new installed capacity for residential sector                                             [GW              ]")
+    m.vSTNewCapOth        = Var  (      m.sST_Oth,                 m.sYear,                within = NonNegativeReals, doc = "ST new installed capacity for others sector                                                  [GW              ]")
+    m.vSTNewCapInd        = Var  (      m.sST_Ind,                 m.sYear,                within = NonNegativeReals, doc = "ST new installed capacity for industrial sector                                              [GW              ]")
+    m.vSTNewCapTra        = Var  (      m.sST_Tra,                 m.sYear,                within = NonNegativeReals, doc = "ST new installed capacity for transportation sector                                          [GW              ]")
     m.vSTDecCap           = Var  (      m.sST,      m.sVinYear,                            within = NonNegativeReals, doc = "ST decommissioned capacity                                                                   [GW              ]")
+    m.vSTDecCapRes        = Var  (m.ES_Res,m.sMD_Res, m.sSD_Res,      m.sST_Res,  m.sVinYear,                            within = NonNegativeReals, doc = "ST decommissioned capacity for residential sector                                            [GW              ]")
+    m.vSTDecCapInd        = Var  (      m.sST_Ind,  m.sVinYear,                            within = NonNegativeReals, doc = "ST decommissioned capacity for industrial sector                                             [GW              ]")
+    m.vSTDecCapTra        = Var  (      m.sST_Tra,  m.sVinYear,                            within = NonNegativeReals, doc = "ST decommissioned capacity for transportation sector                                         [GW              ]")
+    m.vSTDecCapOth        = Var  (      m.sST_Oth,  m.sVinYear,                            within = NonNegativeReals, doc = "ST decommissioned capacity for others sector                                                  [GW              ]")
     m.vSTTotCap           = Var  (      m.sST,      m.sVinYear,                            within = NonNegativeReals, doc = "ST accumulated installed capacity                                                            [GW              ]")
-                            
+    m.vSTTotCapTra        = Var  (      m.sST_Tra,  m.sVinYear,                            within = NonNegativeReals, doc = "ST accumulated installed capacity for transportation sector                                  [GW              ]")
+    m.vSTTotCapRes        = Var  (m.ES_Res,m.sMD_Res, m.sSD_Res,      m.sST_Res,  m.sVinYear,                            within = NonNegativeReals, doc = "ST accumulated installed capacity for residential sector                                     [GW              ]")
+    m.vSTTotCapInd        = Var  (      m.sST_Ind,  m.sVinYear,                            within = NonNegativeReals, doc = "ST accumulated installed capacity for industrial sector                                      [GW              ]")
+    m.vSTTotCapOth        = Var  (      m.sST_Oth,  m.sVinYear,                            within = NonNegativeReals, doc = "ST accumulated installed capacity for others sector                                           [GW              ]")
+    m.vInvUserRes         = Var  (m.sMD_Oth,m.sSD_Oth,                                 m.sYear,                within = NonNegativeReals, doc = "Annual investment of residential sector                                                      [G€              ]")  
+
     #CO2 Emission variables                               
     m.vEmiCO2CE           = Var  (      m.sCE,                     m.sYear,                within = NonNegativeReals, doc = "CO2 emissions produced in CE processes                                                       [ktCO2           ]")
     m.vEmiCO2CEPri        = Var  (m.sQCEPriIN,                     m.sYear,                within = NonNegativeReals, doc = "CO2 emissions produced in Primary CE processes                                               [ktCO2           ]")
@@ -465,17 +526,15 @@ def make_model():
     
     # ### **Equations**
     # #### Objective function
+    ######################################################################################################################################################################
+    ######################################################################################################################################################################
+    # Objective function begin --------------------------------------------------------------------------------------------------------------------------------------------------
     
-    #Objective function
     def EQ_FObj            (m               ):
         return  (m.vSysCost)
     d['EQ_FObj']             = Objective (sense = minimize,       rule = EQ_FObj,            doc = 'Total system cost minimization objective function')
-    
-    # #### Constraints
-    
-    # Objective function-related constraints
-    
-    
+
+    # Where vSysCost is the total system cost [G€]
     def EQ_SysCost           (m        ):
         return m.vSysCost ==        (sum(m.vTotalCost      [sYear] for       sYear  in       m.sYear)  
                             +        sum(m.vPenalCost      [sYear] for       sYear  in       m.sYear)
@@ -485,46 +544,14 @@ def make_model():
                             )
     #G€
     d['EQ_SysCost']              = Constraint(                 rule = EQ_SysCost,             doc = 'Total System Cost [G€]')
-    
-    
-    def EQ_PenalCost           (m, sYear ):
-        return m.vPenalCost [sYear] ==  m.pYrGap * (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * 1e-2* m.pESNSCost * ( 
-                             + (1-m.pEmiCO2CapSectRestr) * (1 - m.pEmiCO2BudgetRestr) *      m.vEmiCO2CapExc   [sYear]
-                             +    m.pEmiCO2CapSectRestr  * (1 - m.pEmiCO2BudgetRestr) * sum((m.vEmiCO2CapTraExc[sYear] + m.vEmiCO2CapEleExc[sYear] + m.vEmiCO2CapIndTEExc[sYear] + m.vEmiCO2CapIndProExc[sYear] + m.vEmiCO2CapOthExc[sYear] + m.vEmiCO2CapRefExc[sYear]) for sYear in m.sYear)
-                             +                                                          sum((m.vEmiNOxCapExc   [sYear] + m.vEmiSOxCapExc   [sYear] + m.vEmiPM25CapExc    [sYear]                                                                                       ) for sYear in m.sYear)
-                            )
-    #G€
-    d['EQ_PenalCost']            = Constraint(m.sYear,         rule = EQ_PenalCost,           doc = 'Penalization Cost [G€]')
-    
-    
+
+        # Where vTotalCost is the annual total cost [G€]
     def EQ_TotalCost         (m, sYear        ):
-        return m.vTotalCost[sYear] ==  (1e-3*m.vOpCost[sYear]) + sum(m.vInvCostCE[sCE,sYear] for sCE in m.sCE) + sum(m.vInvCostST[sST,sYear] for sST in m.sST)
+        return m.vTotalCost[sYear] ==  (1e-3*m.vOpCost[sYear]) + sum(m.vInvCostCE[sCE,sYear] for sCE in m.sCE) + sum(m.vInvCostSTRes[sST_Res,sYear] for sST_Res in m.sST_Res) + sum(m.vInvCostSTTra[sST_Tra,sYear] for sST_Tra in m.sST_Tra) + sum(m.vInvCostSTInd[sST_Ind,sYear] for sST_Ind in m.sST_Ind) + sum(m.vInvCostSTOth[sST_Oth,sYear] for sST_Oth in m.sST_Oth)
     #G€
     d['EQ_TotalCost']            = Constraint(m.sYear,         rule = EQ_TotalCost,           doc = 'Annual Total Cost = Total Investment Cost + Total Operation Cost [G€]')
-    
-    
-    
-    def EQ_BMCost         (m, sBM,sYear        ):
-        return m.vBMCost[sBM,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
-                                        sum(m.pBMCost[sBM,sYear] * m.vBMTra[sST_Tra,sES_Tra,sSD_Tra,sBM,sYear] for (sST_Tra,sES_Tra,sSD_Tra) in m.sQSTESSD_Tra if sBM in m.sBM_Tra) 
-                                      + sum(m.pBMCost[sBM,sYear] * m.vBMOth[sES_Oth,sSD_Oth,sMD_Oth,sBM,sYear] for (sES_Oth,sSD_Oth,sMD_Oth) in m.sQESSDMD_Oth if sBM in m.sBM_Oth)
-                                      )
-    #G€
-    d['EQ_BMCost']               = Constraint(m.sBM,m.sYear,   rule = EQ_BMCost,              doc = 'Annual BM Cost [G€]')
-    
-    
-    
-    def EQ_DMCost         (m, sDM,sYear        ):
-        return m.vDMCost[sDM,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
-                                        sum(m.pDMCost          [sDM,             sYear] *  m.vDMTra   [sSD_Tra,sMD_Tra,sDM,sYear] for (sSD_Tra,sMD_Tra) in m.sQSDMD_Tra if sDM in m.sDM_Tra) 
-                                      + sum(m.pDMCost          [sDM,             sYear] * (m.vDMOth_HE[        sMD_Oth,sDM,sYear] 
-                                      -    (m.vDMOth_HE[sMD_Oth,sDM,m.sYear.prev(sYear)] if not sYear==m.sYear.first() else 0))   for  sMD_Oth          in m.sMD_Oth    if sDM in m.sDM_Oth)
-                                      )
-    #G€
-    d['EQ_DMCost']               = Constraint(m.sDM,m.sYear,   rule = EQ_DMCost,              doc = 'Annual DM Cost [G€]')
-    
-    
-    
+
+    # vInvCostCE is the annual total CE investment cost [G€]
     def EQ_InvCostCE         (m, sCE, sYear        ):
          return m.vInvCostCE[sCE,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
                                             m.pCECapex[sCE,sYear] * m.vCENewCap     [sCE,sYear] 
@@ -533,31 +560,65 @@ def make_model():
                                            ) *1e-3
     #G€
     d['EQ_InvCostCE']            = Constraint(m.sCE, m.sYear,  rule = EQ_InvCostCE,           doc = 'Annual Total CE Investment Cost [G€]')
-    
-    
-    def EQ_InvCostST         (m, sST, sYear        ):
-         return m.vInvCostST[sST,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
-                                            m.pSTCapex[sST,sYear] *     m.vSTNewCap     [sST,     sYear] 
-                                          + m.pSTDecom[sST,sYear] * sum(m.vSTDecCap     [sST,sVin,sYear] for sVin in m.sVin if (sVin,sYear) in m.sVinYear) 
+
+    # Where vInvCostSTTra is the annual total ST Tra Investment Cost [G€]
+    def EQ_InvCostSTTra      (m, sST_Tra, sYear        ):
+        return m.vInvCostSTTra[sST_Tra,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
+                                            m.pSTCapexTra[sST_Tra,sYear] *          m.vSTNewCapTra     [sST_Tra,     sYear]
+                                            + m.pSTDecomTra[sST_Tra,sYear] *    sum(m.vSTDecCapTra     [sST_Tra,sVin,sYear] for sVin in m.sVin if (sVin,sYear) in m.sVinYear)
+                                            ) *1e-3
+    #G€
+    d['EQ_InvCostSTTra']            = Constraint(m.sST_Tra, m.sYear,  rule = EQ_InvCostSTTra,           doc = 'Annual Total ST Tra Investment Cost [G€]')
+
+    # Where vInvCostSTInd is the annual total ST Ind Investment Cost [G€]
+    def EQ_InvCostSTInd      (m, sST_Ind, sYear        ):
+        return m.vInvCostSTInd[sST_Ind,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
+                                              m.pSTCapexInd[sST_Ind,sYear] *        m.vSTNewCapInd     [sST_Ind,     sYear]
+                                            + m.pSTDecomInd[sST_Ind,sYear] *    sum(m.vSTDecCapInd     [sST_Ind,sVin,sYear] for sVin in m.sVin if (sVin,sYear) in m.sVinYear)
+                                            ) *1e-3
+    #G€
+    d['EQ_InvCostSTInd']            = Constraint(m.sST_Ind, m.sYear,  rule = EQ_InvCostSTInd,           doc = 'Annual Total ST Ind Investment Cost [G€]')
+
+    # Where vInvCostSTOth is the annual total ST Oth Investment Cost [G€]
+    def EQ_InvCostSTOth      (m, sST_Oth, sYear        ):
+        return m.vInvCostSTOth[sST_Oth,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
+                                              m.pSTCapexOth[sST_Oth,sYear] *        m.vSTNewCapOth     [sST_Oth,     sYear]
+                                            + m.pSTDecomOth[sST_Oth,sYear] *    sum(m.vSTDecCapOth     [sST_Oth,sVin,sYear] for sVin in m.sVin if (sVin,sYear) in m.sVinYear)
+                                            ) *1e-3
+    #G€
+    d['EQ_InvCostSTOth']            = Constraint(m.sST_Oth, m.sYear,  rule = EQ_InvCostSTOth,           doc = 'Annual Total ST Oth Investment Cost [G€]')
+
+    # Where vInvCostSTRes is the annual total ST Res Investment Cost [G€]
+    def EQ_InvCostSTRes      (m, sST_Res,sYear        ):
+         return m.vInvCostSTRes[sST_Res,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
+                                            m.pSTCapexRes[sST_Res,sYear] *  sum(m.vSTNewCapRes     [sST_Res, sES_Res, sSD_Res, sMD_Res, sYear] for (sES_Res, sSD_Res, sMD_Res) in m.sES_Res*m.sSD_Res*m.sMD_Res if (sST_Res,sES_Res,sSD_Res,sMD_Res,sYear) in m.sQSTESSDMD_Res)
+                                          + m.pSTDecomRes[sST_Res,sYear] *  sum(sum(m.vSTDecCapRes     [sST_Res, sES_Res,sMD_Res,sSD_Res,sVin,sYear]        for (sVin) in m.sVin if (sVin,sYear) in m.sVinYear) for (sES_Res,sMD_Res,sSD_Res) in m.sES_Res*m.sMD_Res*m.sSD_Res if (sST_Res,sES_Res,sMD_Res,sSD_Res) in m.sQSTESSDMD_Res)
                                            ) *1e-3
     #G€
-    d['EQ_InvCostST']            = Constraint(m.sST, m.sYear,  rule = EQ_InvCostST,           doc = 'Annual Total ST Investment Cost [G€]')
-    
-    
+    d['EQ_InvCostSTRes']            = Constraint(m.sST_Res, m.sYear,  rule = EQ_InvCostSTRes,           doc = 'Annual Total ST Res Investment Cost [G€]')
+
+    # Where vOpCost is the annual total operation cost [G€]
+    # vOpCost is the annual total operation cost [M€]
     def EQ_OpCost         (m, sYear        ):
         return m.vOpCost[sYear] ==   m.pYrGap * (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) *(
                                     sum(m.pPECost [sPE,sYear] *    (m.vQPEImp  [sPE,             sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)                                                                                                                      
                             + 1e3 * sum(m.pCEFixom[sCE]       *     m.vCEActCap[sCE,             sYear                    ] for sCE                                          in m.sCE) 
                             + 1e3 * sum(m.pRMCost [sRM,sYear] *     m.vQSTInRM [sRM,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,sRM,sST,sES,sVin,sSeason,sDay,sHour)      in m.sQSTInRM_indexed[sYear])
-                            + 1e-3* sum(m.pSTFixom[sST      ] *     m.vSTTotCap[    sST,    sVin,sYear                   ]  for (_,sST,sVin)                                 in m.sQSTVin_indexed[sYear])
-                            + 1e-3* sum(m.pSTVarom[sST,sES  ] *    (m.vQSTOut  [    sST,sES,sVin,sYear,sSeason,sDay,sHour]) for (_,sST,sES,sVin,sSeason,sDay,sHour)          in m.sQSTOUT_VinTime_indexed[sYear]) 
+                            + 1e-3* sum(m.pSTFixomTra[sST_Tra      ] *     m.vSTTotCapTra[    sST_Tra,    sVin,sYear                    ]  for (_,sST_Tra,sVin)                                 in m.sQSTVinTra_indexed[sYear])
+                            + 1e-3* sum(m.pSTFixomOth[sST_Oth      ] *     m.vSTTotCapOth[    sST_Oth,    sVin,sYear                    ]  for (_,sST_Oth,sVin)                                 in m.sQSTVinOth_indexed[sYear])
+                            + 1e-3* sum(m.pSTFixomInd[sST_Ind      ] *     m.vSTTotCapInd[    sST_Ind,    sVin,sYear                    ]  for (_,sST_Ind,sVin)                                 in m.sQSTVinInd_indexed[sYear])
+                            + 1e-3* sum(m.pSTFixomRes[sST_Res      ] *     m.vSTTotCapRes[    sST_Res,sES_Res,sMD_Res,sSD_Res,sVin,sYear]  for (_,sST_Res,sES_Res,sMD_Res,sSD_Res,sVin)         in m.sQSTVinRes_indexed[sYear])
+                            + 1e-3* sum(m.pSTVaromTra[sST_Tra,sES_Tra] *    (m.vQSTOut_Tra  [    sST_Tra,sES_Tra,sVin,sYear,sSeason,sDay,sHour]) for (_,sST_Tra,sES_Tra,sVin,sSeason,sDay,sHour)          in m.sQSTOUTTra_VinTime_indexed[sYear]) 
+                            + 1e-3* sum(m.pSTVaromOth[sST_Oth,sES_Oth] *    (m.vQSTOut_Oth  [    sST_Oth,sES_Oth,sVin,sYear,sSeason,sDay,sHour]) for (_,sST_Oth,sES_Oth,sVin,sSeason,sDay,sHour)          in m.sQSTOUTOth_VinTime_indexed[sYear])
+                            + 1e-3* sum(m.pSTVaromInd[sST_Ind,sES_Ind] *    (m.vQSTOut_Ind  [    sST_Ind,sES_Ind,sVin,sYear,sSeason,sDay,sHour]) for (_,sST_Ind,sES_Ind,sVin,sSeason,sDay,sHour)          in m.sQSTOUTInd_VinTime_indexed[sYear])
+                            + 1e-3* sum(m.pSTVaromRes[sST_Res,sES_Res] *    (m.vQSTOut_Res  [    sST_Res,sES_Res,sSD_Res,sMD_Res,sVin,sYear,sSeason,sDay,sHour]) for (_,sST_Res,sES_Res,sSD_Res,sMD_Res,sVin,sSeason,sDay,sHour) in m.sQSTOUTRes_VinTime_indexed[sYear])
                            #+ 1e3*      m.pESNSCost           * sum(m.vQESNS   [sST,sES,         sYear,sSeason,sDay,sHour]  for (_,sST,sES,sSeason,sDay,sHour)               in m.sQSTOUT_Time_indexed[sYear])
                             +           m.vOpVarom[sYear]  
                             ) * 1e-3
     #M€
     d['EQ_OpCost']               = Constraint(m.sYear,         rule = EQ_OpCost,              doc = 'Annual Total Operation Cost [M€]')
-    
-    
+
+    # vOpVarom is the annual total operation variable cost [k€]
     def EQ_OpVarom         (m, sYear        ):
         return m.vOpVarom[sYear] ==  (
     
@@ -568,83 +629,113 @@ def make_model():
                                     )
     #k€
     d['EQ_OpVarom']              = Constraint(m.sYear,         rule = EQ_OpVarom,             doc = 'Annual Total Varom Cost [k€]')
-    
-    
-    # Primary energy (PE)-related constraints
-    
-    
+
+    # vPenalCost is the penalization cost [G€]
+    def EQ_PenalCost           (m, sYear ):
+        return m.vPenalCost [sYear] ==  m.pYrGap * (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * 1e-2* m.pESNSCost * ( 
+                             + (1-m.pEmiCO2CapSectRestr) * (1 - m.pEmiCO2BudgetRestr) *      m.vEmiCO2CapExc   [sYear]
+                             +    m.pEmiCO2CapSectRestr  * (1 - m.pEmiCO2BudgetRestr) * sum((m.vEmiCO2CapTraExc[sYear] + m.vEmiCO2CapEleExc[sYear] + m.vEmiCO2CapIndTEExc[sYear] + m.vEmiCO2CapIndProExc[sYear] + m.vEmiCO2CapOthExc[sYear] + m.vEmiCO2CapRefExc[sYear]) for sYear in m.sYear)
+                             +                                                          sum((m.vEmiNOxCapExc   [sYear] + m.vEmiSOxCapExc   [sYear] + m.vEmiPM25CapExc    [sYear]                                                                                       ) for sYear in m.sYear)
+                            )
+    #G€
+    d['EQ_PenalCost']            = Constraint(m.sYear,         rule = EQ_PenalCost,           doc = 'Penalization Cost [G€]')
+
+    # vBMCost is the annual BM cost [G€]
+    def EQ_BMCost         (m, sBM,sYear        ):
+        return m.vBMCost[sBM,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
+                                        sum(m.pBMCost[sBM,sYear] * m.vBMTra[sST_Tra,sES_Tra,sSD_Tra,sBM,sYear] for (sST_Tra,sES_Tra,sSD_Tra) in m.sQSTESSD_Tra if sBM in m.sBM_Tra) 
+                                      + sum(m.pBMCost[sBM,sYear] * m.vBMOth[sES_Res,sSD_Res,sMD_Res,sBM,sYear] for (sES_Res,sSD_Res,sMD_Res) in m.sQESSDMD_Res if sBM in m.sBM_Res)
+                                      )
+    #G€
+    d['EQ_BMCost']               = Constraint(m.sBM,m.sYear,   rule = EQ_BMCost,              doc = 'Annual BM Cost [G€]')
+
+    # vDMCost is the annual DM cost [G€]
+    def EQ_DMCost         (m, sDM,sYear        ):
+        return m.vDMCost[sDM,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
+                                        sum(m.pDMCost          [sDM,             sYear] *  m.vDMTra   [sSD_Tra,sMD_Tra,sDM,sYear] for (sSD_Tra,sMD_Tra) in m.sQSDMD_Tra if sDM in m.sDM_Tra) 
+                                      + sum(m.pDMCost          [sDM,             sYear] * (m.vDMRes_HE[        sMD_Res,sDM,sYear] 
+                                      -    (m.vDMRes_HE[sMD_Res,sDM,m.sYear.prev(sYear)] if not sYear==m.sYear.first() else 0))   for  sMD_Res          in m.sMD_Res    if sDM in m.sDM_Res)
+                                      )
+    #G€
+    d['EQ_DMCost']               = Constraint(m.sDM,m.sYear,   rule = EQ_DMCost,              doc = 'Annual DM Cost [G€]')
+
+    # Objective function end  --------------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Primary energy (PE)-related constraints begin --------------------------------------------------------------------------------------------------------------------------------------------------
+    # vQPEDom is the annual domestic PE production [GWh]
     def EQ_PEDomCap         (m, sPE, sYear, sSeason, sDay, sHour        ):
         return m.pPEDomCap [sPE] * m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] >= m.vQPEDom   [sPE,sYear,sSeason,sDay,sHour]
     #GWh
     d['EQ_PEDomCap']            = Constraint(m.sPE,m.sTime,         rule = EQ_PEDomCap,           doc = 'PE domestic production capacity [GWh]')
-    
-    
+
+    # vQPEImp is the annual imported PE [GWh]
     def EQ_PEImpCap         (m, sPE, sYear, sSeason, sDay, sHour        ):
         return m.pPEImpCap [sPE] * m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] >= m.vQPEImp [sPE,sYear,sSeason,sDay,sHour]
     #GWh
-    d['EQ_PEImpCap']            = Constraint(m.sPE,m.sTime,         rule = EQ_PEImpCap,           doc = 'PE importation capacity [GWh]')
-    
-    
+    d['EQ_PEImpCap']            = Constraint(m.sPE,m.sTime,         rule = EQ_PEImpCap,           doc = 'PE importation capacity [GWh]') 
+
+    # PE energy balance
     def EQ_PEBalance         (m, sPE, sYear, sSeason, sDay, sHour        ):
         return m.vQPEDom[sPE,sYear,sSeason,sDay,sHour] + m.vQPEImp[sPE,sYear,sSeason,sDay,sHour] == sum(m.vQCEPriIN[sPE,sCE,sYear,sSeason,sDay,sHour] for (_,sCE) in m.sQCEPriIN_indexed[sPE])
     #GWh
     d['EQ_PEBalance']           = Constraint(m.sPE,m.sTime,         rule = EQ_PEBalance,          doc = 'PE energy balance [GWh]')
-    
-    
-    # Primary Conversion Energy (CE_Pri)-related contraints
-    
-    
+    # Primary energy (PE)-related constraints end --------------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Primary Conversion Energy (CE_Pri)-related contraints begin --------------------------------------------------------------------------------------------------------------------------------------------------
+    # Balance for Primary CE techs (using PE commodities)
     def EQ_CEPriBalance         (m, sCEPri, sYear, sSeason, sDay, sHour        ):
         return (sum(((m.vQCEPriIN [sPE,sCEPri,sYear,sSeason,sDay,sHour] if (sPE,sCEPri) in m.sQCEPriIN  else 0) * (m.pCEPriEff[sPE, sCEPri] if (sPE,sCEPri) in m.sQCEPriIN else 0)) for sPE in m.sPE) 
             ==  sum(( m.vQCEPriOUT[sCEPri,sTE,sYear,sSeason,sDay,sHour] if (sCEPri,sTE) in m.sQCEPriOUT else 0)                                                                     for sTE in m.sTE))
     #GWh
     d['EQ_CEPriBalance']            = Constraint(m.sCEPri,m.sTime,         rule = EQ_CEPriBalance,           doc = 'Balance for Primary CE techs (using PE commodities) [GWh]')
-    
-    
+
+    # Lower bound for Primary CE output shares
     def EQ_CEPriOutShareMin         (m, sCEPri,sTE,sYear,sSeason,sDay,sHour        ):
         return m.vQCEPriOUT [sCEPri,sTE,sYear,sSeason,sDay,sHour] >=  m.pCEOutShareMin [sCEPri,sTE] * sum(m.vQCEPriOUT [sCEPri,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCEPriOUT_CE_indexed[sCEPri])
     #GWh
     d['EQ_CEPriOutShareMin']        = Constraint(m.sQCEPriOUT,m.sTime,     rule = EQ_CEPriOutShareMin,       doc = 'Minimum CE output shares restriction [GWh]')
-    
-    
+
+    # Upper bound for Primary CE output shares
     def EQ_CEPriOutShareMax         (m, sCEPri,sTE,sYear,sSeason,sDay,sHour        ):
         return m.pCEOutShareMax [sCEPri,sTE] * sum(m.vQCEPriOUT [sCEPri,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCEPriOUT_CE_indexed[sCEPri]) >= m.vQCEPriOUT [sCEPri,sTE,sYear,sSeason,sDay,sHour]
     #GWh
     d['EQ_CEPriOutShareMax']        = Constraint(m.sQCEPriOUT,m.sTime,     rule = EQ_CEPriOutShareMax,       doc = 'Maximum CE output shares restriction [GWh]')
-    
-    
-    # Secondary Conversion Energy (CE_Sec)-related constraints
-    
-    
+
+    # Primary Conversion Energy (CE_Pri)-related contraints end --------------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Secondary Conversion Energy (CE_Sec)-related constraints begin --------------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Balance for Secondary CE techs (using TE commodities)
     def EQ_CESecBalance         (m, sCESec,sYear,sSeason,sDay,sHour        ): 
         return (sum(((m.vQCESecIN [sTE,sCESec,sYear,sSeason,sDay,sHour] if (sTE,sCESec) in m.sQCESecIN  else 0) * (m.pCESecEff[sTE, sCESec] if (sTE, sCESec) in m.sQCESecIN else 0)) for sTE in m.sTE) 
            ==   sum(( m.vQCESecOUT[sCESec,sTE,sYear,sSeason,sDay,sHour] if (sCESec,sTE) in m.sQCESecOUT else 0)                                                                      for sTE in m.sTE))
     #GWh
     d['EQ_CESecBalance']            = Constraint(m.sCESec,m.sTime,         rule = EQ_CESecBalance,           doc = 'Balance for CE techs using TE commodities [GWh]')
-    
-    
+
+    # Lower bound for Secondary CE output shares
     def EQ_CESecOutShareMin         (m, sCESec,sTE,sYear,sSeason,sDay,sHour        ):
         return m.vQCESecOUT [sCESec,sTE,sYear,sSeason,sDay,sHour] >= m.pCEOutShareMin [sCESec,sTE] * sum(m.vQCESecOUT [sCESec,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCESecOUT_CE_indexed[sCESec])
     #GWh
     d['EQ_CESecOutShareMin']        = Constraint(m.sQCESecOUT,m.sTime,     rule = EQ_CESecOutShareMin,       doc = 'Minimum CE output shares restriction [GWh]')
-    
-    
+
+    # Upper bound for Secondary CE output shares
     def EQ_CESecOutShareMax         (m, sCESec,sTE,sYear,sSeason,sDay,sHour        ):
         return m.pCEOutShareMax[sCESec,sTE] * sum(m.vQCESecOUT [sCESec,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCESecOUT_CE_indexed[sCESec]) >= m.vQCESecOUT [sCESec,sTE,sYear,sSeason,sDay,sHour]
     #GWh
     d['EQ_CESecOutShareMax']        = Constraint(m.sQCESecOUT,m.sTime,     rule = EQ_CESecOutShareMax,       doc = 'Maximum CE output shares restriction [GWh]')
-    
-    
-    # Storage-related constraints
-    
-    
+
+    # Secondary Conversion Energy (CE_Sec)-related constraints end --------------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Storage-related constraints begin --------------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Balance for storage seasonal representative-day
     def EQ_CEStoBalance         (m, sCESto,sYear,sSeason        ):
         return (sum((m.vQCEStoIN [sTE,sCESto,sYear,sSeason,sDay,sHour] * (m.pCEStoEff[sTE, sCESto] if (sTE, sCESto) in m.sQCEStoIN else 0)) for (sTE,sDay,sHour) in m.sTE*m.sDay*m.sHour if ((sTE,sCESto) in m.sQCEStoIN ))
              == sum( m.vQCEStoOUT[sCESto,sTE,sYear,sSeason,sDay,sHour]                                                                      for (sTE,sDay,sHour) in m.sTE*m.sDay*m.sHour if  (sCESto,sTE) in m.sQCEStoOUT))
     #GWh (Seasonal balance)
     d['EQ_CEStoBalance']          = Constraint(m.sCESto,m.sYear,m.sSeason,  rule = EQ_CEStoBalance,         doc = 'Balance for storage seasonal representative-day [GWh]')
-    
-    
+
+    # Storage level calculation
     def EQ_CEStoLevel         (m, sCESto,sYear,sSeason,sDay,sHour        ):
         return           m.vCEStoLevel [    sCESto,    sYear,sSeason,  sDay,             sHour] ==(
                   +     (m.vCEStoLevel [    sCESto,    sYear,sSeason,  sDay,           m.sHour.prev(sHour)] if not sHour==m.sHour.first()                               else 0)  # if         h>00 --> level(d     , h-1   )
@@ -654,31 +745,30 @@ def make_model():
                   - sum(m.vQCEStoOUT   [    sCESto,sTE,sYear,sSeason,  sDay,             sHour            ]                                                                      for sTE in m.sTE if ((sCESto,sTE) in m.sQCEStoOUT)))
     #GWh
     d['EQ_CEStoLevel']            = Constraint(m.sCESto,m.sTime,            rule = EQ_CEStoLevel,           doc = 'Storage level calculation [GWh]')
-    
-    
+
+    # Minimum Storage output shares
     def EQ_CEStoOutShareMin         (m, sCESto,sTE,sYear,sSeason,sDay,sHour        ):
         return m.vQCEStoOUT  [sCESto,sTE,sYear,sSeason,sDay,sHour]                    >=  m.pCEOutShareMin [sCESto,sTE] * sum(m.vQCEStoOUT  [sCESto,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCEStoOUT_CE_indexed[sCESto])
     #GWh
     d['EQ_CEStoOutShareMin']      = Constraint(m.sQCEStoOUT,m.sTime,        rule = EQ_CEStoOutShareMin,     doc = 'Minimum Storage output shares [GWh]')
-    
-    
+
+    # Maximum Storage output shares
     def EQ_CEStoOutShareMax         (m, sCESto,sTE,sYear,sSeason,sDay,sHour        ):
         return m.pCEOutShareMax [sCESto,sTE] * sum(m.vQCEStoOUT  [sCESto,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCEStoOUT_CE_indexed[sCESto]) >= m.vQCEStoOUT [sCESto,sTE,sYear,sSeason,sDay,sHour]
     #GWh
     d['EQ_CEStoOutShareMax']      = Constraint(m.sQCEStoOUT,m.sTime,        rule = EQ_CEStoOutShareMax,     doc = 'Maximum Storage output shares [GWh]')
-    
-    
+
+    # Storage maximum level restriction
     def EQ_CEStoMaxSto         (m, sCESto,sYear,sSeason,sDay,sHour        ):
         return m.pCEStoCap [sCESto] >= m.vCEStoLevel [sCESto,sYear,sSeason,sDay,sHour]
     #GWh
     d['EQ_CEStoMaxSto']           = Constraint(m.sCESto,m.sTime,            rule = EQ_CEStoMaxSto,          doc = 'Storage maximum level restriction [GWh]')
     
+    # Storage-related constraints end --------------------------------------------------------------------------------------------------------------------------------------------------
     
-    # Transported Energy (TE)-related constraints
-    
-    
-    # TE
-    
+    # Transformed Energy (TE)-related constraints begin --------------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Balance for TE
     def EQ_TEBalance             (m, sTE,sYear,sSeason,sDay,sHour  ):
               
         return  (quicksum(m.vQCEPriOUT [sCE,sTE,         sYear,sSeason,sDay,sHour] for (_,sCE)            in m.sQCEPriOUT_indexed[sTE]       ) 
@@ -687,11 +777,14 @@ def make_model():
                - quicksum(m.vQCESecIN  [sTE,sCE,         sYear,sSeason,sDay,sHour] for (_,sCE)            in m.sQCESecIN_indexed [sTE]       ) 
                - quicksum(m.vQCEStoIN  [sTE,sCE,         sYear,sSeason,sDay,sHour] for (_,sCE)            in m.sQCEStoIN_indexed [sTE]       )     
                -          m.vQTELoss   [sTE,             sYear,sSeason,sDay,sHour] 
-              >= quicksum(m.vQSTInTE   [sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour] for (_,_,sST,sES,sVin) in m.sSTESVin_indexed  [sTE, sYear]))
+              >= quicksum(m.vQSTTraInTE   [sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour] for (_,_,sST,sES,sVin) in m.sSTTraESVin_indexed  [sTE, sYear])
+               + quicksum(m.vQSTOthInTE   [sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour] for (_,_,sST,sES,sVin) in m.sSTOthESVin_indexed  [sTE, sYear])
+               + quicksum(m.vQSTIndInTE   [sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour] for (_,_,sST,sES,sVin) in m.sSTIndESVin_indexed  [sTE, sYear])
+               + quicksum(m.vQSTResInTE   [sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour] for (_,_,sST,sES,sVin) in m.sSTResESVin_indexed  [sTE, sYear]))
     #GWh
     d['EQ_TEBalance']            = Constraint(m.sTE,m.sTime,         rule = EQ_TEBalance,           doc = 'Balance for TE [GWh]')
-    
-    
+   
+    # TE losses for transportation processes
     def EQ_TELoss         (m, sTE,sYear,sSeason,sDay,sHour        ):
         return  (m.vQTELoss [sTE,sYear,sSeason,sDay,sHour]  ==  m.pTELoss[sTE] * (
                                                             sum(m.vQCEPriOUT [sCE,sTE,sYear,sSeason,sDay,sHour] for (_,sCE) in m.sQCEPriOUT_indexed[sTE]) 
@@ -699,41 +792,55 @@ def make_model():
                                                           + sum(m.vQCEStoOUT [sCE,sTE,sYear,sSeason,sDay,sHour] for (_,sCE) in m.sQCEStoOUT_indexed[sTE])))
     #GWh
     d['EQ_TELoss']               = Constraint(m.sTE,m.sTime,         rule = EQ_TELoss,              doc = 'TE losses for transportation processes [GWh]')
-    
-    
-    # Supply Technologies (ST)-related constraints
-    
-    
+
+    # Transformed Energy (TE)-related constraints end --------------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Supply Technologies (ST)-related constraints begin --------------------------------------------------------------------------------------------------------------------------------------------------
+    # ST Transport consumption of TE
     def EQ_STBalanceTE_Tra         (m, sST_Tra,sES_Tra,sVin,sYear,sSeason,sDay,sHour        ):
-        return sum((m.vQSTInTE [sTE,sST_Tra,sES_Tra,sVin,sYear,sSeason,sDay,sHour] / m.pSTEffTE[sST_Tra,sES_Tra,sTE,sVin]) for (_,_,sTE) in m.sQTESTES_STES_indexed[sST_Tra,sES_Tra]) == m.vQSTOut [sST_Tra,sES_Tra,sVin,sYear,sSeason,sDay,sHour]
+        return sum((m.vQSTTraInTE [sTE,sST_Tra,sES_Tra,sVin,sYear,sSeason,sDay,sHour] / m.pSTEffTE[sST_Tra,sES_Tra,sTE,sVin]) for (_,_,sTE) in m.sQTESTES_STES_indexed[sST_Tra,sES_Tra]) == m.vQSTOut_Tra [sST_Tra,sES_Tra,sVin,sYear,sSeason,sDay,sHour]
     #ES units
-    d['EQ_STBalanceTE_Tra']            = Constraint(m.sQSTOUT_Tra,m.sVinTime,         rule = EQ_STBalanceTE_Tra,           doc = 'Balance for ST consumption of TE [ES units]')
-    
-    
+    d['EQ_STBalanceTE_Tra']            = Constraint(m.sQSTOUT_Tra,m.sVinTime,         rule = EQ_STBalanceTE_Tra,           doc = 'Balance for ST Tra consumption of TE [ES units]')
+
+    # ST Other consumption of TE
     def EQ_STBalanceTE_Oth         (m, sST_Oth,sES_Oth,sVin,sYear,sSeason,sDay,sHour        ):
-        return sum((m.vQSTInTE [sTE,sST_Oth,sES_Oth,sVin,sYear,sSeason,sDay,sHour] / m.pSTEffTE[sST_Oth,sES_Oth,sTE,sVin]) for (_,_,sTE) in m.sQTESTES_STES_indexed[sST_Oth,sES_Oth]) == m.vQSTOut [sST_Oth,sES_Oth,sVin,sYear,sSeason,sDay,sHour]
+        return sum((m.vQSTOthInTE [sTE,sST_Oth,sES_Oth,sVin,sYear,sSeason,sDay,sHour] / m.pSTEffTE[sST_Oth,sES_Oth,sTE,sVin]) for (_,_,sTE) in m.sQTESTES_STES_indexed[sST_Oth,sES_Oth]) == m.vQSTOut_Oth [sST_Oth,sES_Oth,sVin,sYear,sSeason,sDay,sHour]
     #ES units
-    d['EQ_STBalanceTE_Oth']            = Constraint(m.sQSTOUT_Oth,m.sVinTime,         rule = EQ_STBalanceTE_Oth,           doc = 'Balance for ST consumption of TE [ES units]')
-    
-    
+    d['EQ_STBalanceTE_Oth']            = Constraint(m.sQSTOUT_Oth,m.sVinTime,         rule = EQ_STBalanceTE_Oth,           doc = 'Balance for ST Oth consumption of TE [ES units]')
+
+    # ST Industry consumption of TE
     def EQ_STBalanceTE_Ind     (m, sTE, sST_Ind,sES_Ind,sVin,sYear,sSeason,sDay,sHour        ):
-        return  m.vQSTInTE [sTE,sST_Ind,sES_Ind,sVin,sYear,sSeason,sDay,sHour] / m.pSTEffTE[sST_Ind,sES_Ind,sTE,sVin] == m.vQSTOut [sST_Ind,sES_Ind,sVin,sYear,sSeason,sDay,sHour]
+        return  m.vQSTIndInTE [sTE,sST_Ind,sES_Ind,sVin,sYear,sSeason,sDay,sHour] / m.pSTEffTE[sST_Ind,sES_Ind,sTE,sVin] == m.vQSTOut_Ind [sST_Ind,sES_Ind,sVin,sYear,sSeason,sDay,sHour]
     #ES units
-    d['EQ_STBalanceTE_Ind']            = Constraint(m.sQTESTES_Ind,m.sVinTime,        rule = EQ_STBalanceTE_Ind,           doc = 'Balance for ST consumption of TE [ES units]')
-    
-    
+    d['EQ_STBalanceTE_Ind']            = Constraint(m.sQTESTES_Ind,m.sVinTime,        rule = EQ_STBalanceTE_Ind,           doc = 'Balance for ST Ind consumption of TE [ES units]')
+
+    # ST Residential consumption of TE
+    def EQ_STBalanceTE_Res     (m,sTE, sST_Res,sES_Res,sVin,sYear,sSeason,sDay,sHour        ):
+        return  sum(m.vQSTResInTE [sTE,sST_Res,sES_Res,sVin,sYear,sSeason,sDay,sHour] / m.pSTEffTE[sST_Res,sES_Res,sTE,sVin] for (_,_,sTE) in m.sQTESTES_STES_indexed[sST_Res,sES_Res]) == m.vQSTOut_Res [sST_Res,sES_Res,sVin,sYear,sSeason,sDay,sHour]
+    #ES units
+    d['EQ_STBalanceTE_Res']            = Constraint(m.sQSTOUT_Res,m.sVinTime,        rule = EQ_STBalanceTE_Res,           doc = 'Balance for ST Res consumption of TE [ES units]')
+
+    # Minimum ST output shares restriction
     def EQ_STOutShareMin         (m, sST,sES,sVin,sYear,sSeason,sDay,sHour        ):
         return m.vQSTOut [sST,sES,sVin,sYear,sSeason,sDay,sHour] >= m.pSTOutShareMin [sST,sES] * sum(m.vQSTOut [sST,sES,sVin,sYear,sSeason,sDay,sHour] for (_,sES) in m.sQSTOUT_indexed[sST])
     #GWh
     d['EQ_STOutShareMin']              = Constraint(m.sQSTOUT,m.sVinTime,             rule = EQ_STOutShareMin,             doc = 'Minimum ST output shares restriction [ES units]')
-    
-    
+
+    # Maximum ST output shares restriction
     def EQ_STOutShareMax         (m, sST,sES,sVin,sYear,sSeason,sDay,sHour        ):
         return m.pSTOutShareMax[sST,sES] * sum(m.vQSTOut [sST,sES,sVin,sYear,sSeason,sDay,sHour] for (_,sES) in m.sQSTOUT_indexed[sST]) >= m.vQSTOut [sST,sES,sVin,sYear,sSeason,sDay,sHour]
     #GWh
     d['EQ_STOutShareMax']              = Constraint(m.sQSTOUT,m.sVinTime,             rule = EQ_STOutShareMax,             doc = 'Maximum ES output shares restriction [ES units]')
-    
-    
+    # Supply Technologies (ST)-related constraints end --------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    ######################################################################################################################################################################
+    ######################################################################################################################################################################
+
+    ######################################################################################################################################################################
+    ######################################################################################################################################################################
+ 
+
     # Transport modal shift constraints
     
     
@@ -742,57 +849,57 @@ def make_model():
     
     def EQ_MinMS_Car         (m, sSD_Tra_Car,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_Car,sES_Tra,sYear] * m.pAFTra[sST_Tra_Car,sES_Tra,sSD_Tra_Car]) for (_,sES_Tra,sST_Tra_Car) in m.sQSTOUT_AFTraCar_indexed[sSD_Tra_Car])/sum(m.pDC[sSD_Tra_Car,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Car])) >= 1e4*(sum((m.vQES[sST_Tra_Car,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Car,sES_Tra,sSD_Tra_Car]) for (_,sES_Tra,sST_Tra_Car) in m.sQSTOUT_AFTraCar_indexed[sSD_Tra_Car])/sum(m.pDC[sSD_Tra_Car,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Car])) - 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Car,sES_Tra,sYear] * m.pAFTra[sST_Tra_Car,sES_Tra,sSD_Tra_Car]) for (_,sES_Tra,sST_Tra_Car) in m.sQSTOUT_AFTraCar_indexed[sSD_Tra_Car])/sum(m.pDC[sSD_Tra_Car,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Car])) >= 1e4*(sum((m.vQES_Tra[sST_Tra_Car,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Car,sES_Tra,sSD_Tra_Car]) for (_,sES_Tra,sST_Tra_Car) in m.sQSTOUT_AFTraCar_indexed[sSD_Tra_Car])/sum(m.pDC[sSD_Tra_Car,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Car])) - 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_Car,sES_Tra,sYear] * m.pAFTra[sST_Tra_Car,sES_Tra,sSD_Tra_Car]) for (_,sES_Tra,sST_Tra_Car) in m.sQSTOUT_AFTraCar_indexed[sSD_Tra_Car])/sum(m.pDC[sSD_Tra_Car,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Car])) >= 1e4*m.pSTTra_MS['Car',sSD_Tra_Car]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Car,sES_Tra,sYear] * m.pAFTra[sST_Tra_Car,sES_Tra,sSD_Tra_Car]) for (_,sES_Tra,sST_Tra_Car) in m.sQSTOUT_AFTraCar_indexed[sSD_Tra_Car])/sum(m.pDC[sSD_Tra_Car,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Car])) >= 1e4*m.pSTTra_MS['Car',sSD_Tra_Car]
     #GWh
     d['EQ_MinMS_Car']            = Constraint(m.sSD_Tra_Car, m.sYear,        rule = EQ_MinMS_Car,           doc = 'Minimum ST output shares restriction [ES units]')
     
     def EQ_MinMS_Bus         (m, sSD_Tra_Bus,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_Bus,sES_Tra,sYear] * m.pAFTra[sST_Tra_Bus,sES_Tra,sSD_Tra_Bus]) for (_,sES_Tra,sST_Tra_Bus) in m.sQSTOUT_AFTraBus_indexed[sSD_Tra_Bus])/sum(m.pDC[sSD_Tra_Bus,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Bus])) >= 1e4*( (sum((m.vQES[sST_Tra_Bus,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Bus,sES_Tra,sSD_Tra_Bus]) for (_,sES_Tra,sST_Tra_Bus) in m.sQSTOUT_AFTraBus_indexed[sSD_Tra_Bus])/sum(m.pDC[sSD_Tra_Bus,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Bus]))) - 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Bus,sES_Tra,sYear] * m.pAFTra[sST_Tra_Bus,sES_Tra,sSD_Tra_Bus]) for (_,sES_Tra,sST_Tra_Bus) in m.sQSTOUT_AFTraBus_indexed[sSD_Tra_Bus])/sum(m.pDC[sSD_Tra_Bus,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Bus])) >= 1e4*( (sum((m.vQES_Tra[sST_Tra_Bus,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Bus,sES_Tra,sSD_Tra_Bus]) for (_,sES_Tra,sST_Tra_Bus) in m.sQSTOUT_AFTraBus_indexed[sSD_Tra_Bus])/sum(m.pDC[sSD_Tra_Bus,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Bus]))) - 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_Bus,sES_Tra,sYear] * m.pAFTra[sST_Tra_Bus,sES_Tra,sSD_Tra_Bus]) for (_,sES_Tra,sST_Tra_Bus) in m.sQSTOUT_AFTraBus_indexed[sSD_Tra_Bus])/sum(m.pDC[sSD_Tra_Bus,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Bus])) >= 1e4*m.pSTTra_MS['Bus',sSD_Tra_Bus]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Bus,sES_Tra,sYear] * m.pAFTra[sST_Tra_Bus,sES_Tra,sSD_Tra_Bus]) for (_,sES_Tra,sST_Tra_Bus) in m.sQSTOUT_AFTraBus_indexed[sSD_Tra_Bus])/sum(m.pDC[sSD_Tra_Bus,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Bus])) >= 1e4*m.pSTTra_MS['Bus',sSD_Tra_Bus]
     #GWh
     d['EQ_MinMS_Bus']            = Constraint(m.sSD_Tra_Bus, m.sYear,        rule = EQ_MinMS_Bus,           doc = 'Minimum ST output shares restriction [ES units]')
     
     def EQ_MinMS_Moped         (m, sSD_Tra_Moped,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_Moped,sES_Tra,sYear] * m.pAFTra[sST_Tra_Moped,sES_Tra,sSD_Tra_Moped]) for (_,sES_Tra,sST_Tra_Moped) in m.sQSTOUT_AFTraMoped_indexed[sSD_Tra_Moped])/sum(m.pDC[sSD_Tra_Moped,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Moped])) >= 1e4*((sum((m.vQES[sST_Tra_Moped,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Moped,sES_Tra,sSD_Tra_Moped]) for (_,sES_Tra,sST_Tra_Moped) in m.sQSTOUT_AFTraMoped_indexed[sSD_Tra_Moped])/sum(m.pDC[sSD_Tra_Moped,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Moped]))) - 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Moped,sES_Tra,sYear] * m.pAFTra[sST_Tra_Moped,sES_Tra,sSD_Tra_Moped]) for (_,sES_Tra,sST_Tra_Moped) in m.sQSTOUT_AFTraMoped_indexed[sSD_Tra_Moped])/sum(m.pDC[sSD_Tra_Moped,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Moped])) >= 1e4*((sum((m.vQES_Tra[sST_Tra_Moped,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Moped,sES_Tra,sSD_Tra_Moped]) for (_,sES_Tra,sST_Tra_Moped) in m.sQSTOUT_AFTraMoped_indexed[sSD_Tra_Moped])/sum(m.pDC[sSD_Tra_Moped,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Moped]))) - 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_Moped,sES_Tra,sYear] * m.pAFTra[sST_Tra_Moped,sES_Tra,sSD_Tra_Moped]) for (_,sES_Tra,sST_Tra_Moped) in m.sQSTOUT_AFTraMoped_indexed[sSD_Tra_Moped])/sum(m.pDC[sSD_Tra_Moped,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Moped])) >= 1e4*m.pSTTra_MS['Moped',sSD_Tra_Moped]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Moped,sES_Tra,sYear] * m.pAFTra[sST_Tra_Moped,sES_Tra,sSD_Tra_Moped]) for (_,sES_Tra,sST_Tra_Moped) in m.sQSTOUT_AFTraMoped_indexed[sSD_Tra_Moped])/sum(m.pDC[sSD_Tra_Moped,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Moped])) >= 1e4*m.pSTTra_MS['Moped',sSD_Tra_Moped]
     #GWh
     d['EQ_MinMS_Moped']          = Constraint(m.sSD_Tra_Moped, m.sYear,      rule = EQ_MinMS_Moped,         doc = 'Minimum ST output shares restriction [ES units]')
     
     def EQ_MinMS_IntRail         (m, sSD_Tra_IntRail,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_IntRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_IntRail,sES_Tra,sSD_Tra_IntRail]) for (_,sES_Tra,sST_Tra_IntRail) in m.sQSTOUT_AFTraIntRail_indexed[sSD_Tra_IntRail])/sum(m.pDC[sSD_Tra_IntRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_IntRail])) >= 1e4*( (sum((m.vQES[sST_Tra_IntRail,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_IntRail,sES_Tra,sSD_Tra_IntRail]) for (_,sES_Tra,sST_Tra_IntRail) in m.sQSTOUT_AFTraIntRail_indexed[sSD_Tra_IntRail])/sum(m.pDC[sSD_Tra_IntRail,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_IntRail]))) - 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_IntRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_IntRail,sES_Tra,sSD_Tra_IntRail]) for (_,sES_Tra,sST_Tra_IntRail) in m.sQSTOUT_AFTraIntRail_indexed[sSD_Tra_IntRail])/sum(m.pDC[sSD_Tra_IntRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_IntRail])) >= 1e4*( (sum((m.vQES_Tra[sST_Tra_IntRail,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_IntRail,sES_Tra,sSD_Tra_IntRail]) for (_,sES_Tra,sST_Tra_IntRail) in m.sQSTOUT_AFTraIntRail_indexed[sSD_Tra_IntRail])/sum(m.pDC[sSD_Tra_IntRail,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_IntRail]))) - 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_IntRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_IntRail,sES_Tra,sSD_Tra_IntRail]) for (_,sES_Tra,sST_Tra_IntRail) in m.sQSTOUT_AFTraIntRail_indexed[sSD_Tra_IntRail])/sum(m.pDC[sSD_Tra_IntRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_IntRail])) >= 1e4*m.pSTTra_MS['IntRail',sSD_Tra_IntRail]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_IntRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_IntRail,sES_Tra,sSD_Tra_IntRail]) for (_,sES_Tra,sST_Tra_IntRail) in m.sQSTOUT_AFTraIntRail_indexed[sSD_Tra_IntRail])/sum(m.pDC[sSD_Tra_IntRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_IntRail])) >= 1e4*m.pSTTra_MS['IntRail',sSD_Tra_IntRail]
     #GWh
     d['EQ_MinMS_IntRail']        = Constraint(m.sSD_Tra_IntRail, m.sYear,    rule = EQ_MinMS_IntRail,       doc = 'Minimum ST output shares restriction [ES units]')
     
     def EQ_MinMS_UrbanRail         (m, sSD_Tra_UrbanRail,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_UrbanRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_UrbanRail,sES_Tra,sSD_Tra_UrbanRail]) for (_,sES_Tra,sST_Tra_UrbanRail) in m.sQSTOUT_AFTraUrbRail_indexed[sSD_Tra_UrbanRail])/sum(m.pDC[sSD_Tra_UrbanRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_UrbanRail])) >= 1e4*( (sum((m.vQES[sST_Tra_UrbanRail,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_UrbanRail,sES_Tra,sSD_Tra_UrbanRail]) for (_,sES_Tra,sST_Tra_UrbanRail) in m.sQSTOUT_AFTraUrbRail_indexed[sSD_Tra_UrbanRail])/sum(m.pDC[sSD_Tra_UrbanRail,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_UrbanRail]))) - 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_UrbanRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_UrbanRail,sES_Tra,sSD_Tra_UrbanRail]) for (_,sES_Tra,sST_Tra_UrbanRail) in m.sQSTOUT_AFTraUrbRail_indexed[sSD_Tra_UrbanRail])/sum(m.pDC[sSD_Tra_UrbanRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_UrbanRail])) >= 1e4*( (sum((m.vQES_Tra[sST_Tra_UrbanRail,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_UrbanRail,sES_Tra,sSD_Tra_UrbanRail]) for (_,sES_Tra,sST_Tra_UrbanRail) in m.sQSTOUT_AFTraUrbRail_indexed[sSD_Tra_UrbanRail])/sum(m.pDC[sSD_Tra_UrbanRail,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_UrbanRail]))) - 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_UrbanRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_UrbanRail,sES_Tra,sSD_Tra_UrbanRail]) for (_,sES_Tra,sST_Tra_UrbanRail) in m.sQSTOUT_AFTraUrbRail_indexed[sSD_Tra_UrbanRail])/sum(m.pDC[sSD_Tra_UrbanRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_UrbanRail])) >= 1e4*m.pSTTra_MS['UrbanRail',sSD_Tra_UrbanRail]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_UrbanRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_UrbanRail,sES_Tra,sSD_Tra_UrbanRail]) for (_,sES_Tra,sST_Tra_UrbanRail) in m.sQSTOUT_AFTraUrbRail_indexed[sSD_Tra_UrbanRail])/sum(m.pDC[sSD_Tra_UrbanRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_UrbanRail])) >= 1e4*m.pSTTra_MS['UrbanRail',sSD_Tra_UrbanRail]
     #GWh
     d['EQ_MinMS_UrbanRail']      = Constraint(m.sSD_Tra_UrbanRail, m.sYear,  rule = EQ_MinMS_UrbanRail,     doc = 'Minimum ST output shares restriction [ES units]')
     
     def EQ_MinMS_Air         (m, sSD_Tra_Air,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_Air,sES_Tra,sYear] * m.pAFTra[sST_Tra_Air,sES_Tra,sSD_Tra_Air]) for (_,sES_Tra,sST_Tra_Air) in m.sQSTOUT_AFTraAir_indexed[sSD_Tra_Air])/sum(m.pDC[sSD_Tra_Air,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Air])) >= 1e4*( (sum((m.vQES[sST_Tra_Air,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Air,sES_Tra,sSD_Tra_Air]) for (_,sES_Tra,sST_Tra_Air) in m.sQSTOUT_AFTraAir_indexed[sSD_Tra_Air])/sum(m.pDC[sSD_Tra_Air,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Air]))) - 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Air,sES_Tra,sYear] * m.pAFTra[sST_Tra_Air,sES_Tra,sSD_Tra_Air]) for (_,sES_Tra,sST_Tra_Air) in m.sQSTOUT_AFTraAir_indexed[sSD_Tra_Air])/sum(m.pDC[sSD_Tra_Air,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Air])) >= 1e4*( (sum((m.vQES_Tra[sST_Tra_Air,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Air,sES_Tra,sSD_Tra_Air]) for (_,sES_Tra,sST_Tra_Air) in m.sQSTOUT_AFTraAir_indexed[sSD_Tra_Air])/sum(m.pDC[sSD_Tra_Air,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Air]))) - 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_Air,sES_Tra,sYear] * m.pAFTra[sST_Tra_Air,sES_Tra,sSD_Tra_Air]) for (_,sES_Tra,sST_Tra_Air) in m.sQSTOUT_AFTraAir_indexed[sSD_Tra_Air])/sum(m.pDC[sSD_Tra_Air,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Air])) >= 1e4*m.pSTTra_MS['Air',sSD_Tra_Air]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Air,sES_Tra,sYear] * m.pAFTra[sST_Tra_Air,sES_Tra,sSD_Tra_Air]) for (_,sES_Tra,sST_Tra_Air) in m.sQSTOUT_AFTraAir_indexed[sSD_Tra_Air])/sum(m.pDC[sSD_Tra_Air,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Air])) >= 1e4*m.pSTTra_MS['Air',sSD_Tra_Air]
     #GWh
     d['EQ_MinMS_Air']            = Constraint(m.sSD_Tra_Air, m.sYear,        rule = EQ_MinMS_Air,           doc = 'Minimum ST output shares restriction [ES units]')
     
     def EQ_MinMS_Sea         (m, sSD_Tra_Sea,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_Sea,sES_Tra,sYear] * m.pAFTra[sST_Tra_Sea,sES_Tra,sSD_Tra_Sea]) for (_,sES_Tra,sST_Tra_Sea) in m.sQSTOUT_AFTraSea_indexed[sSD_Tra_Sea])/sum(m.pDC[sSD_Tra_Sea,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Sea])) >= 1e4*( (sum((m.vQES[sST_Tra_Sea,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Sea,sES_Tra,sSD_Tra_Sea]) for (_,sES_Tra,sST_Tra_Sea) in m.sQSTOUT_AFTraSea_indexed[sSD_Tra_Sea])/sum(m.pDC[sSD_Tra_Sea,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Sea]))) - 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Sea,sES_Tra,sYear] * m.pAFTra[sST_Tra_Sea,sES_Tra,sSD_Tra_Sea]) for (_,sES_Tra,sST_Tra_Sea) in m.sQSTOUT_AFTraSea_indexed[sSD_Tra_Sea])/sum(m.pDC[sSD_Tra_Sea,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Sea])) >= 1e4*( (sum((m.vQES_Tra[sST_Tra_Sea,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Sea,sES_Tra,sSD_Tra_Sea]) for (_,sES_Tra,sST_Tra_Sea) in m.sQSTOUT_AFTraSea_indexed[sSD_Tra_Sea])/sum(m.pDC[sSD_Tra_Sea,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Sea]))) - 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_Sea,sES_Tra,sYear] * m.pAFTra[sST_Tra_Sea,sES_Tra,sSD_Tra_Sea]) for (_,sES_Tra,sST_Tra_Sea) in m.sQSTOUT_AFTraSea_indexed[sSD_Tra_Sea])/sum(m.pDC[sSD_Tra_Sea,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Sea])) >= 1e4*m.pSTTra_MS['Sea',sSD_Tra_Sea]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Sea,sES_Tra,sYear] * m.pAFTra[sST_Tra_Sea,sES_Tra,sSD_Tra_Sea]) for (_,sES_Tra,sST_Tra_Sea) in m.sQSTOUT_AFTraSea_indexed[sSD_Tra_Sea])/sum(m.pDC[sSD_Tra_Sea,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Sea])) >= 1e4*m.pSTTra_MS['Sea',sSD_Tra_Sea]
     #GWh
     d['EQ_MinMS_Sea']            = Constraint(m.sSD_Tra_Sea, m.sYear,        rule = EQ_MinMS_Sea,           doc = 'Minimum ST output shares restriction [ES units]')
     
@@ -801,142 +908,162 @@ def make_model():
     
     def EQ_MaxMS_Car         (m, sSD_Tra_Car,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_Car,sES_Tra,sYear] * m.pAFTra[sST_Tra_Car,sES_Tra,sSD_Tra_Car]) for (_,sES_Tra,sST_Tra_Car) in m.sQSTOUT_AFTraCar_indexed[sSD_Tra_Car])/sum(m.pDC[sSD_Tra_Car,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Car])) <= 1e4*(sum((m.vQES[sST_Tra_Car,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Car,sES_Tra,sSD_Tra_Car]) for (_,sES_Tra,sST_Tra_Car) in m.sQSTOUT_AFTraCar_indexed[sSD_Tra_Car])/sum(m.pDC[sSD_Tra_Car,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Car])) + 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Car,sES_Tra,sYear] * m.pAFTra[sST_Tra_Car,sES_Tra,sSD_Tra_Car]) for (_,sES_Tra,sST_Tra_Car) in m.sQSTOUT_AFTraCar_indexed[sSD_Tra_Car])/sum(m.pDC[sSD_Tra_Car,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Car])) <= 1e4*(sum((m.vQES_Tra[sST_Tra_Car,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Car,sES_Tra,sSD_Tra_Car]) for (_,sES_Tra,sST_Tra_Car) in m.sQSTOUT_AFTraCar_indexed[sSD_Tra_Car])/sum(m.pDC[sSD_Tra_Car,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Car])) + 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_Car,sES_Tra,sYear] * m.pAFTra[sST_Tra_Car,sES_Tra,sSD_Tra_Car]) for (_,sES_Tra,sST_Tra_Car) in m.sQSTOUT_AFTraCar_indexed[sSD_Tra_Car])/sum(m.pDC[sSD_Tra_Car,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Car])) <= 1e4*m.pSTTra_MS['Car',sSD_Tra_Car]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Car,sES_Tra,sYear] * m.pAFTra[sST_Tra_Car,sES_Tra,sSD_Tra_Car]) for (_,sES_Tra,sST_Tra_Car) in m.sQSTOUT_AFTraCar_indexed[sSD_Tra_Car])/sum(m.pDC[sSD_Tra_Car,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Car])) <= 1e4*m.pSTTra_MS['Car',sSD_Tra_Car]
     #GWh
     d['EQ_MaxMS_Car']            = Constraint(m.sSD_Tra_Car, m.sYear,        rule = EQ_MaxMS_Car,           doc = 'Minimum ST output shares restriction [ES units]')
     
     def EQ_MaxMS_Bus         (m, sSD_Tra_Bus,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_Bus,sES_Tra,sYear] * m.pAFTra[sST_Tra_Bus,sES_Tra,sSD_Tra_Bus]) for (_,sES_Tra,sST_Tra_Bus) in m.sQSTOUT_AFTraBus_indexed[sSD_Tra_Bus])/sum(m.pDC[sSD_Tra_Bus,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Bus])) <= 1e4*( (sum((m.vQES[sST_Tra_Bus,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Bus,sES_Tra,sSD_Tra_Bus]) for (_,sES_Tra,sST_Tra_Bus) in m.sQSTOUT_AFTraBus_indexed[sSD_Tra_Bus])/sum(m.pDC[sSD_Tra_Bus,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Bus]))) + 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Bus,sES_Tra,sYear] * m.pAFTra[sST_Tra_Bus,sES_Tra,sSD_Tra_Bus]) for (_,sES_Tra,sST_Tra_Bus) in m.sQSTOUT_AFTraBus_indexed[sSD_Tra_Bus])/sum(m.pDC[sSD_Tra_Bus,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Bus])) <= 1e4*( (sum((m.vQES_Tra[sST_Tra_Bus,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Bus,sES_Tra,sSD_Tra_Bus]) for (_,sES_Tra,sST_Tra_Bus) in m.sQSTOUT_AFTraBus_indexed[sSD_Tra_Bus])/sum(m.pDC[sSD_Tra_Bus,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Bus]))) + 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_Bus,sES_Tra,sYear] * m.pAFTra[sST_Tra_Bus,sES_Tra,sSD_Tra_Bus]) for (_,sES_Tra,sST_Tra_Bus) in m.sQSTOUT_AFTraBus_indexed[sSD_Tra_Bus])/sum(m.pDC[sSD_Tra_Bus,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Bus])) <= 1e4*m.pSTTra_MS['Bus',sSD_Tra_Bus]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Bus,sES_Tra,sYear] * m.pAFTra[sST_Tra_Bus,sES_Tra,sSD_Tra_Bus]) for (_,sES_Tra,sST_Tra_Bus) in m.sQSTOUT_AFTraBus_indexed[sSD_Tra_Bus])/sum(m.pDC[sSD_Tra_Bus,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Bus])) <= 1e4*m.pSTTra_MS['Bus',sSD_Tra_Bus]
     #GWh
     d['EQ_MaxMS_Bus']            = Constraint(m.sSD_Tra_Bus, m.sYear,        rule = EQ_MaxMS_Bus,           doc = 'Minimum ST output shares restriction [ES units]')
     
     def EQ_MaxMS_Moped         (m, sSD_Tra_Moped,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_Moped,sES_Tra,sYear] * m.pAFTra[sST_Tra_Moped,sES_Tra,sSD_Tra_Moped]) for (_,sES_Tra,sST_Tra_Moped) in m.sQSTOUT_AFTraMoped_indexed[sSD_Tra_Moped])/sum(m.pDC[sSD_Tra_Moped,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Moped])) <= 1e4*((sum((m.vQES[sST_Tra_Moped,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Moped,sES_Tra,sSD_Tra_Moped]) for (_,sES_Tra,sST_Tra_Moped) in m.sQSTOUT_AFTraMoped_indexed[sSD_Tra_Moped])/sum(m.pDC[sSD_Tra_Moped,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Moped]))) + 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Moped,sES_Tra,sYear] * m.pAFTra[sST_Tra_Moped,sES_Tra,sSD_Tra_Moped]) for (_,sES_Tra,sST_Tra_Moped) in m.sQSTOUT_AFTraMoped_indexed[sSD_Tra_Moped])/sum(m.pDC[sSD_Tra_Moped,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Moped])) <= 1e4*((sum((m.vQES_Tra[sST_Tra_Moped,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Moped,sES_Tra,sSD_Tra_Moped]) for (_,sES_Tra,sST_Tra_Moped) in m.sQSTOUT_AFTraMoped_indexed[sSD_Tra_Moped])/sum(m.pDC[sSD_Tra_Moped,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Moped]))) + 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_Moped,sES_Tra,sYear] * m.pAFTra[sST_Tra_Moped,sES_Tra,sSD_Tra_Moped]) for (_,sES_Tra,sST_Tra_Moped) in m.sQSTOUT_AFTraMoped_indexed[sSD_Tra_Moped])/sum(m.pDC[sSD_Tra_Moped,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Moped])) <= 1e4*m.pSTTra_MS['Moped',sSD_Tra_Moped]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Moped,sES_Tra,sYear] * m.pAFTra[sST_Tra_Moped,sES_Tra,sSD_Tra_Moped]) for (_,sES_Tra,sST_Tra_Moped) in m.sQSTOUT_AFTraMoped_indexed[sSD_Tra_Moped])/sum(m.pDC[sSD_Tra_Moped,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Moped])) <= 1e4*m.pSTTra_MS['Moped',sSD_Tra_Moped]
     #GWh
     d['EQ_MaxMS_Moped']          = Constraint(m.sSD_Tra_Moped, m.sYear,      rule = EQ_MaxMS_Moped,         doc = 'Minimum ST output shares restriction [ES units]')
     
     def EQ_MaxMS_IntRail         (m, sSD_Tra_IntRail,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_IntRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_IntRail,sES_Tra,sSD_Tra_IntRail]) for (_,sES_Tra,sST_Tra_IntRail) in m.sQSTOUT_AFTraIntRail_indexed[sSD_Tra_IntRail])/sum(m.pDC[sSD_Tra_IntRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_IntRail])) <= 1e4*( (sum((m.vQES[sST_Tra_IntRail,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_IntRail,sES_Tra,sSD_Tra_IntRail]) for (_,sES_Tra,sST_Tra_IntRail) in m.sQSTOUT_AFTraIntRail_indexed[sSD_Tra_IntRail])/sum(m.pDC[sSD_Tra_IntRail,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_IntRail]))) + 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_IntRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_IntRail,sES_Tra,sSD_Tra_IntRail]) for (_,sES_Tra,sST_Tra_IntRail) in m.sQSTOUT_AFTraIntRail_indexed[sSD_Tra_IntRail])/sum(m.pDC[sSD_Tra_IntRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_IntRail])) <= 1e4*( (sum((m.vQES_Tra[sST_Tra_IntRail,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_IntRail,sES_Tra,sSD_Tra_IntRail]) for (_,sES_Tra,sST_Tra_IntRail) in m.sQSTOUT_AFTraIntRail_indexed[sSD_Tra_IntRail])/sum(m.pDC[sSD_Tra_IntRail,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_IntRail]))) + 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_IntRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_IntRail,sES_Tra,sSD_Tra_IntRail]) for (_,sES_Tra,sST_Tra_IntRail) in m.sQSTOUT_AFTraIntRail_indexed[sSD_Tra_IntRail])/sum(m.pDC[sSD_Tra_IntRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_IntRail])) <= 1e4*m.pSTTra_MS['IntRail',sSD_Tra_IntRail]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_IntRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_IntRail,sES_Tra,sSD_Tra_IntRail]) for (_,sES_Tra,sST_Tra_IntRail) in m.sQSTOUT_AFTraIntRail_indexed[sSD_Tra_IntRail])/sum(m.pDC[sSD_Tra_IntRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_IntRail])) <= 1e4*m.pSTTra_MS['IntRail',sSD_Tra_IntRail]
     #GWh
     d['EQ_MaxMS_IntRail']        = Constraint(m.sSD_Tra_IntRail, m.sYear,    rule = EQ_MaxMS_IntRail,       doc = 'Minimum ST output shares restriction [ES units]')
     
     def EQ_MaxMS_UrbanRail         (m, sSD_Tra_UrbanRail,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_UrbanRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_UrbanRail,sES_Tra,sSD_Tra_UrbanRail]) for (_,sES_Tra,sST_Tra_UrbanRail) in m.sQSTOUT_AFTraUrbRail_indexed[sSD_Tra_UrbanRail])/sum(m.pDC[sSD_Tra_UrbanRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_UrbanRail])) <= 1e4*( (sum((m.vQES[sST_Tra_UrbanRail,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_UrbanRail,sES_Tra,sSD_Tra_UrbanRail]) for (_,sES_Tra,sST_Tra_UrbanRail) in m.sQSTOUT_AFTraUrbRail_indexed[sSD_Tra_UrbanRail])/sum(m.pDC[sSD_Tra_UrbanRail,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_UrbanRail]))) + 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_UrbanRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_UrbanRail,sES_Tra,sSD_Tra_UrbanRail]) for (_,sES_Tra,sST_Tra_UrbanRail) in m.sQSTOUT_AFTraUrbRail_indexed[sSD_Tra_UrbanRail])/sum(m.pDC[sSD_Tra_UrbanRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_UrbanRail])) <= 1e4*( (sum((m.vQES_Tra[sST_Tra_UrbanRail,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_UrbanRail,sES_Tra,sSD_Tra_UrbanRail]) for (_,sES_Tra,sST_Tra_UrbanRail) in m.sQSTOUT_AFTraUrbRail_indexed[sSD_Tra_UrbanRail])/sum(m.pDC[sSD_Tra_UrbanRail,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_UrbanRail]))) + 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_UrbanRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_UrbanRail,sES_Tra,sSD_Tra_UrbanRail]) for (_,sES_Tra,sST_Tra_UrbanRail) in m.sQSTOUT_AFTraUrbRail_indexed[sSD_Tra_UrbanRail])/sum(m.pDC[sSD_Tra_UrbanRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_UrbanRail])) <= 1e4*m.pSTTra_MS['UrbanRail',sSD_Tra_UrbanRail]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_UrbanRail,sES_Tra,sYear] * m.pAFTra[sST_Tra_UrbanRail,sES_Tra,sSD_Tra_UrbanRail]) for (_,sES_Tra,sST_Tra_UrbanRail) in m.sQSTOUT_AFTraUrbRail_indexed[sSD_Tra_UrbanRail])/sum(m.pDC[sSD_Tra_UrbanRail,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_UrbanRail])) <= 1e4*m.pSTTra_MS['UrbanRail',sSD_Tra_UrbanRail]
     #GWh
     d['EQ_MaxMS_UrbanRail']      = Constraint(m.sSD_Tra_UrbanRail, m.sYear,  rule = EQ_MaxMS_UrbanRail,     doc = 'Minimum ST output shares restriction [ES units]')
     
     def EQ_MaxMS_Air         (m, sSD_Tra_Air,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_Air,sES_Tra,sYear] * m.pAFTra[sST_Tra_Air,sES_Tra,sSD_Tra_Air]) for (_,sES_Tra,sST_Tra_Air) in m.sQSTOUT_AFTraAir_indexed[sSD_Tra_Air])/sum(m.pDC[sSD_Tra_Air,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Air])) <= 1e4*( (sum((m.vQES[sST_Tra_Air,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Air,sES_Tra,sSD_Tra_Air]) for (_,sES_Tra,sST_Tra_Air) in m.sQSTOUT_AFTraAir_indexed[sSD_Tra_Air])/sum(m.pDC[sSD_Tra_Air,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Air]))) + 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Air,sES_Tra,sYear] * m.pAFTra[sST_Tra_Air,sES_Tra,sSD_Tra_Air]) for (_,sES_Tra,sST_Tra_Air) in m.sQSTOUT_AFTraAir_indexed[sSD_Tra_Air])/sum(m.pDC[sSD_Tra_Air,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Air])) <= 1e4*( (sum((m.vQES_Tra[sST_Tra_Air,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Air,sES_Tra,sSD_Tra_Air]) for (_,sES_Tra,sST_Tra_Air) in m.sQSTOUT_AFTraAir_indexed[sSD_Tra_Air])/sum(m.pDC[sSD_Tra_Air,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Air]))) + 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_Air,sES_Tra,sYear] * m.pAFTra[sST_Tra_Air,sES_Tra,sSD_Tra_Air]) for (_,sES_Tra,sST_Tra_Air) in m.sQSTOUT_AFTraAir_indexed[sSD_Tra_Air])/sum(m.pDC[sSD_Tra_Air,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Air])) <= 1e4*m.pSTTra_MS['Air',sSD_Tra_Air]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Air,sES_Tra,sYear] * m.pAFTra[sST_Tra_Air,sES_Tra,sSD_Tra_Air]) for (_,sES_Tra,sST_Tra_Air) in m.sQSTOUT_AFTraAir_indexed[sSD_Tra_Air])/sum(m.pDC[sSD_Tra_Air,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Air])) <= 1e4*m.pSTTra_MS['Air',sSD_Tra_Air]
     #GWh
     d['EQ_MaxMS_Air']            = Constraint(m.sSD_Tra_Air, m.sYear,        rule = EQ_MaxMS_Air,           doc = 'Minimum ST output shares restriction [ES units]')
     
     def EQ_MaxMS_Sea         (m, sSD_Tra_Sea,sYear       ):
         if sYear>m.sYear.first():
-            return  1e4*(sum((m.vQES[sST_Tra_Sea,sES_Tra,sYear] * m.pAFTra[sST_Tra_Sea,sES_Tra,sSD_Tra_Sea]) for (_,sES_Tra,sST_Tra_Sea) in m.sQSTOUT_AFTraSea_indexed[sSD_Tra_Sea])/sum(m.pDC[sSD_Tra_Sea,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Sea])) <= 1e4*( (sum((m.vQES[sST_Tra_Sea,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Sea,sES_Tra,sSD_Tra_Sea]) for (_,sES_Tra,sST_Tra_Sea) in m.sQSTOUT_AFTraSea_indexed[sSD_Tra_Sea])/sum(m.pDC[sSD_Tra_Sea,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Sea]))) + 1e4*m.pMSMax
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Sea,sES_Tra,sYear] * m.pAFTra[sST_Tra_Sea,sES_Tra,sSD_Tra_Sea]) for (_,sES_Tra,sST_Tra_Sea) in m.sQSTOUT_AFTraSea_indexed[sSD_Tra_Sea])/sum(m.pDC[sSD_Tra_Sea,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Sea])) <= 1e4*( (sum((m.vQES_Tra[sST_Tra_Sea,sES_Tra,m.sYear.prev(sYear)] * m.pAFTra[sST_Tra_Sea,sES_Tra,sSD_Tra_Sea]) for (_,sES_Tra,sST_Tra_Sea) in m.sQSTOUT_AFTraSea_indexed[sSD_Tra_Sea])/sum(m.pDC[sSD_Tra_Sea,sMD_Tra] * m.pMD[sMD_Tra,m.sYear.prev(sYear)] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Sea]))) + 1e4*m.pMSMax
         else:
-            return  1e4*(sum((m.vQES[sST_Tra_Sea,sES_Tra,sYear] * m.pAFTra[sST_Tra_Sea,sES_Tra,sSD_Tra_Sea]) for (_,sES_Tra,sST_Tra_Sea) in m.sQSTOUT_AFTraSea_indexed[sSD_Tra_Sea])/sum(m.pDC[sSD_Tra_Sea,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Sea])) <= 1e4*m.pSTTra_MS['Sea',sSD_Tra_Sea]
+            return  1e4*(sum((m.vQES_Tra[sST_Tra_Sea,sES_Tra,sYear] * m.pAFTra[sST_Tra_Sea,sES_Tra,sSD_Tra_Sea]) for (_,sES_Tra,sST_Tra_Sea) in m.sQSTOUT_AFTraSea_indexed[sSD_Tra_Sea])/sum(m.pDC[sSD_Tra_Sea,sMD_Tra] * m.pMD[sMD_Tra,sYear] for (_,sMD_Tra) in m.sQSDMD_Tra_indexed[sSD_Tra_Sea])) <= 1e4*m.pSTTra_MS['Sea',sSD_Tra_Sea]
     #GWh
     d['EQ_MaxMS_Sea']            = Constraint(m.sSD_Tra_Sea, m.sYear,        rule = EQ_MaxMS_Sea,           doc = 'Minimum ST output shares restriction [ES units]')
     
     
-    
+    # Technological choice shares
     def EQ_TC_Car         (m, sST_Tra_Car,sYear       ):
         if sYear>m.sYear.first():
-            return  m.vSTNewCap [sST_Tra_Car,sYear] <= sum(m.vSTTotCap [sST_Tra_Car,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_Car,sVin,m.sYear.prev(sYear)] for (sST_Tra_Car,sVin) in m.sST_Tra_Car*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_Car,sYear] <= sum(m.vSTTotCap [sST_Tra_Car,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_Car,sVin,m.sYear.prev(sYear)] for (sST_Tra_Car,sVin) in m.sST_Tra_Car*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
         else:
-            return  m.vSTNewCap [sST_Tra_Car,sYear] <= sum(m.pSTInsCap [sST_Tra_Car,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_Car,sVin]                     for (sST_Tra_Car,sVin) in m.sST_Tra_Car*m.sVin if (sVin,             sYear)  in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_Car,sYear] <= sum(m.pSTInsCap [sST_Tra_Car,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_Car,sVin]                     for (sST_Tra_Car,sVin) in m.sST_Tra_Car*m.sVin if (sVin,             sYear)  in m.sVinYear)
     #GWh
     d['EQ_TC_Car']                  = Constraint(m.sST_Tra_Car, m.sYear,        rule = EQ_TC_Car,           doc = '[ST units]')
     
     
     def EQ_TC_Moped         (m, sST_Tra_Moped,sYear       ):
         if sYear>m.sYear.first():
-            return  m.vSTNewCap [sST_Tra_Moped,sYear] <= sum(m.vSTTotCap [sST_Tra_Moped,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_Moped,sVin,m.sYear.prev(sYear)] for (sST_Tra_Moped,sVin) in m.sST_Tra_Moped*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_Moped,sYear] <= sum(m.vSTTotCap [sST_Tra_Moped,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_Moped,sVin,m.sYear.prev(sYear)] for (sST_Tra_Moped,sVin) in m.sST_Tra_Moped*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
         else:
-            return  m.vSTNewCap [sST_Tra_Moped,sYear] <= sum(m.pSTInsCap [sST_Tra_Moped,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_Moped,sVin]                     for (sST_Tra_Moped,sVin) in m.sST_Tra_Moped*m.sVin if (sVin,             sYear)  in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_Moped,sYear] <= sum(m.pSTInsCap [sST_Tra_Moped,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_Moped,sVin]                     for (sST_Tra_Moped,sVin) in m.sST_Tra_Moped*m.sVin if (sVin,             sYear)  in m.sVinYear)
     #GWh
     d['EQ_TC_Moped']                = Constraint(m.sST_Tra_Moped, m.sYear,      rule = EQ_TC_Moped,         doc = '[ST units]')
     
     
     def EQ_TC_RoadFreight         (m, sST_Tra_RoadFreight,sYear       ):
         if sYear>m.sYear.first():
-            return  m.vSTNewCap [sST_Tra_RoadFreight,sYear] <= sum(m.vSTTotCap [sST_Tra_RoadFreight,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_RoadFreight,sVin,m.sYear.prev(sYear)] for (sST_Tra_RoadFreight,sVin) in m.sST_Tra_RoadFreight*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_RoadFreight,sYear] <= sum(m.vSTTotCap [sST_Tra_RoadFreight,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_RoadFreight,sVin,m.sYear.prev(sYear)] for (sST_Tra_RoadFreight,sVin) in m.sST_Tra_RoadFreight*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
         else:
-            return  m.vSTNewCap [sST_Tra_RoadFreight,sYear] <= sum(m.pSTInsCap [sST_Tra_RoadFreight,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_RoadFreight,sVin]                     for (sST_Tra_RoadFreight,sVin) in m.sST_Tra_RoadFreight*m.sVin if (sVin,             sYear)  in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_RoadFreight,sYear] <= sum(m.pSTInsCap [sST_Tra_RoadFreight,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_RoadFreight,sVin]                     for (sST_Tra_RoadFreight,sVin) in m.sST_Tra_RoadFreight*m.sVin if (sVin,             sYear)  in m.sVinYear)
     #GWh
     d['EQ_TC_RoadFreight']          = Constraint(m.sST_Tra_RoadFreight, m.sYear,rule = EQ_TC_RoadFreight,   doc = '[ST units]')
     
     
     def EQ_TC_Bus         (m, sST_Tra_Bus,sYear       ):
         if sYear>m.sYear.first():
-            return  m.vSTNewCap [sST_Tra_Bus,sYear] <= sum(m.vSTTotCap [sST_Tra_Bus,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_Bus,sVin,m.sYear.prev(sYear)] for (sST_Tra_Bus,sVin) in m.sST_Tra_Bus*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_Bus,sYear] <= sum(m.vSTTotCap [sST_Tra_Bus,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_Bus,sVin,m.sYear.prev(sYear)] for (sST_Tra_Bus,sVin) in m.sST_Tra_Bus*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
         else:
-            return  m.vSTNewCap [sST_Tra_Bus,sYear] <= sum(m.pSTInsCap [sST_Tra_Bus,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_Bus,sVin]                     for (sST_Tra_Bus,sVin) in m.sST_Tra_Bus*m.sVin if (sVin,             sYear)  in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_Bus,sYear] <= sum(m.pSTInsCap [sST_Tra_Bus,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_Bus,sVin]                     for (sST_Tra_Bus,sVin) in m.sST_Tra_Bus*m.sVin if (sVin,             sYear)  in m.sVinYear)
     #GWh
     d['EQ_TC_Bus']                  = Constraint(m.sST_Tra_Bus, m.sYear,        rule = EQ_TC_Bus,           doc = '[ST units]')
     
     
     def EQ_TC_UrbanRail         (m, sST_Tra_UrbanRail,sYear       ):
         if sYear>m.sYear.first():
-            return  m.vSTNewCap [sST_Tra_UrbanRail,sYear] <= sum(m.vSTTotCap [sST_Tra_UrbanRail,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_UrbanRail,sVin,m.sYear.prev(sYear)] for (sST_Tra_UrbanRail,sVin) in m.sST_Tra_UrbanRail*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_UrbanRail,sYear] <= sum(m.vSTTotCap [sST_Tra_UrbanRail,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_UrbanRail,sVin,m.sYear.prev(sYear)] for (sST_Tra_UrbanRail,sVin) in m.sST_Tra_UrbanRail*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
         else:
-            return  m.vSTNewCap [sST_Tra_UrbanRail,sYear] <= sum(m.pSTInsCap [sST_Tra_UrbanRail,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_UrbanRail,sVin]                     for (sST_Tra_UrbanRail,sVin) in m.sST_Tra_UrbanRail*m.sVin if (sVin,             sYear)  in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_UrbanRail,sYear] <= sum(m.pSTInsCap [sST_Tra_UrbanRail,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_UrbanRail,sVin]                     for (sST_Tra_UrbanRail,sVin) in m.sST_Tra_UrbanRail*m.sVin if (sVin,             sYear)  in m.sVinYear)
     #GWh
     d['EQ_TC_UrbanRail']            = Constraint(m.sST_Tra_UrbanRail, m.sYear,  rule = EQ_TC_UrbanRail,     doc = '[ST units]')
     
     
     def EQ_TC_IntRail         (m, sST_Tra_IntRail,sYear       ):
         if sYear>m.sYear.first():
-            return  m.vSTNewCap [sST_Tra_IntRail,sYear] <= sum(m.vSTTotCap [sST_Tra_IntRail,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_IntRail,sVin,m.sYear.prev(sYear)] for (sST_Tra_IntRail,sVin) in m.sST_Tra_IntRail*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_IntRail,sYear] <= sum(m.vSTTotCap [sST_Tra_IntRail,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_IntRail,sVin,m.sYear.prev(sYear)] for (sST_Tra_IntRail,sVin) in m.sST_Tra_IntRail*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
         else:
-            return  m.vSTNewCap [sST_Tra_IntRail,sYear] <= sum(m.pSTInsCap [sST_Tra_IntRail,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_IntRail,sVin]                     for (sST_Tra_IntRail,sVin) in m.sST_Tra_IntRail*m.sVin if (sVin,             sYear)  in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_IntRail,sYear] <= sum(m.pSTInsCap [sST_Tra_IntRail,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_IntRail,sVin]                     for (sST_Tra_IntRail,sVin) in m.sST_Tra_IntRail*m.sVin if (sVin,             sYear)  in m.sVinYear)
     #GWh
     d['EQ_TC_IntRail']              = Constraint(m.sST_Tra_IntRail, m.sYear,    rule = EQ_TC_IntRail,       doc = '[ST units]')
     
     
     def EQ_TC_Air         (m, sST_Tra_Air,sYear       ):
         if sYear>m.sYear.first():
-            return  m.vSTNewCap [sST_Tra_Air,sYear] <= sum(m.vSTTotCap [sST_Tra_Air,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_Air,sVin,m.sYear.prev(sYear)] for (sST_Tra_Air,sVin) in m.sST_Tra_Air*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_Air,sYear] <= sum(m.vSTTotCap [sST_Tra_Air,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_Air,sVin,m.sYear.prev(sYear)] for (sST_Tra_Air,sVin) in m.sST_Tra_Air*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
         else:
-            return  m.vSTNewCap [sST_Tra_Air,sYear] <= sum(m.pSTInsCap [sST_Tra_Air,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_Air,sVin]                     for (sST_Tra_Air,sVin) in m.sST_Tra_Air*m.sVin if (sVin,             sYear)  in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_Air,sYear] <= sum(m.pSTInsCap [sST_Tra_Air,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_Air,sVin]                     for (sST_Tra_Air,sVin) in m.sST_Tra_Air*m.sVin if (sVin,             sYear)  in m.sVinYear)
     #GWh
     d['EQ_TC_Air']                  = Constraint(m.sST_Tra_Air, m.sYear,        rule = EQ_TC_Air,           doc = '[ST units]')
     
     
     def EQ_TC_Sea         (m, sST_Tra_Sea,sYear       ):
         if sYear>m.sYear.first():
-            return  m.vSTNewCap [sST_Tra_Sea,sYear] <= sum(m.vSTTotCap [sST_Tra_Sea,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_Sea,sVin,m.sYear.prev(sYear)] for (sST_Tra_Sea,sVin) in m.sST_Tra_Sea*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_Sea,sYear] <= sum(m.vSTTotCap [sST_Tra_Sea,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Tra_Sea,sVin,m.sYear.prev(sYear)] for (sST_Tra_Sea,sVin) in m.sST_Tra_Sea*m.sVin if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
         else:
-            return  m.vSTNewCap [sST_Tra_Sea,sYear] <= sum(m.pSTInsCap [sST_Tra_Sea,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_Sea,sVin]                     for (sST_Tra_Sea,sVin) in m.sST_Tra_Sea*m.sVin if (sVin,             sYear)  in m.sVinYear)
+            return  m.vSTNewCapTra [sST_Tra_Sea,sYear] <= sum(m.pSTInsCap [sST_Tra_Sea,sVin]                     for sVin in m.sVin if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Tra_Sea,sVin]                     for (sST_Tra_Sea,sVin) in m.sST_Tra_Sea*m.sVin if (sVin,             sYear)  in m.sVinYear)
     #GWh
     d['EQ_TC_Sea']                  = Constraint(m.sST_Tra_Sea, m.sYear,        rule = EQ_TC_Sea,           doc = '[ST units]')
     
     
     
-    def EQ_TC_Oth         (m, sST_Oth,sES_Oth,sYear       ):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    def EQ_TC_Res         (m, sST_Res,sES_Res,sYear       ):
         if sYear>m.sYear.first():
-            return  m.vSTNewCap [sST_Oth,sYear] <= sum(m.vSTTotCap [sST_Oth,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sST_Oth,sES_Oth) in m.sQSTOUT_Oth if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Oth,sVin,m.sYear.prev(sYear)] for (sST_Oth,sVin) in m.sST_Oth*m.sVin if (sST_Oth,sES_Oth) in m.sQSTOUT_Oth if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
+            return  m.vSTNewCapRes [sST_Res,sYear] <= sum(m.vSTTotCap [sST_Res,sVin,m.sYear.prev(sYear)] for sVin in m.sVin if (sST_Res,sES_Res) in m.sQSTOUT_Oth if (sVin,m.sYear.prev(sYear)) in m.sVinYear) + m.pTCMax * sum(m.vSTTotCap [sST_Res,sVin,m.sYear.prev(sYear)] for (sST_Res,sVin) in m.sST_Oth*m.sVin if (sST_Res,sES_Res) in m.sQSTOUT_Oth if (sVin,m.sYear.prev(sYear)) in m.sVinYear)
         else:
-            return  m.vSTNewCap [sST_Oth,sYear] <= sum(m.pSTInsCap [sST_Oth,sVin]                     for sVin in m.sVin if (sST_Oth,sES_Oth) in m.sQSTOUT_Oth if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Oth,sVin]                     for (sST_Oth,sVin) in m.sST_Oth*m.sVin if (sST_Oth,sES_Oth) in m.sQSTOUT_Oth if (sVin,             sYear)  in m.sVinYear)
+            return  m.vSTNewCapRes [sST_Res,sYear] <= sum(m.pSTInsCap [sST_Res,sVin]                     for sVin in m.sVin if (sST_Res,sES_Res) in m.sQSTOUT_Oth if (sVin,             sYear)  in m.sVinYear) + m.pTCMax * sum(m.pSTInsCap [sST_Res,sVin]                     for (sST_Res,sVin) in m.sST_Oth*m.sVin if (sST_Res,sES_Res) in m.sQSTOUT_Oth if (sVin,             sYear)  in m.sVinYear)
     #GWh
-    d['EQ_TC_Oth']                  = Constraint(m.sQSTOUT_Oth, m.sYear,        rule = EQ_TC_Oth,           doc = '[ST units]')
+    d['EQ_TC_Res']                  = Constraint(m.sQSTOUT_Oth, m.sYear,        rule = EQ_TC_Res,           doc = '[ST units]')
     
     
     # Energy Services (ES)-related constraints
