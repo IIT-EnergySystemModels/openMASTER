@@ -63,6 +63,10 @@ def load_dataportal_from_csv() -> DataPortal:
         'sQCESecIN_indexed'               : {sTE          : [(sTE,sCE)    for sCE  in data._data[None]['sCESec'][None] if (sTE,sCE)     in data._data[None]['sQCESecIN' ][None]] for sTE    in data._data[None]['sTE'   ][None]},
         'sQCEStoIN_indexed'               : {sTE          : [(sTE,sCE)    for sCE  in data._data[None]['sCESto'][None] if (sTE,sCE)     in data._data[None]['sQCEStoIN' ][None]] for sTE    in data._data[None]['sTE'   ][None]},
         'sQSTOUT_indexed'                 : {sST          : [(sST,sES)    for sES  in data._data[None]['sES'   ][None] if (sST,sES)     in data._data[None]['sQSTOUT'   ][None]] for sST    in data._data[None]['sST'   ][None]},
+        'sQSTOUT_Tra_indexed'             : {sST_Tra      : [(sST_Tra,sES_Tra) for sES_Tra in data._data[None]['sES_Tra'   ][None] if (sST_Tra,sES_Tra) in data._data[None]['sQSTOUT'   ][None]] for sST_Tra in data._data[None]['sST_Tra'   ][None]},
+        'sQSTOUT_Oth_indexed'             : {sST_Oth      : [(sST_Oth,sES_Oth) for sES_Oth in data._data[None]['sES_Oth'   ][None] if (sST_Oth,sES_Oth) in data._data[None]['sQSTOUT'   ][None]] for sST_Oth in data._data[None]['sST_Oth'   ][None]},
+        'sQSTOUT_Ind_indexed'             : {sST_Ind      : [(sST_Ind,sES_Ind) for sES_Ind in data._data[None]['sES_Ind'   ][None] if (sST_Ind,sES_Ind) in data._data[None]['sQSTOUT'   ][None]] for sST_Ind in data._data[None]['sST_Ind'   ][None]},
+        'sQSTOUT_Res_indexed'             : {sST_Res      : [(sST_Res,sES_Res,sSD_Res,sMD_Res) for (sES_Res,sSD_Res,sMD_Res) in data._data[None]['sQESSDMD_Res'][None] if (sST_Res,sES_Res,sSD_Res,sMD_Res) in data._data[None]['sQSTESSDMD_Res'   ][None]] for sST_Res in data._data[None]['sST_Res'   ][None]}, 
         'sQSTInTE_indexed'                : {sST          : [(sST,sTE)    for sTE  in data._data[None]['sTE'   ][None] if (sST,sTE)     in data._data[None]['sQSTInTE'  ][None]] for sST    in data._data[None]['sST'   ][None]},
         'sVinYear_indexed'                : {sYear        : [(sYear,sVin) for sVin in data._data[None]['sVin'  ][None] if (sVin,sYear)  in data._data[None]['sVinYear'  ][None]] for sYear  in data._data[None]['sYear' ][None]},
               
@@ -127,6 +131,35 @@ def load_dataportal_from_csv() -> DataPortal:
                 ] for   sYear                                   in data._data[None]['sYear'         ][None]
     
         },
+
+        'sQSTVinTra_indexed'              : {sYear: [(sYear,sST_Tra,sVin)
+            for    sST_Tra                                      in data._data[None]['sST_Tra'       ][None]
+            for    sVin                                         in data._data[None]['sVin'          ][None] 
+              if ((sVin,sYear)                                  in data._data[None]['sVinYear'      ][None])
+                ] for   sYear                                   in data._data[None]['sYear'         ][None]
+        },
+
+        'sQSTVinOth_indexed'              : {sYear: [(sYear,sST_Oth,sVin)
+            for    sST_Oth                                      in data._data[None]['sST_Oth'       ][None]
+            for    sVin                                         in data._data[None]['sVin'          ][None] 
+              if ((sVin,sYear)                                  in data._data[None]['sVinYear'      ][None])
+                ] for   sYear                                   in data._data[None]['sYear'         ][None]
+        },
+
+        'sQSTVinInd_indexed'              : {sYear: [(sYear,sST_Ind,sVin)
+            for    sST_Ind                                      in data._data[None]['sST_Ind'       ][None]
+            for    sVin                                         in data._data[None]['sVin'          ][None] 
+              if ((sVin,sYear)                                  in data._data[None]['sVinYear'      ][None])
+                ] for   sYear                                   in data._data[None]['sYear'         ][None]
+        },
+
+        'sQSTVinRes_indexed'              : {sYear: [(sYear,sST_Res,sVin)
+            for    sST_Res                                      in data._data[None]['sST_Res'       ][None]
+            for    sVin                                         in data._data[None]['sVin'          ][None] 
+              if ((sVin,sYear)                                  in data._data[None]['sVinYear'      ][None])
+                ] for   sYear                                   in data._data[None]['sYear'         ][None]
+        },
+
         'sQSTInRM_indexed'                : {sYear : [(sYear,sRM,sST,sES,sVin,sSeason,sDay,sHour)
             for  ( sRM,sST,sES)                                 in data._data[None]['sQSTInRM'      ][None]
             for    sVin                                         in data._data[None]['sVin'          ][None]
@@ -137,6 +170,38 @@ def load_dataportal_from_csv() -> DataPortal:
         },
         'sQSTOUT_VinTime_indexed'         : {sYear:[(sYear,sST,sES,sVin,sSeason,sDay,sHour)
             for  ( sST,sES)                                     in data._data[None]['sQSTOUT'       ][None]
+            for    sVin                                         in data._data[None]['sVin'          ][None]
+            for  ( sSeason,sDay,sHour)                          in data._data[None]['sSeasonDayHour'][None] 
+              if ((sVin,sYear)                                  in data._data[None]['sVinYear'      ][None])
+                ] for   sYear                                   in data._data[None]['sYear'         ][None]    
+        },
+
+        'sQSTOUTTra_VinTime_indexed'      : {sYear:[(sYear,sST_Tra,sES_Tra,sVin,sSeason,sDay,sHour)
+            for  ( sST_Tra,sES_Tra)                             in data._data[None]['sQSTOUT'       ][None]
+            for    sVin                                         in data._data[None]['sVin'          ][None]
+            for  ( sSeason,sDay,sHour)                          in data._data[None]['sSeasonDayHour'][None] 
+              if ((sVin,sYear)                                  in data._data[None]['sVinYear'      ][None])
+                ] for   sYear                                   in data._data[None]['sYear'         ][None]    
+        },
+
+        'sQSTOUTOth_VinTime_indexed'      : {sYear:[(sYear,sST_Oth,sES_Oth,sVin,sSeason,sDay,sHour)
+            for  ( sST_Oth,sES_Oth)                             in data._data[None]['sQSTOUT'       ][None]
+            for    sVin                                         in data._data[None]['sVin'          ][None]
+            for  ( sSeason,sDay,sHour)                          in data._data[None]['sSeasonDayHour'][None] 
+              if ((sVin,sYear)                                  in data._data[None]['sVinYear'      ][None])
+                ] for   sYear                                   in data._data[None]['sYear'         ][None]    
+        },
+
+        'sQSTOUTInd_VinTime_indexed'      : {sYear:[(sYear,sST_Ind,sES_Ind,sVin,sSeason,sDay,sHour)
+            for  ( sST_Ind,sES_Ind)                             in data._data[None]['sQSTOUT'       ][None]
+            for    sVin                                         in data._data[None]['sVin'          ][None]
+            for  ( sSeason,sDay,sHour)                          in data._data[None]['sSeasonDayHour'][None] 
+              if ((sVin,sYear)                                  in data._data[None]['sVinYear'      ][None])
+                ] for   sYear                                   in data._data[None]['sYear'         ][None]    
+        },
+
+        'sQSTOUTRes_VinTime_indexed'      : {sYear:[(sYear,sST_Res,sES_Res,sSD_Res,sMD_Res,sVin,sSeason,sDay,sHour)
+            for  ( sST_Res,sES_Res,sSD_Res,sMD_Res)             in data._data[None]['sQSTESSDMD_Res'][None]
             for    sVin                                         in data._data[None]['sVin'          ][None]
             for  ( sSeason,sDay,sHour)                          in data._data[None]['sSeasonDayHour'][None] 
               if ((sVin,sYear)                                  in data._data[None]['sVinYear'      ][None])
@@ -203,6 +268,34 @@ def load_dataportal_from_csv() -> DataPortal:
                 ] for  sST                                      in data._data[None]['sST'           ][None]
                   for      sES                                  in data._data[None]['sES'           ][None]
           },
+
+          'sQTESTES_STES_Tra_indexed'     : {(sST_Tra,sES_Tra): [(sST_Tra,sES_Tra,sTE)
+            for    sTE                                          in data._data[None]['sTE'           ][None]
+              if ((sTE,sST_Tra,sES_Tra)                         in data._data[None]['sQTESTES'      ][None])
+                ] for  sST_Tra                                  in data._data[None]['sST_Tra'       ][None]
+                  for      sES_Tra                              in data._data[None]['sES_Tra'       ][None]
+          },
+
+          'sQTESTES_STES_Oth_indexed'     : {(sST_Oth,sES_Oth): [(sST_Oth,sES_Oth,sTE)
+            for    sTE                                          in data._data[None]['sTE'           ][None]
+              if ((sTE,sST_Oth,sES_Oth)                         in data._data[None]['sQTESTES'      ][None])
+                ] for  sST_Oth                                  in data._data[None]['sST_Oth'       ][None]
+                  for      sES_Oth                              in data._data[None]['sES_Oth'       ][None]
+          },
+
+          'sQTESTES_STES_Ind_indexed'     : {(sST_Ind,sES_Ind): [(sST_Ind,sES_Ind,sTE)
+            for    sTE                                          in data._data[None]['sTE'           ][None]
+              if ((sTE,sST_Ind,sES_Ind)                         in data._data[None]['sQTESTES'      ][None])
+                ] for  sST_Ind                                  in data._data[None]['sST_Ind'       ][None]
+                  for      sES_Ind                              in data._data[None]['sES_Ind'       ][None]
+          },
+
+          'sQTESTES_STES_Res_indexed'     : {(sST_Res,sES_Res): [(sST_Res,sES_Res,sTE)
+            for    sTE                                          in data._data[None]['sTE'           ][None]
+              if ((sTE,sST_Res,sES_Res)                         in data._data[None]['sQTESTES'      ][None])
+                ] for  sST_Res                                  in data._data[None]['sST_Res'       ][None]
+                  for      sES_Res                              in data._data[None]['sES_Res'       ][None]
+          },
     
           'sQSTOUT_AFTra_indexed'         : {sSD_Tra:[(sSD_Tra,sES_Tra,sST_Tra)
             for  ( sST_Tra,sES_Tra)                             in data._data[None]['sQSTOUT'       ][None]
@@ -262,15 +355,27 @@ def load_dataportal_from_csv() -> DataPortal:
           'sQSDMD_Tra_indexed'            : {sSD_Tra     : [(sSD_Tra,sMD_Tra)     for sMD_Tra in data._data[None]['sMD_Tra'][None] if (sSD_Tra,    sMD_Tra) in data._data[None]['sQSDMD' ][None]] for sSD_Tra     in data._data[None]['sSD_Tra'    ][None]},
                  
           'sQSDMD_Tra_Car_indexed'        : {sSD_Tra_Car : [(sSD_Tra_Car,sMD_Tra) for sMD_Tra in data._data[None]['sMD_Tra'][None] if (sSD_Tra_Car,sMD_Tra) in data._data[None]['sQSDMD' ][None]] for sSD_Tra_Car in data._data[None]['sSD_Tra_Car'][None]},
-            
-          'sQSTOUT_AFOth_indexed'         : {sES_Oth     : [(sES_Oth,sST_Oth)     for sST_Oth in data._data[None]['sST_Oth'][None] if (sST_Oth,sES_Oth    ) in data._data[None]['sQSTOUT'][None]] for sES_Oth     in data._data[None]['sES_Oth'    ][None]},
+
+          #OJP  
+          'sQSTOUT_AFOth_indexed'         : {(sES_Oth,sSD_Oth,sMD_Oth)     : [(sES_Oth,sSD_Oth,sMD_Oth,sST_Oth)     for sST_Oth in data._data[None]['sST_Oth'][None] if (sST_Oth,sES_Oth,sSD_Oth,sMD_Oth    ) in data._data[None]['sQSTESSDMD_Oth'][None]] for (sES_Oth,sSD_Oth,sMD_Oth)     in data._data[None]['sQESSDMD_Oth'    ][None]},
+
+          'sQSTOUT_AFRes_indexed'         : {(sES_Res,sSD_Res,sMD_Res)     : [(sES_Res,sSD_Res,sMD_Res,sST_Res)     for sST_Res in data._data[None]['sST_Res'][None] if (sST_Res,sES_Res,sSD_Res,sMD_Res    ) in data._data[None]['sQSTESSDMD_Res'][None]] for (sES_Res,sSD_Res,sMD_Res)     in data._data[None]['sQESSDMD_Res'    ][None]},
            
           'sQSDMD_Oth_indexed'            : {sES_Oth     : [(sES_Oth,sSD_Oth,sMD_Oth)
             for  (            sSD_Oth,sMD_Oth)                  in data._data[None]['sQSDMD'           ][None]
               if ((   sES_Oth,sSD_Oth)                          in data._data[None]['sQESSD'           ][None])   
                 ] for sES_Oth                                   in data._data[None]['sES_Oth'          ][None] 
           },
-    
+
+          'sQSDMD_Res_indexed'            :{(sST_Res,sES_Res) : [(sST_Res,sES_Res,sSD_Res,sMD_Res)   for (sSD_Res,sMD_Res) in data._data[None]['sQSDMD'][None] if (sST_Res,sES_Res,sSD_Res,sMD_Res) in data._data[None]['sQSTESSDMD_Res'][None]] for (sST_Res,sES_Res) in data._data[None]['sQSTOUT'][None]},
+          'sQSDMDAF_Res_indexed'          :{sES_Res : [(sES_Res,sSD_Res,sMD_Res) for (sSD_Res,sMD_Res) in data._data[None]['sQSDMD'][None] if (sES_Res,sSD_Res,sMD_Res) in data._data[None]['sQESSDMD_Res'][None]] for sES_Res in data._data[None]['sES_Res'][None]},
+          'sQSDMDAF_Oth_indexed'          :{sES_Oth : [(sES_Oth,sSD_Oth,sMD_Oth) for (sSD_Oth,sMD_Oth) in data._data[None]['sQSDMD'][None] if (sES_Oth,sSD_Oth,sMD_Oth) in data._data[None]['sQESSDMD_Oth'][None]] for sES_Oth in data._data[None]['sES_Oth'][None]},
+          'sQSTSDMD_Res_indexed'          :{(sST_Res,sYear) : [(sST_Res,sYear,sSD_Res,sMD_Res) 
+            for (sSD_Res,sMD_Res)                               in data._data[None]['sQSDMD'][None] 
+              if (((sST_Res,sSD_Res,sMD_Res) in data._data[None]['sQSTSDMD_Res'][None])  and (sYear in data._data[None]['sYear'][None]))]
+                  for               sST_Res                     in data._data[None]['sST_Res'][None] 
+                  for               sYear                       in data._data[None]['sYear'][None]},
+
           'sQSTOUT_AFInd_indexed'         : {sSD_Ind:[(sSD_Ind,sES_Ind,sST_Ind)
             for  ( sST_Ind,sES_Ind)                             in data._data[None]['sQSTOUT'          ][None]
               if ((        sES_Ind,sSD_Ind)                     in data._data[None]['sQESSD'           ][None]) 
@@ -280,7 +385,10 @@ def load_dataportal_from_csv() -> DataPortal:
           'sQSDMD_Ind_indexed'            : {sMD_Ind : [(sMD_Ind,sSD_Ind) for sSD_Ind in data._data[None]['sSD_Ind'][None] if (sSD_Ind,sMD_Ind) in data._data[None]['sQSDMD' ][None]] for sMD_Ind in data._data[None]['sMD_Ind'][None]},
           
           'sQSTOUT_sST_Cap'               : {sST_Cap : [(sST_Cap,sES)     for sES     in data._data[None]['sES'    ][None] if (sST_Cap,sES    ) in data._data[None]['sQSTOUT'][None]] for sST_Cap in data._data[None]['sST_Cap'][None]},
-          
+          'sQSTOUT_sST_Cap_Tra'           : {sST_Cap_Tra : [(sST_Cap_Tra,sES_Tra) for sES_Tra in data._data[None]['sES_Tra'][None] if (sST_Cap_Tra,sES_Tra) in data._data[None]['sQSTOUT'][None]] for sST_Cap_Tra in data._data[None]['sST_Cap_Tra'][None]},
+          'sQSTOUT_sST_Cap_Oth'           : {sST_Cap_Oth : [(sST_Cap_Oth,sES_Oth) for sES_Oth in data._data[None]['sES_Oth'][None] if (sST_Cap_Oth,sES_Oth) in data._data[None]['sQSTOUT'][None]] for sST_Cap_Oth in data._data[None]['sST_Cap_Oth'][None]},
+          'sQSTOUT_sST_Cap_Ind'           : {sST_Cap_Ind : [(sST_Cap_Ind,sES_Ind) for sES_Ind in data._data[None]['sES_Ind'][None] if (sST_Cap_Ind,sES_Ind) in data._data[None]['sQSTOUT'][None]] for sST_Cap_Ind in data._data[None]['sST_Cap_Ind'][None]},
+          'sQSTOUT_sST_Cap_Res'           : {sST_Cap_Res : [(sST_Cap_Res,sSD_Res,sMD_Res) for (sSD_Res,sMD_Res) in data._data[None]['sQSDMD'][None] if (sST_Cap_Res,sSD_Res,sMD_Res) in data._data[None]['sQSTSDMD_Res'][None]] for sST_Cap_Res in data._data[None]['sST_Cap_Res'][None]},
           'sQSTOUT_sST_Uni'               : {sST_Uni : [(sST_Uni,sES,sSeason,sDay,sHour)
             for  sES                                            in data._data[None]['sES'              ][None]
             for (sSeason,sDay,sHour)                            in data._data[None]['sSeasonDayHour'   ][None] 

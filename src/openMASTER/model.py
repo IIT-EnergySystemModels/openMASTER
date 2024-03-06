@@ -2130,7 +2130,7 @@ def make_model():
     d['EQ_EmiPM25STTra']               = Constraint(m.sQSTOUT,m.sYear,          rule = EQ_EmiPM25STTra,              doc = 'PM25 emissions in ST [ktPM25]')
 
     def EQ_EmiPM25STInd         (m, sST_Ind,sES_Ind,sYear        ):
-        return   m.vEmiPM25STInd[sST_Ind,sES_Ind,sYear] == (sum(m.vEmiPM25STIndTE[sTE,sST_Ind,sES_Ind,sYear] for (_,_,sTE) in m.sQTESTES_STES_Tra_indexed[sST_Ind,sES_Ind]) + m.vEmiPM25STIndPro[sST_Ind,sES_Ind,sYear])*1e-3
+        return   m.vEmiPM25STInd[sST_Ind,sES_Ind,sYear] == (sum(m.vEmiPM25STIndTE[sTE,sST_Ind,sES_Ind,sYear] for (_,_,sTE) in m.sQTESTES_STES_Ind_indexed[sST_Ind,sES_Ind]) + m.vEmiPM25STIndPro[sST_Ind,sES_Ind,sYear])*1e-3
     #ktPM25
     d['EQ_EmiPM25STInd']               = Constraint(m.sQSTOUT,m.sYear,          rule = EQ_EmiPM25STInd,              doc = 'PM25 emissions in ST [ktPM25]')
 
