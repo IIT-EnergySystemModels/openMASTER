@@ -74,6 +74,42 @@ def load_dataportal_from_csv() -> DataPortal:
                 ] for sTE                                       in data._data[None]['sTE'           ][None]
                   for sYear                                     in data._data[None]['sYear'         ][None]
         },
+
+        'sSTTraESVin_indexed'            : {(sTE, sYear) : [(sTE,sYear,sST_Tra,sES_Tra,sVin)
+            for           sST_Tra                               in data._data[None]['sST_Tra'       ][None]
+            for               sES_Tra                           in data._data[None]['sES_Tra'       ][None]
+            for       sVin                                      in data._data[None]['sVin'          ][None] 
+              if (((sST_Tra,sES_Tra)                            in data._data[None]['sQSTOUT'       ][None]) and ((sVin,sYear) in data._data[None]['sVinYear'][None]))
+                ] for sTE                                       in data._data[None]['sTE'           ][None]
+                  for sYear                                     in data._data[None]['sYear'         ][None]
+        },
+
+        'sSTOthESVin_indexed'            : {(sTE, sYear) : [(sTE,sYear,sST_Oth,sES_Oth,sVin)
+            for           sST_Oth                               in data._data[None]['sST_Oth'       ][None]
+            for               sES_Oth                           in data._data[None]['sES_Oth'       ][None]
+            for       sVin                                      in data._data[None]['sVin'          ][None] 
+              if (((sST_Oth,sES_Oth)                            in data._data[None]['sQSTOUT'       ][None]) and ((sVin,sYear) in data._data[None]['sVinYear'][None]))
+                ] for sTE                                       in data._data[None]['sTE'           ][None]
+                  for sYear                                     in data._data[None]['sYear'         ][None]
+        },
+
+        'sSTIndESVin_indexed'            : {(sTE, sYear) : [(sTE,sYear,sST_Ind,sES_Ind,sVin)
+            for           sST_Ind                               in data._data[None]['sST_Ind'       ][None]
+            for               sES_Ind                           in data._data[None]['sES_Ind'       ][None]
+            for       sVin                                      in data._data[None]['sVin'          ][None] 
+              if (((sST_Ind,sES_Ind)                            in data._data[None]['sQSTOUT'       ][None]) and ((sVin,sYear) in data._data[None]['sVinYear'][None]))
+                ] for sTE                                       in data._data[None]['sTE'           ][None]
+                  for sYear                                     in data._data[None]['sYear'         ][None]
+        },
+
+        'sSTResESVin_indexed'            : {(sTE, sYear) : [(sTE,sYear,sST_Res,sES_Res,sVin)
+            for           sST_Res                               in data._data[None]['sST_Res'       ][None]
+            for               sES_Res                           in data._data[None]['sES_Res'       ][None]
+            for       sVin                                      in data._data[None]['sVin'          ][None] 
+              if (((sST_Res,sES_Res)                            in data._data[None]['sQSTOUT'       ][None]) and ((sVin,sYear) in data._data[None]['sVinYear'][None]))
+                ] for sTE                                       in data._data[None]['sTE'           ][None]
+                  for sYear                                     in data._data[None]['sYear'         ][None]
+        },
     
         'sSTESVinTime_indexed'            : {(sTE, sYear) : [(sTE,sYear,sST,sES,sVin,sSeason,sDay,sHour)
             for  (        sST,sES)                              in data._data[None]['sQSTOUT'       ][None]
