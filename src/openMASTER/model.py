@@ -280,6 +280,7 @@ def make_model():
     m.sQCESecIN_CE_indexed             = Set(m.sCE,                             dimen=2)
     m.sQCEStoIN_CE_indexed             = Set(m.sCE,                             dimen=2)
     m.sSTESVinTime_indexed             = Set(m.sTE,m.sYear,                     dimen=8)
+
     m.sSTTraESVinTime_indexed          = Set(m.sTE,m.sYear,                     dimen=8)
     m.sSTIndESVinTime_indexed          = Set(m.sTE,m.sYear,                     dimen=8)
     m.sSTOthESVinTime_indexed          = Set(m.sTE,m.sYear,                     dimen=8)
@@ -300,7 +301,6 @@ def make_model():
     m.sTESTESVinTime_Ele_Oth_indexed   = Set(m.sYear,m.sSeason,m.sDay,m.sHour,  dimen=8)
     m.sTESTESVinTime_Ele_Res_indexed   = Set(m.sYear,m.sSeason,m.sDay,m.sHour,  dimen=8)
     m.sQSTOUT_STTraCar_ES_Year_indexed = Set(m.sES_Tra,m.sYear,                 dimen=7)
-    #m.sQSTOUT_STTra_ES_Year_indexed    = Set(m.sES_Tra,m.sYear,                 dimen=7)
     m.sQSTOUT_AFTraCar_indexed         = Set(m.sSD_Tra,                         dimen=3)
     m.sQSTOUT_AFTraBus_indexed         = Set(m.sSD_Tra,                         dimen=3)
     m.sQSTOUT_AFTraUrbRail_indexed     = Set(m.sSD_Tra,                         dimen=3)
