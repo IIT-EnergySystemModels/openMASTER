@@ -1315,7 +1315,9 @@ def make_model():
     
     def EQ_STDecCap         (m, sST,sVin,             sYear ): 
         return m.vSTDecCap  [   sST,sVin,             sYear ]  ==  (
-             ((m.vSTTotCap  [   sST,sVin,m.sYear.prev(sYear)] if sYear>m.sYear.first() else (1-m.pGreenfield)*m.pSTInsCap[sST,sVin]) if m.pYr[sYear]>m.pYr[sVin] else 0) * sum(m.pSTDecProb[sST,sAge] for sAge in m.sAge if m.sAge.ord(sAge)==m.pYr[sYear]-m.pYr[sVin]))                              
+             ((m.vSTTotCap  [   sST,sVin,m.sYear.prev(sYear)] if sYear>m.sYear.first() else (1-m.pGreenfield)*m.pSTInsCap[sST,sVin]) if m.pYr[sYear]>m.pYr[sVin] else 0) * sum(m.pSTDecProb[sST,sAge] for sAge in m.sAge if (m.sAge.ord(sAge)+1)==((m.pYr[sYear]-m.pYr[sVin])/m.pYrGap)))                              
+    #         (m.vSTTotCap  [   sST,sVin,sYear]) * sum(m.pSTDecProb[sST,sAge] for sAge in m.sAge if (m.sAge.ord(sAge)+1)==((m.pYr[sYear]-m.pYr[sVin])/m.pYrGap)))
+                                 
     #GW    
     d['EQ_STDecCap']               = Constraint(m.sST,m.sVinYear,             rule = EQ_STDecCap,              doc = 'ST decommissioned capacity [ST units]')
     
@@ -1683,9 +1685,9 @@ def make_model():
 
     l_eq = [
         'EQ_TotalCost_Unc',
-        'EQ_UncCost',
-        #'EQ_UncCost_Cher',
-        #'EQ_UncCost_Cher2',
+        #'EQ_UncCost',
+        'EQ_UncCost_Cher',
+        'EQ_UncCost_Cher2',
         'EQ_InvCostCE_Unc',   
         'EQ_OpCost_Unc',
         'EQ_FObj',
