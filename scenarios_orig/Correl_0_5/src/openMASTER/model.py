@@ -577,11 +577,11 @@ def make_model():
     
     
     def EQ_PenalCost           (m, sYear ):
-        return m.vPenalCost [sYear] ==  m.pYrGap * (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * m.pESNSCost * ( 
+        return m.vPenalCost [sYear] ==  m.pYrGap * (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * 1e-2* m.pESNSCost * ( 
                              + (1-m.pEmiCO2CapSectRestr) * (1 - m.pEmiCO2BudgetRestr) *      m.vEmiCO2CapExc   [sYear]
                              +    m.pEmiCO2CapSectRestr  * (1 - m.pEmiCO2BudgetRestr) * sum((m.vEmiCO2CapTraExc[sYear] + m.vEmiCO2CapEleExc[sYear] + m.vEmiCO2CapIndTEExc[sYear] + m.vEmiCO2CapIndProExc[sYear] + m.vEmiCO2CapOthExc[sYear] + m.vEmiCO2CapRefExc[sYear]) for sYear in m.sYear)
                              +                                                          sum((m.vEmiNOxCapExc   [sYear] + m.vEmiSOxCapExc   [sYear] + m.vEmiPM25CapExc    [sYear]                                                                                       ) for sYear in m.sYear)
-                            ) * 1e-2
+                            )
     #G€
     d['EQ_PenalCost']            = Constraint(m.sYear,         rule = EQ_PenalCost,           doc = 'Penalization Cost [G€]')
     
@@ -1315,7 +1315,7 @@ def make_model():
     
     def EQ_STDecCap         (m, sST,sVin,             sYear ): 
         return m.vSTDecCap  [   sST,sVin,             sYear ]  ==  (
-             ((m.vSTTotCap  [   sST,sVin,m.sYear.prev(sYear)] if sYear>m.sYear.first() else (1-m.pGreenfield)*m.pSTInsCap[sST,sVin]) if m.pYr[sYear]>m.pYr[sVin] else 0) * sum(m.pSTDecProb[sST,sAge] for sAge in m.sAge if (m.sAge.ord(sAge)-1==((m.pYr[sYear]-m.pYr[sVin])/m.pYrGap))))                          
+             ((m.vSTTotCap  [   sST,sVin,m.sYear.prev(sYear)] if sYear>m.sYear.first() else (1-m.pGreenfield)*m.pSTInsCap[sST,sVin]) if m.pYr[sYear]>m.pYr[sVin] else 0) * sum(m.pSTDecProb[sST,sAge] for sAge in m.sAge if (m.sAge.ord(sAge)+1)==((m.pYr[sYear]-m.pYr[sVin])/m.pYrGap)))                              
     #         (m.vSTTotCap  [   sST,sVin,sYear]) * sum(m.pSTDecProb[sST,sAge] for sAge in m.sAge if (m.sAge.ord(sAge)+1)==((m.pYr[sYear]-m.pYr[sVin])/m.pYrGap)))
                                  
     #GW    
@@ -1685,9 +1685,9 @@ def make_model():
 
     l_eq = [
         'EQ_TotalCost_Unc',
-        'EQ_UncCost',
-        #'EQ_UncCost_Cher',
-        #'EQ_UncCost_Cher2',
+        #'EQ_UncCost',
+        'EQ_UncCost_Cher',
+        'EQ_UncCost_Cher2',
         'EQ_InvCostCE_Unc',   
         'EQ_OpCost_Unc',
         'EQ_FObj',
@@ -1761,7 +1761,7 @@ def make_model():
         'EQ_STBalanceRM',
         'EQ_AFInd',
         'EQ_DCInd',
-        #'EQ_CircularityInd',
+        'EQ_CircularityInd',
         'EQ_CEMaxPro_Pri',
         'EQ_CEMaxPro_Sec',
         'EQ_CEMaxPro_Sto',
@@ -1817,15 +1817,15 @@ def make_model():
         #'EQ_EmiPM25ST',
         #'EQ_EmiPM25ESNS',
         #'EQ_EmiPM25Tot',
-        #'EQ_EmiCO2Cap',
+        'EQ_EmiCO2Cap',
         #'EQ_EmiNOxCap',
         #'EQ_EmiSOxCap',
         #'EQ_EmiPM25Cap',
-        #'EQ_EmiCO2Budget',
+        'EQ_EmiCO2Budget',
         'EQ_EmiCO2CapTra',
         'EQ_EmiCO2CapEle',
-        #'EQ_EmiCO2CapIndTE',
-        #'EQ_EmiCO2CapIndPro',
+        'EQ_EmiCO2CapIndTE',
+        'EQ_EmiCO2CapIndPro',
         'EQ_EmiCO2CapOth',
         'EQ_EmiCO2CapRef',
     ]
