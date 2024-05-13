@@ -1,0 +1,13 @@
+# Key Variables to Modify in Sankey Diagrams
+
+When creating and customizing Sankey diagrams, several variables can be modified to enhance the visual representation and effectively convey the intended information. Some important variables include:
+
+**1. Node Thickness:** Modifying the thickness of nodes (represented as rectangles or segments) in the Sankey diagram can help emphasize the significance or volume of a specific flow or category. It allows for visual differentiation and highlights key elements in the system.
+
+**2.Node Padding:** Adjusting the padding or spacing between nodes can improve the clarity and organization of the diagram. Optimal padding ensures that nodes are visually separated and prevent overlapping, enhancing readability and understanding.
+
+**3.Link Width:** Changing the width of the links (represented as lines or arrows) connecting nodes can indicate the magnitude or intensity of the flow between different elements. Thicker links can represent larger quantities or stronger relationships, while thinner links can signify smaller flows.
+
+**4.Link Color:** Modifying the color of the links can provide additional information or categorization. Colors can be used to represent different types of flows, highlight specific patterns or trends, or differentiate between positive and negative relationships.
+
+**5.Background Color:** Choosing an appropriate background color for the Sankey diagram can influence the overall visual impact and readability. A well-chosen background color can enhance contrast, improve focus on the diagram elements, and create a harmonious visual composition.
