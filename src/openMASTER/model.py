@@ -1709,28 +1709,28 @@ def make_model():
     d['EQ_EmiCO2CapRef']            = Constraint(m.sYear,        rule = EQ_EmiCO2CapRef,           doc = 'Refinery production emission cap restriction [MtCO2]')
 
     l_eq = [
-        'EQ_TotalCost_Unc',
+        #'EQ_TotalCost_Unc',
         
         #'EQ_UncCost',
         
-        'EQ_UncCost_Cher',
-        'EQ_UncCost_Cher2',
+        #'EQ_UncCost_Cher',
+        #'EQ_UncCost_Cher2',
         
         #'EQ_UncCost_Bert',
         #'EQ_UncCost_Bert2',
 
-        'EQ_InvCostCE_Unc',   
-        'EQ_OpCost_Unc',
+        #'EQ_InvCostCE_Unc',   
+        #'EQ_OpCost_Unc',
         
         'EQ_FObj',
         'EQ_SysCost',
         'EQ_PenalCost',
-        #'EQ_TotalCost',
+        'EQ_TotalCost',
         'EQ_BMCost',
         'EQ_DMCost',
-        #'EQ_InvCostCE',
+        'EQ_InvCostCE',
         'EQ_InvCostST',
-        #'EQ_OpCost',
+        'EQ_OpCost',
         'EQ_OpVarom',
         'EQ_PEDomCap',
         'EQ_PEImpCap',
@@ -1849,16 +1849,16 @@ def make_model():
         #'EQ_EmiPM25ST',
         #'EQ_EmiPM25ESNS',
         #'EQ_EmiPM25Tot',
-        #'EQ_EmiCO2Cap',
+        'EQ_EmiCO2Cap',
         #'EQ_EmiNOxCap',
         #'EQ_EmiSOxCap',
         #'EQ_EmiPM25Cap',
         #'EQ_EmiCO2Budget',
-        'EQ_EmiCO2CapTra',
-        'EQ_EmiCO2CapEle',
+        #'EQ_EmiCO2CapTra',
+        #'EQ_EmiCO2CapEle',
         #'EQ_EmiCO2CapIndTE',
         #'EQ_EmiCO2CapIndPro',
-        'EQ_EmiCO2CapOth',
+        #'EQ_EmiCO2CapOth',
         #'EQ_EmiCO2CapRef',
     ]
     for eq in l_eq:
