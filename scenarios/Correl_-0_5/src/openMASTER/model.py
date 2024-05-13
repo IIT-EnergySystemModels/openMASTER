@@ -268,9 +268,9 @@ def make_model():
     m.pW_max             = Param(m.f,            within=Reals,                      doc = '')
     m.pW_min             = Param(m.f,            within=Reals,                      doc = '')
                             
-    m.pAlpha_up          = Param(m.f,m.sUnc,     within=Reals,                      doc = '')
-    m.pAlpha_do          = Param(m.f,m.sUnc,     within=Reals,                      doc = '')
-    m.pRest              = Param(m.f,m.sUnc,     within=Reals,                      doc = '')
+    m.pAlpha_up          = Param(m.sUnc,m.f,     within=Reals,                      doc = '')
+    m.pAlpha_do          = Param(m.sUnc,m.f,     within=Reals,                      doc = '')
+    m.pRest              = Param(m.sUnc,m.f,     within=Reals,                      doc = '')
 
     #RO parameter
     m.pTau               = Param(                within=Reals,                      doc = '')
@@ -529,8 +529,8 @@ def make_model():
     def EQ_UncCost_Cher         (m, sYear        ):
         return m.vUncCost[sYear] ==   (sum(m.vBeta[f,sYear] for f in m.f1)
                                     + (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
-                                       1e-3 * m.pYrGap * sum((m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) * (m.pS[sPE] + sum(m.pAlpha_do[f,sPE] for f in m.f1) + sum(m.pRest[f,sPE] for f in m.fr)) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
-                                    +                    sum( m.vCENewCap[sCE,sYear]                                                               * (m.pS[sCE] + sum(m.pAlpha_do[f,sCE] for f in m.f1) + sum(m.pRest[f,sCE] for f in m.fr)) for  sCE                     in m.sCE        ) 
+                                       1e-3 * m.pYrGap * sum((m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) * (m.pS[sPE] + sum(m.pAlpha_do[sPE,f] for f in m.f1) + sum(m.pRest[sPE,f] for f in m.fr)) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
+                                    +                    sum( m.vCENewCap[sCE,sYear]                                                               * (m.pS[sCE] + sum(m.pAlpha_do[sCE,f] for f in m.f1) + sum(m.pRest[sCE,f] for f in m.fr)) for  sCE                     in m.sCE        ) 
                                       )) * 1e-3
     #M€
     d['EQ_UncCost_Cher']               = Constraint(m.sYear,         rule = EQ_UncCost_Cher,              doc = 'Annual Total Operation Cost [M€]')
@@ -538,8 +538,8 @@ def make_model():
 
     def EQ_UncCost_Cher2         (m, f1, sYear        ):
         return m.vBeta[f1,sYear] >=        (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * 1e-3* (
-                                       1e-3 * m.pYrGap * sum((m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) * (m.pAlpha_up[f1,sPE] - m.pAlpha_do[f1,sPE]) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
-                                    +                    sum( m.vCENewCap[sCE,sYear]                                                               * (m.pAlpha_up[f1,sCE] - m.pAlpha_do[f1,sCE]) for  sCE                     in m.sCE        ) 
+                                       1e-3 * m.pYrGap * sum((m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) * (m.pAlpha_up[sPE,f1] - m.pAlpha_do[sPE,f1]) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
+                                    +                    sum( m.vCENewCap[sCE,sYear]                                                               * (m.pAlpha_up[sCE,f1] - m.pAlpha_do[sCE,f1]) for  sCE                     in m.sCE        ) 
                                       )
     #M€
     d['EQ_UncCost_Cher2']               = Constraint(m.f1,m.sYear,         rule = EQ_UncCost_Cher2,              doc = '')
@@ -573,7 +573,8 @@ def make_model():
         return m.vUncCost[sYear] ==   (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) *(
                                    1e-3*m.pYrGap              * sum(m.pUnc   [sPE,sYear] *    (m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
                                   +                             sum(m.pUnc   [sCE,sYear] *     m.vCENewCap[sCE,sYear]                                                               for  sCE                     in m.sCE        ) 
-                                      ) * 1e-3 +  sum(m.vP[sUnc,sYear] for (sUnc,sYear) in m.sUnc*m.sYear) + m.vW * m.pTau
+    #                                  ) * 1e-3 +  sum(m.vP[sUnc,sYear] for (sUnc,sYear) in m.sUnc*m.sYear) + m.vW * m.pTau
+                                      ) * 1e-3 +  sum(m.vP[sUnc,sYear] for sUnc in m.sUnc) + m.vW * m.pTau
     #M€
     d['EQ_UncCost_Bert']               = Constraint(m.sYear,         rule = EQ_UncCost_Bert,              doc = 'Annual Total Operation Cost [M€]')
 
@@ -1715,11 +1716,11 @@ def make_model():
         'EQ_UncCost_Cher',
         'EQ_UncCost_Cher2',
         
-        'EQ_InvCostCE_Unc',   
-        'EQ_OpCost_Unc',
-        
         #'EQ_UncCost_Bert',
         #'EQ_UncCost_Bert2',
+
+        'EQ_InvCostCE_Unc',   
+        'EQ_OpCost_Unc',
         
         'EQ_FObj',
         'EQ_SysCost',
