@@ -419,7 +419,7 @@ def _excel_table_to_list(path, sheetname, index_dim):
             for i in range(len(col_index_values)):
                 temp_values[col_index_names[i]] = col_index_values[i]
             # Añadimos el valor de los parámetros
-            temp_values[sheetname] = current_column_values.values
+            temp_values[sheetname] = current_column_values.values[:,0]
             # Rellenamos los valores de los parámetros vacíos con 0.0
             temp_values[sheetname].fillna(0.0, inplace = True)
             # Concatenamos los datos obtenidos a la lista de datos final (data_list)
