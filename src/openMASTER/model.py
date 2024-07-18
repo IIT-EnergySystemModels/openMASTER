@@ -97,7 +97,7 @@ def make_model():
       
     m.sYear               = Set  (within=m.sVin,                         doc = "Optimization years period"                             )
     m.sYearBNZ            = Set  (within=m.sVin,                         doc = "Before Net-Zero emissions target year period"          )
-    m.sYearANZ            = Set  (within=m.sVin,                         doc = "After Net-Zero emissions target year period"           )
+    #m.sYearANZ            = Set  (within=m.sVin,                         doc = "After Net-Zero emissions target year period"           )
     m.sYearCoal           = Set  (within=m.sVin,                         doc = "Coal phase-out  target year period"                    )
     m.sYearNuc            = Set  (within=m.sVin,                         doc = "Nuclear dismantling target year period"                )
 
@@ -202,7 +202,7 @@ def make_model():
     m.pGreenfield        = Param(                                                   doc = 'GreenField=1 | BrownField=0'                                                                                                 )
     m.pEmiCO2CapSectRestr= Param(                                                   doc = 'CO2 Emission Sectorial Cap=1 | CO2 Emission Global Cap=0'                                                                    )                     
     m.pEmiCO2BudgetRestr = Param(                                                   doc = 'CO2 Emission Budget       =1 | CO2 Emission Cap       =0'                                                                    )
-    m.pEmiCO2Cost        = Param(m.sYear,                                           doc = 'CO2 emission cost                                                                                    [€ per tCO2           ]')
+    m.pEmiCO2Cost        = Param(m.sYear,mutable=True,                              doc = 'CO2 emission cost                                                                                    [€ per tCO2           ]')
                                     
     m.pCEResMar          = Param(                                                   doc = 'Required reserve margin over peak demand, for adequacy restriction'                                                          )
     m.pCEDemErr          = Param(                                                   doc = 'Average prediction error in demand, for reserves restriction'                                                                )
@@ -212,7 +212,8 @@ def make_model():
                      
                      
     #Emissions                                      
-                     
+    
+    '''                 
     ##Global emission constraints                                      
     m.pEmiCO2Budget      = Param(                                                   doc = 'CO2  emission budget'                                                                                                        )
     m.pEmiCO2Cap         = Param(m.sYear,                                           doc = 'CO2  emission cap per year'                                                                                                  )
@@ -226,6 +227,8 @@ def make_model():
     m.pEmiCO2CapIndPro   = Param(m.sYear,                                           doc = 'Industrial sector (process) CO2 emission cap per year                                                [MtCO2                ]')
     m.pEmiCO2CapOth      = Param(m.sYear,                                           doc = 'Residential&Service sector  CO2 emission cap per year                                                [MtCO2                ]')
     m.pEmiCO2CapRef      = Param(m.sYear,                                           doc = 'Refinery sector             CO2 emission cap per year                                                [MtCO2                ]')
+    '''
+
     ##CO2                                                                           
     m.pEmiCO2CEPri       = Param(m.sPE,m.sCE,                                       doc = 'Primary CE CO2 emission factor                                                                       [tCO2 per MWh         ]')
     m.pEmiCO2CESec       = Param(m.sTE,m.sCE,                                       doc = 'Secondary CE CO2 emission factor                                                                     [tCO2 per MWh         ]')
@@ -233,7 +236,8 @@ def make_model():
     m.pEmiCO2TE          = Param(m.sTE,                                             doc = 'TE transportation CO2 emission factor                                                                [tCO2 per MWh         ]')
     m.pEmiCO2STTE        = Param(m.sST,m.sTE,                                       doc = 'TE consumption CO2 emission factor                                                                   [tCO2 per MWh         ]')
     m.pEmiCO2STPro       = Param(m.sST,m.sES,                                       doc = 'Process emission CO2 emission factor                                                                 [tCO2 per ES unit     ]')
-    m.pEmiCO2ESNS        = Param(                                                   doc = 'ENS CO2 emission factor                                                                              [tCO2 per ES unit     ]')
+    #m.pEmiCO2ESNS        = Param(                                                   doc = 'ENS CO2 emission factor                                                                              [tCO2 per ES unit     ]')
+    '''
     ##NOx                                                                                        
     m.pEmiNOxCEPri       = Param(m.sPE,m.sCE,                                       doc = 'Primary CE NOx emission factor                                                                       [tNOx per MWh         ]')
     m.pEmiNOxCESec       = Param(m.sTE,m.sCE,                                       doc = 'Secondary CE NOx emission factor                                                                     [tNOx per MWh         ]')
@@ -255,29 +259,13 @@ def make_model():
     m.pEmiPM25STTE       = Param(m.sST,m.sTE,                                       doc = 'TE consumption PM25 emission factor                                                                  [tPM25 per MWh        ]')
     m.pEmiPM25STPro      = Param(m.sST,m.sES,                                       doc = 'Process emission PM25 emission factor                                                                [tPM25 per ES unit    ]')
     m.pEmiPM25ESNS       = Param(                                                   doc = 'ENS PM25 emission factor                                                                             [tPM25 per ES unit    ]')
-                                                         
+    '''
+
     #ESNS                                                                                                    
     m.pESNSCost          = Param(                                                   doc = 'Energy service non supplied cost                                                                     [M€ per ES unit       ]')
 
-    #PCA parameters 
-    m.pUnc               = Param(m.sUnc,m.sYear,                                    doc = 'PE Cost and CE Capex                                                                                 [€ per MWh] or [€ per kW]')
-    m.pNumPCA            = Param(                                                   doc = 'number of PCA'                                                                                                               )
-   
-    m.pS                 = Param(    m.sUnc,     within=Reals,                      doc = '')
-                            
-    m.pW_max             = Param(m.f,            within=Reals,                      doc = '')
-    m.pW_min             = Param(m.f,            within=Reals,                      doc = '')
-                            
-    m.pAlpha_up          = Param(m.sUnc,m.f,     within=Reals,                      doc = '')
-    m.pAlpha_do          = Param(m.sUnc,m.f,     within=Reals,                      doc = '')
-    m.pRest              = Param(m.sUnc,m.f,     within=Reals,                      doc = '')
-
-    #RO parameter
-    m.pTau               = Param(                within=Reals,                      doc = '')
-    m.pDeltaUnc          = Param(m.sUnc,m.sYear, within=Reals,                      doc = '')
-       
     #PE Primary Energy characterization                                                                                                                        
-    m.pPECost            = Param(m.sPE,m.sYear,                                     doc = 'PE Cost                                                                                              [€    per MWh         ]')
+    m.pPECost            = Param(m.sPE,m.sYear,mutable=True,                        doc = 'PE Cost                                                                                              [€    per MWh         ]')
     m.pPEDomCap          = Param(m.sPE,                                             doc = 'PE domestic consumption capacity                                                                     [GW                   ]')
     m.pPEImpCap          = Param(m.sPE,                                             doc = 'PE importation capacity                                                                              [GW                   ]')
                                                              
@@ -290,14 +278,14 @@ def make_model():
     m.pCEStoEff          = Param(m.sTE,m.sCE,                                       doc = 'CESto Efficiency factor                                                                              [%                    ]')
     m.pCELife            = Param(      m.sCE,                                       doc = 'Life of energy technologies                                                                          [years                ]')
     m.pCEInsCap          = Param(      m.sCE,                                       doc = 'Previous installed capacity of CE                                                                    [GW                   ]')
-    m.pCEMaxCap          = Param(      m.sCE,                                       doc = 'Maximum installed capacity of CE                                                                     [GW                   ]')
+    m.pCEMaxCap          = Param(      m.sCE, mutable=True,                         doc = 'Maximum installed capacity of CE                                                                     [GW                   ]')
     m.pCEStoCap          = Param(      m.sCE,                                       doc = 'Storage capacity in terms of energy                                                                  [MWh                  ]')
-    m.pCECapex           = Param(      m.sCE,      m.sYear,                         doc = 'CAPEX of CE                                                                                          [€ per kW             ]')
+    m.pCECapex           = Param(      m.sCE,      m.sYear, mutable=True,           doc = 'CAPEX of CE                                                                                          [€ per kW             ]')
     m.pCEDecom           = Param(      m.sCE,      m.sYear,                         doc = 'Decommission cost of CE                                                                              [€ per kW             ]')
     m.pCEFixom           = Param(      m.sCE,                                       doc = 'Fixed O&M costs of CE                                                                                [€ per kW             ]')
     m.pCEVarom           = Param(      m.sCE,m.sTE,                                 doc = 'Variable O&M costs of CE                                                                             [€ per MWh            ]')
     m.pCEReact           = Param(      m.sCE,      m.sYear,                         doc = 'Reactivation cost of CE                                                                              [€ per kW             ]')     
-    m.pCEAF              = Param(      m.sCE,              m.sSeason,m.sDay,m.sHour,doc = 'Availability factor of CE                                                                            [%                    ]') 
+    m.pCEAF              = Param(      m.sCE,m.sSeason,m.sDay,m.sHour, mutable=True,doc = 'Availability factor of CE                                                                            [%                    ]') 
     m.pCEFlex            = Param(      m.sCE_Ele,                                   doc = 'Electricity generation technology flexibility factor                                                 [%                    ]')
     m.pCEFirm            = Param(      m.sCE_Ele,                                   doc = 'Electricity generation technology firmness factor                                                    [%                    ]')
                                                          
@@ -311,14 +299,14 @@ def make_model():
     #ST technologies characterization                                                                                                                              
     m.pSTOutShareMin     = Param(m.sST,m.sES,                                       doc = 'ST Outshare minimum                                                                                  [%                    ]')
     m.pSTOutShareMax     = Param(m.sST,m.sES,                                       doc = 'ST Outshare maximum                                                                                  [%                    ]')
-    m.pMSMax             = Param(                                                   doc = 'Maximum modal shift                                                                                  [%                    ]')    
+    m.pMSMax             = Param(mutable=True,                                      doc = 'Maximum modal shift                                                                                  [%                    ]')    
     m.pTCMax             = Param(                                                   doc = 'Maximum technological choice                                                                         [%                    ]')    
     m.pSTEffTE           = Param(m.sST,m.sES,m.sTE,m.sVin,                          doc = 'ST efficiency                                                                                        [GWh per ES units     ]')
     m.pSTEffRM           = Param(m.sRM,m.sST,m.sES,                                 doc = 'RM input                                                                                             [RM units per ES units]')
     m.pSTInsCap          = Param(m.sST,m.sVin,                                      doc = 'ST previous installed capacity                                                                       [ST units             ]')        
     m.pSTMaxCap          = Param(m.sST,                                             doc = 'ST maximum allowed capacity                                                                          [ST units             ]')        
     m.pSTMaxPro          = Param(m.sST,                                             doc = 'Maximum ST annual production                                                                         [ES units             ]')
-    m.pSTCapex           = Param(m.sST,m.sYear,                                     doc = 'ST CAPEX cost                                                                                        [G€ per ST unit       ]')
+    m.pSTCapex           = Param(m.sST,m.sYear, mutable=True,                       doc = 'ST CAPEX cost                                                                                        [G€ per ST unit       ]')
     m.pSTDecom           = Param(m.sST,m.sYear,                                     doc = 'ST Decommission cost                                                                                 [G€ per ST unit       ]')
     m.pSTDecProb         = Param(m.sST,m.sAge,                                      doc = 'ST decommission probability                                                                          [%                    ]')
     m.pSTFixom           = Param(m.sST,                                             doc = 'ST Fixom cost                                                                                        [k€ per ST unit       ]') 
@@ -326,7 +314,7 @@ def make_model():
     m.pESLoad            = Param(m.sES,m.sSeason,m.sDay,m.sHour,                    doc = 'ES load curve                                                                                        [%                    ]')         
                                                  
     #Activity factors                                                                                             
-    m.pAFTra             = Param(m.sST,m.sES,m.sSD,                                 doc = 'Activity factor (Occupancy Rate) Transportation                                                      [%                    ]')
+    m.pAFTra             = Param(m.sST,m.sES,m.sSD,mutable=True,                                 doc = 'Activity factor (Occupancy Rate) Transportation                                                      [%                    ]')
     m.pAFOth             = Param(m.sES,m.sSD,m.sMD,                                 doc = 'Activity factor (ES demand per dwelling/km2)                                                         [ES units             ]')
     m.pAFInd             = Param(m.sES,m.sSD,                                       doc = 'Activity factor (none)                                                                               [%                    ]')
     #Behavioural Measures                                                            
@@ -340,8 +328,8 @@ def make_model():
     m.pDeltaDC           = Param(m.sSD,m.sMD,            m.sDM,                     doc = 'Demand shift Measures max improvement allowed                                                        [%                    ]')
     
     # Demand characterization and Macro data                                        
-    m.pDC                = Param(m.sSD,m.sMD,                                       doc = 'Demand characterization                                                                              [DC unit              ]')
-    m.pMD                = Param(m.sMD,m.sYear,                                     doc = 'Macro data                                                                                           [MD unit              ]')
+    m.pDC                = Param(m.sSD,m.sMD,mutable=True,                          doc = 'Demand characterization                                                                              [DC unit              ]')
+    m.pMD                = Param(m.sMD,m.sYear,mutable=True,                        doc = 'Macro data                                                                                           [MD unit              ]')
     
     
     # Variables definition
@@ -351,7 +339,7 @@ def make_model():
     m.vTotalCost          = Var  (                                 m.sYear,                within = Reals,            doc = "Annual Total cost                                                                            [G€              ]")
     m.vBMCost             = Var  (      m.sBM,                     m.sYear,                within = Reals,            doc = "Annual Behavioural Measures cost                                                             [G€              ]")
     m.vDMCost             = Var  (      m.sDM,                     m.sYear,                within = Reals,            doc = "Annual Demand shift Measures cost                                                            [G€              ]")
-    m.vPenalCost          = Var  (                                 m.sYear,                within = Reals,            doc = "Annual Penalization cost                                                                     [G€              ]")
+    #m.vPenalCost          = Var  (                                 m.sYear,                within = Reals,            doc = "Annual Penalization cost                                                                     [G€              ]")
     m.vInvCostCE          = Var  (      m.sCE,                     m.sYear,                within = Reals,            doc = "Annual Total CE investment cost                                                              [G€              ]")
     m.vInvCostST          = Var  (      m.sST,                     m.sYear,                within = Reals,            doc = "Annual Total ST investment cost                                                              [G€              ]")
     m.vOpCost             = Var  (                                 m.sYear,                within = Reals,            doc = "Annual Total operation cost                                                                  [M€              ]")
@@ -436,7 +424,8 @@ def make_model():
     m.vEmiCO2Tot          = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Annual Total CO2 emissions                                                                   [MtCO2           ]")
     m.vEmiCO2CapExc       = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Excess of CO2 emissions regarding Carbon Cap 2050 onwards (slack variable)                   [MtCO2           ]")
     m.vEmiCO2BudgetExc    = Var  (                                                         within = NonNegativeReals, doc = "Excess of CO2 emissions regarding Carbon Budget (slack variable)                             [MtCO2           ]")
-                    
+
+    '''                
     #NOx Emission variables                               
     m.vEmiNOxCE           = Var  (      m.sCE,                     m.sYear,                within = NonNegativeReals, doc = "NOx emissions produced in CE processes                                                       [ktNOx           ]")
     m.vEmiNOxCEPri        = Var  (m.sQCEPriIN,                     m.sYear,                within = NonNegativeReals, doc = "NOx emissions produced in Primary CE processes                                               [ tNOx           ]")
@@ -482,13 +471,10 @@ def make_model():
     m.vEmiCO2CapOthExc    = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Excess of CO2 emissions regarding Carbon Cap in Residential&Service sector  (slack variable) [MtCO2           ]")
     m.vEmiCO2CapRefExc    = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Excess of CO2 emissions regarding Carbon Cap in Refinery sector             (slack variable) [MtCO2           ]")
     
-    #Correlation Uncertainty
+    #Uncertainty
     m.vBeta               = Var  (m.f,m.sYear,                                             within = NonNegativeReals, doc = "PCA beta (dual variable)                  ")
     m.vUncCost            = Var  (    m.sYear,                                             within = NonNegativeReals, doc = "Uncertain cost                            ")    
-
-    #RO Uncertainty
-    m.vW                  = Var  (                                                         within = NonNegativeReals, doc = "RO Additional variable W                  ")
-    m.vP                  = Var  (m.sUnc,m.sYear,                                          within = NonNegativeReals, doc = "RO Additional variable P                  ")
+    '''
 
     d = dict()
     
@@ -500,102 +486,18 @@ def make_model():
         return  (m.vSysCost)
     d['EQ_FObj']             = Objective (sense = minimize,       rule = EQ_FObj,            doc = 'Total system cost minimization objective function')
     
+
     ##### Constraints
-
-
-
-
-    # Uncertainty eqs
-
-
-    
-    def EQ_TotalCost_Unc         (m, sYear        ):
-        return m.vTotalCost[sYear] ==  m.vUncCost[sYear] + (1e-3*m.vOpCost[sYear]) + sum(m.vInvCostCE[sCE,sYear] for sCE in m.sCE) + sum(m.vInvCostST[sST,sYear] for sST in m.sST)
-    #G€
-    d['EQ_TotalCost_Unc']            = Constraint(m.sYear,         rule = EQ_TotalCost_Unc,           doc = 'Annual Total Cost = Total Investment Cost + Total Operation Cost [G€]')
-
-
-
-    def EQ_UncCost         (m, sYear        ):
-        return m.vUncCost[sYear] ==   (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) *(
-                                   1e-3*m.pYrGap              * sum(m.pUnc   [sPE,sYear] *    (m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
-                                  +                             sum(m.pUnc   [sCE,sYear] *     m.vCENewCap[sCE,sYear]                                                               for  sCE                     in m.sCE        ) 
-                                      ) * 1e-3
-    #M€
-    d['EQ_UncCost']               = Constraint(m.sYear,         rule = EQ_UncCost,              doc = 'Annual Total Operation Cost [M€]')
-
-
-
-    def EQ_UncCost_Cher         (m, sYear        ):
-        return m.vUncCost[sYear] ==   (sum(m.vBeta[f,sYear] for f in m.f1)
-                                    + (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
-                                       1e-3 * m.pYrGap * sum((m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) * (m.pS[sPE] + sum(m.pAlpha_do[sPE,f] for f in m.f1) + sum(m.pRest[sPE,f] for f in m.fr)) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
-                                    +                    sum( m.vCENewCap[sCE,sYear]                                                               * (m.pS[sCE] + sum(m.pAlpha_do[sCE,f] for f in m.f1) + sum(m.pRest[sCE,f] for f in m.fr)) for  sCE                     in m.sCE        ) 
-                                      )) * 1e-3
-    #M€
-    d['EQ_UncCost_Cher']               = Constraint(m.sYear,         rule = EQ_UncCost_Cher,              doc = 'Annual Total Operation Cost [M€]')
-
-
-    def EQ_UncCost_Cher2         (m, f1, sYear        ):
-        return m.vBeta[f1,sYear] >=        (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * 1e-3* (
-                                       1e-3 * m.pYrGap * sum((m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) * (m.pAlpha_up[sPE,f1] - m.pAlpha_do[sPE,f1]) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
-                                    +                    sum( m.vCENewCap[sCE,sYear]                                                               * (m.pAlpha_up[sCE,f1] - m.pAlpha_do[sCE,f1]) for  sCE                     in m.sCE        ) 
-                                      )
-    #M€
-    d['EQ_UncCost_Cher2']               = Constraint(m.f1,m.sYear,         rule = EQ_UncCost_Cher2,              doc = '')
-
-
-    def EQ_OpCost_Unc         (m, sYear        ):
-        return m.vOpCost[sYear] ==   m.pYrGap * (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) *(                                                                                                                    
-                              1e3 * sum(m.pCEFixom[sCE]       *     m.vCEActCap[sCE,             sYear                    ] for sCE                                          in m.sCE) 
-                            + 1e3 * sum(m.pRMCost [sRM,sYear] *     m.vQSTInRM [sRM,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,sRM,sST,sES,sVin,sSeason,sDay,sHour)      in m.sQSTInRM_indexed[sYear])
-                            + 1e-3* sum(m.pSTFixom[sST      ] *     m.vSTTotCap[    sST,    sVin,sYear                   ]  for (_,sST,sVin)                                 in m.sQSTVin_indexed[sYear])
-                            + 1e-3* sum(m.pSTVarom[sST,sES  ] *    (m.vQSTOut  [    sST,sES,sVin,sYear,sSeason,sDay,sHour]) for (_,sST,sES,sVin,sSeason,sDay,sHour)          in m.sQSTOUT_VinTime_indexed[sYear]) 
-                           #+ 1e3*      m.pESNSCost           * sum(m.vQESNS   [sST,sES,         sYear,sSeason,sDay,sHour]  for (_,sST,sES,sSeason,sDay,sHour)               in m.sQSTOUT_Time_indexed[sYear])
-                            +           m.vOpVarom[sYear]  
-                            ) * 1e-3
-    #M€
-    d['EQ_OpCost_Unc']               = Constraint(m.sYear,         rule = EQ_OpCost_Unc,              doc = 'Annual Total Operation Cost [M€]')
-
-
-    def EQ_InvCostCE_Unc         (m, sCE, sYear        ):
-         return m.vInvCostCE[sCE,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
-                                            m.pCEDecom[sCE,sYear] * m.vCEDecCap     [sCE,sYear] 
-                                          + m.pCEReact[sCE,sYear] * m.vCEDeltaActCap[sCE,sYear]
-                                           ) *1e-3
-    #G€
-    d['EQ_InvCostCE_Unc']            = Constraint(m.sCE, m.sYear,  rule = EQ_InvCostCE_Unc,           doc = 'Annual Total CE Investment Cost [G€]')
-
-
-    # RO Bertsimas
-
-    def EQ_UncCost_Bert         (m, sYear        ):
-        return m.vUncCost[sYear] ==   (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) *(
-                                   1e-3*m.pYrGap              * sum(m.pUnc   [sPE,sYear] *    (m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
-                                  +                             sum(m.pUnc   [sCE,sYear] *     m.vCENewCap[sCE,sYear]                                                               for  sCE                     in m.sCE        ) 
-    #                                  ) * 1e-3 +  sum(m.vP[sUnc,sYear] for (sUnc,sYear) in m.sUnc*m.sYear) + m.vW * m.pTau
-                                      ) * 1e-3 +  sum(m.vP[sUnc,sYear] for sUnc in m.sUnc) + m.vW * m.pTau
-    #M€
-    d['EQ_UncCost_Bert']               = Constraint(m.sYear,         rule = EQ_UncCost_Bert,              doc = 'Annual Total Operation Cost [M€]')
-
-    def EQ_UncCost_Bert2         (m, sUnc, sYear        ):
-        return m.vW + m.vP[sUnc,sYear] >=   (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) *(
-                                   1e-3*m.pYrGap              * sum(m.pDeltaUnc   [sPE,sYear] *    (m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
-                                  +                             sum(m.pDeltaUnc   [sCE,sYear] *     m.vCENewCap[sCE,sYear]                                                               for  sCE                     in m.sCE        ) 
-                                      ) * 1e-3
-    #M€
-    d['EQ_UncCost_Bert2']               = Constraint(m.sUnc, m.sYear,         rule = EQ_UncCost_Bert2,              doc = 'Annual Total Operation Cost [M€]')
-
 
     # Objective function-related constraints
     
     
     def EQ_SysCost           (m        ):
         return m.vSysCost ==        (sum(m.vTotalCost      [sYear] for       sYear  in       m.sYear)  
-                            +        sum(m.vPenalCost      [sYear] for       sYear  in       m.sYear)
+                            #+        sum(m.vPenalCost      [sYear] for       sYear  in       m.sYear)
                             +        sum(m.vBMCost     [sBM,sYear] for (sBM, sYear) in m.sBM*m.sYear)
                             +        sum(m.vDMCost     [sDM,sYear] for (sDM, sYear) in m.sDM*m.sYear)
-                            +            m.pEmiCO2BudgetRestr * m.vEmiCO2BudgetExc
+                            #+            m.pEmiCO2BudgetRestr * m.vEmiCO2BudgetExc
                             )
     #G€
     d['EQ_SysCost']              = Constraint(                 rule = EQ_SysCost,             doc = 'Total System Cost [G€]')
@@ -612,7 +514,7 @@ def make_model():
     
     
     def EQ_TotalCost         (m, sYear        ):
-        return m.vTotalCost[sYear] ==  (1e-3*m.vOpCost[sYear]) + sum(m.vInvCostCE[sCE,sYear] for sCE in m.sCE) + sum(m.vInvCostST[sST,sYear] for sST in m.sST)
+        return m.vTotalCost[sYear] ==  (1e-3*m.vOpCost[sYear]) + sum(m.vInvCostCE[sCE,sYear] for sCE in m.sCE) + sum(m.vInvCostST[sST,sYear] for sST in m.sST) + 1e-3 * m.vEmiCO2Tot [sYear] * m.pEmiCO2Cost [sYear]
     #G€
     d['EQ_TotalCost']            = Constraint(m.sYear,         rule = EQ_TotalCost,           doc = 'Annual Total Cost = Total Investment Cost + Total Operation Cost [G€]')
     
@@ -674,8 +576,6 @@ def make_model():
     #M€
     d['EQ_OpCost']               = Constraint(m.sYear,         rule = EQ_OpCost,              doc = 'Annual Total Operation Cost [M€]')
  
-    
-
     
     def EQ_OpVarom         (m, sYear        ):
         return m.vOpVarom[sYear] ==  (
@@ -1415,7 +1315,7 @@ def make_model():
     ##Total
      
     def EQ_EmiCO2Tot         (m, sYear        ):
-        return   m.vEmiCO2Tot [sYear]  ==  (sum(m.vEmiCO2CE [sCE,sYear] for sCE in m.sCE) + sum(m.vEmiCO2TE [sTE,sYear] for sTE in m.sTE) + sum(m.vEmiCO2ST [sST,sES,sYear] for (sST,sES) in m.sQSTOUT))/1e3 #+ m.vEmiCO2ESNS[sYear])/1e3
+        return   m.vEmiCO2Tot [sYear]  ==  (sum(m.vEmiCO2CE [sCE,sYear] for sCE in m.sCE) + sum(m.vEmiCO2TE [sTE,sYear] for sTE in m.sTE) + sum(m.vEmiCO2ST [sST,sES,sYear] for (sST,sES) in m.sQSTOUT))/1e3 #+ m.vEmiCO2ESNS[sYear]/1e3
     #MtCO2
     d['EQ_EmiCO2Tot']              = Constraint(m.sYear,                    rule = EQ_EmiCO2Tot,             doc = 'Total CO2 emissions [MtCO2]')
     
@@ -1650,8 +1550,7 @@ def make_model():
     #MtPM25
     d['EQ_EmiPM25Cap']           = Constraint(m.sYear,        rule = EQ_EmiPM25Cap,          doc = 'Emission cap restriction [MtPM25]')
     
-    
-    
+ 
     ##Carbon budget
     
     def EQ_EmiCO2Budget         (m        ):
@@ -1670,7 +1569,7 @@ def make_model():
         return    m.pEmiCO2CapTra [sYear] >=  sum(m.vEmiCO2ST [sST_Tra,sES_Tra,sYear] for (sST_Tra,sES_Tra) in m.sQSTOUT_Tra)*1e-3 - m.vEmiCO2CapTraExc [sYear]
     #MtCO2
     d['EQ_EmiCO2CapTra']            = Constraint(m.sYear,        rule = EQ_EmiCO2CapTra,           doc = 'Transport emission cap restriction [MtCO2]')
-    
+
     
     
     ## Electric generation
@@ -1709,22 +1608,9 @@ def make_model():
     d['EQ_EmiCO2CapRef']            = Constraint(m.sYear,        rule = EQ_EmiCO2CapRef,           doc = 'Refinery production emission cap restriction [MtCO2]')
 
     l_eq = [
-        #'EQ_TotalCost_Unc',
-        
-        #'EQ_UncCost',
-        
-        #'EQ_UncCost_Cher',
-        #'EQ_UncCost_Cher2',
-        
-        #'EQ_UncCost_Bert',
-        #'EQ_UncCost_Bert2',
-
-        #'EQ_InvCostCE_Unc',   
-        #'EQ_OpCost_Unc',
-        
         'EQ_FObj',
         'EQ_SysCost',
-        'EQ_PenalCost',
+        #'EQ_PenalCost',
         'EQ_TotalCost',
         'EQ_BMCost',
         'EQ_DMCost',
@@ -1849,7 +1735,7 @@ def make_model():
         #'EQ_EmiPM25ST',
         #'EQ_EmiPM25ESNS',
         #'EQ_EmiPM25Tot',
-        'EQ_EmiCO2Cap',
+        #'EQ_EmiCO2Cap',
         #'EQ_EmiNOxCap',
         #'EQ_EmiSOxCap',
         #'EQ_EmiPM25Cap',

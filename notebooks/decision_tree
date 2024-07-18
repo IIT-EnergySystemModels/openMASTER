@@ -1,0 +1,17 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname="helvetica"] ;
+edge [fontname="helvetica"] ;
+0 [label=<LNG_cost &le; 46.25<br/>squared_error = 11026227.844<br/>samples = 512<br/>value = 40921.065>, fillcolor="#f5cdb0"] ;
+1 [label=<Wind_capex &le; 1500.0<br/>squared_error = 9697684.493<br/>samples = 256<br/>value = 43251.95>, fillcolor="#eda673"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label=<squared_error = 2186651.505<br/>samples = 128<br/>value = 41039.521>, fillcolor="#f4cbad"] ;
+1 -> 2 ;
+3 [label=<squared_error = 7419032.083<br/>samples = 128<br/>value = 45464.379>, fillcolor="#e58139"] ;
+1 -> 3 ;
+4 [label=<CO2_cost &le; 125.0<br/>squared_error = 1488725.067<br/>samples = 256<br/>value = 38590.181>, fillcolor="#fdf3ed"] ;
+0 -> 4 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+5 [label=<squared_error = 811528.794<br/>samples = 128<br/>value = 37883.617>, fillcolor="#ffffff"] ;
+4 -> 5 ;
+6 [label=<squared_error = 1167455.885<br/>samples = 128<br/>value = 39296.745>, fillcolor="#fae8da"] ;
+4 -> 6 ;
+}
