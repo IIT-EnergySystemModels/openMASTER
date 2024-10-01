@@ -1,0 +1,23 @@
+from gurobipy import *
+m=read('m_openMASTER_inst.lp')
+m.printStats()
+# m.setParam('getA()',)
+# m.setParam('Method'   ,2)
+# m.setParam('Crossover',0)
+# m.setParam('OutputFlag', 1)
+# m.setParam('LogToConsole', 1)
+# m.setParam('NumericFocus', 3)
+# m.setParam('IISMethod', 0)
+#m.setParam('BarHomogeneous', 1)
+# m.setParam('FeasRelaxS', 0)
+# m.feasRelaxS(2, False, False, True)
+# # m.write('p2.lp')
+# m=m.presolve()
+# m.write('Model_264_PS.lp')
+
+#m.optimize()
+
+# m.printQuality()
+# print(m.KappaExact)
+m.computeIIS()
+m.write('pp.ilp')

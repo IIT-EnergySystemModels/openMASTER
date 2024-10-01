@@ -17,7 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "pandas~=1.5",
+    "pandas>=1.5",
     "pyomo~=6.5",
     "openpyxl~=3.1",
     "matplotlib~=3.7",
