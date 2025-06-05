@@ -41,13 +41,17 @@ def make_model():
     m.sCEPri              = Set  (within=m.sCE,                          doc = "Conversion Energy Technologies with PE input"          )
     m.sCESec              = Set  (within=m.sCE,                          doc = "Conversion Energy Technologies with TE input"          )
     m.sCESto              = Set  (within=m.sCE,                          doc = "Storage Energy Technologies"                           )
+    m.sCE_Hour            = Set  (within=m.sCE,                          doc = "Conversion Energy Technologies w/ hour balance"        )
     m.sCE_Nuc             = Set  (within=m.sCE,                          doc = "Nuclear Energy Technologies"                           )
     m.sCE_Hydro           = Set  (within=m.sCE,                          doc = "Hydro Energy Technologies"                             )
+    m.sCE_Hydro_Reserv    = Set  (within=m.sCE,                          doc = "Hydro Energy Technologies. Reservoir Capacity"         )
+    m.sCE_Hydro_Run       = Set  (within=m.sCE,                          doc = "Hydro Energy Technologies. Run of River"               )
     m.sCE_Coal            = Set  (within=m.sCE,                          doc = "Coal Energy Technologies"                              )
     m.sCE_Var             = Set  (within=m.sCE,                          doc = "Variable Energy Technologies"                          )
     m.sCE_Ele             = Set  (within=m.sCE,                          doc = "Electricity Energy Technologies"                       )
     m.sCE_Ref             = Set  (within=m.sCE,                          doc = "Refine Energy Technologies"                            )
       
+    m.sTE_Hour            = Set  (within=m.sTE,                          doc = "Final Energy Commodities w/ hourly balance"            )
     m.sTE_Ele             = Set  (within=m.sTE,                          doc = "Electricity Final Energy Commodities"                  )
        
     m.sST_Tra             = Set  (within=m.sST,                          doc = "Transportation Supply Technologies"                    )
@@ -199,10 +203,11 @@ def make_model():
     m.pTimeSlice         = Param(m.sSeason, m.sDay, m.sHour,                        doc = 'Time slice load factor'                                                                                                      )
     m.pNumHours          = Param(                                                   doc = 'Number of hours in the time slice'                                                                                           )
     m.pDisRate           = Param(                                                   doc = 'Discount Rate'                                                                                                               )
+    m.pGrowthRate        = Param(                                                   doc = 'Growth Rate for Residual Value hypothesis'                                                                                   )
     m.pGreenfield        = Param(                                                   doc = 'GreenField=1 | BrownField=0'                                                                                                 )
     m.pEmiCO2CapSectRestr= Param(                                                   doc = 'CO2 Emission Sectorial Cap=1 | CO2 Emission Global Cap=0'                                                                    )                     
     m.pEmiCO2BudgetRestr = Param(                                                   doc = 'CO2 Emission Budget       =1 | CO2 Emission Cap       =0'                                                                    )
-    m.pEmiCO2Cost        = Param(m.sYear,                                           doc = 'CO2 emission cost                                                                                    [€ per tCO2           ]')
+    m.pEmiCO2Cost        = Param(m.sYear,mutable=True,                              doc = 'CO2 emission cost                                                                                    [€ per tCO2           ]')
                                     
     m.pCEResMar          = Param(                                                   doc = 'Required reserve margin over peak demand, for adequacy restriction'                                                          )
     m.pCEDemErr          = Param(                                                   doc = 'Average prediction error in demand, for reserves restriction'                                                                )
@@ -277,9 +282,9 @@ def make_model():
     m.pDeltaUnc          = Param(m.sUnc,m.sYear, within=Reals,                      doc = '')
        
     #PE Primary Energy characterization                                                                                                                        
-    m.pPECost            = Param(m.sPE,m.sYear,                                     doc = 'PE Cost                                                                                              [€    per MWh         ]')
-    m.pPEDomCap          = Param(m.sPE,                                             doc = 'PE domestic consumption capacity                                                                     [GW                   ]')
-    m.pPEImpCap          = Param(m.sPE,                                             doc = 'PE importation capacity                                                                              [GW                   ]')
+    m.pPECost            = Param(m.sPE,m.sYear,mutable=True,                        doc = 'PE Cost                                                                                              [€    per MWh         ]')
+    m.pPEDomCap          = Param(m.sPE,m.sYear,                                     doc = 'PE domestic consumption capacity                                                                     [GWh                  ]')
+    m.pPEImpCap          = Param(m.sPE,m.sYear,                                     doc = 'PE importation capacity                                                                              [GWh                  ]')
                                                              
     #CE Conversion technologies characterization                                                                                                                                
     m.pCEOutShareMin     = Param(      m.sCE,m.sTE,                                 doc = 'Minimum Output share                                                                                 [%                    ]')
@@ -291,8 +296,8 @@ def make_model():
     m.pCELife            = Param(      m.sCE,                                       doc = 'Life of energy technologies                                                                          [years                ]')
     m.pCEInsCap          = Param(      m.sCE,                                       doc = 'Previous installed capacity of CE                                                                    [GW                   ]')
     m.pCEMaxCap          = Param(      m.sCE,                                       doc = 'Maximum installed capacity of CE                                                                     [GW                   ]')
-    m.pCEStoCap          = Param(      m.sCE,                                       doc = 'Storage capacity in terms of energy                                                                  [MWh                  ]')
-    m.pCECapex           = Param(      m.sCE,      m.sYear,                         doc = 'CAPEX of CE                                                                                          [€ per kW             ]')
+    m.pCEStoRat          = Param(      m.sCE,                                       doc = 'Storage ratio capacity in terms of energy/power                                                      [GWh/GW               ]')
+    m.pCECapex           = Param(      m.sCE,      m.sYear,mutable=True,            doc = 'CAPEX of CE                                                                                          [€ per kW             ]')
     m.pCEDecom           = Param(      m.sCE,      m.sYear,                         doc = 'Decommission cost of CE                                                                              [€ per kW             ]')
     m.pCEFixom           = Param(      m.sCE,                                       doc = 'Fixed O&M costs of CE                                                                                [€ per kW             ]')
     m.pCEVarom           = Param(      m.sCE,m.sTE,                                 doc = 'Variable O&M costs of CE                                                                             [€ per MWh            ]')
@@ -300,7 +305,14 @@ def make_model():
     m.pCEAF              = Param(      m.sCE,              m.sSeason,m.sDay,m.sHour,doc = 'Availability factor of CE                                                                            [%                    ]') 
     m.pCEFlex            = Param(      m.sCE_Ele,                                   doc = 'Electricity generation technology flexibility factor                                                 [%                    ]')
     m.pCEFirm            = Param(      m.sCE_Ele,                                   doc = 'Electricity generation technology firmness factor                                                    [%                    ]')
-                                                         
+    m.pCEInsPathwayCap   = Param(      m.sCE, m.sYear,                              doc = 'Installed capacity of CE in the pathway                                                              [GW                   ]')                                                  
+    m.pCECapExcess       = Param(                                                   doc = 'Excess capacity of CE in the pathway                                                                 [GW                   ]')
+
+    #Hidraulicity
+    m.pCEHydro           = Param(             m.sYear, m.sSeason,                   doc = 'Hidraulicity parameter                                                                               [GWh                  ]')
+    m.pCEHRR             = Param(                                                   doc = 'Share of hidraulicity corresponding to Run of River                                                  [%                    ]')
+
+
     #TE Transformed energy characterization                                                                                                                                 
     m.pTELoss            = Param(m.sTE,                                             doc = 'TE transportation losses                                                                             [%                    ]')
                                                                              
@@ -311,18 +323,21 @@ def make_model():
     #ST technologies characterization                                                                                                                              
     m.pSTOutShareMin     = Param(m.sST,m.sES,                                       doc = 'ST Outshare minimum                                                                                  [%                    ]')
     m.pSTOutShareMax     = Param(m.sST,m.sES,                                       doc = 'ST Outshare maximum                                                                                  [%                    ]')
-    m.pMSMax             = Param(                                                   doc = 'Maximum modal shift                                                                                  [%                    ]')    
+    m.pMSMax             = Param(mutable=True,                                      doc = 'Maximum modal shift                                                                                  [%                    ]')    
     m.pTCMax             = Param(                                                   doc = 'Maximum technological choice                                                                         [%                    ]')    
-    m.pSTEffTE           = Param(m.sST,m.sES,m.sTE,m.sVin,                          doc = 'ST efficiency                                                                                        [GWh per ES units     ]')
+    m.pSTEffTE           = Param(m.sST,m.sES,m.sTE,m.sVin,mutable=True,             doc = 'ST efficiency                                                                                        [GWh per ES units     ]')
     m.pSTEffRM           = Param(m.sRM,m.sST,m.sES,                                 doc = 'RM input                                                                                             [RM units per ES units]')
     m.pSTInsCap          = Param(m.sST,m.sVin,                                      doc = 'ST previous installed capacity                                                                       [ST units             ]')        
     m.pSTMaxCap          = Param(m.sST,                                             doc = 'ST maximum allowed capacity                                                                          [ST units             ]')        
     m.pSTMaxPro          = Param(m.sST,                                             doc = 'Maximum ST annual production                                                                         [ES units             ]')
-    m.pSTCapex           = Param(m.sST,m.sYear,                                     doc = 'ST CAPEX cost                                                                                        [G€ per ST unit       ]')
+    m.pSTCapex           = Param(m.sST,m.sYear,mutable=True,                        doc = 'ST CAPEX cost                                                                                        [G€ per ST unit       ]')
     m.pSTDecom           = Param(m.sST,m.sYear,                                     doc = 'ST Decommission cost                                                                                 [G€ per ST unit       ]')
     m.pSTDecProb         = Param(m.sST,m.sAge,                                      doc = 'ST decommission probability                                                                          [%                    ]')
+    m.pSTLifeExp         = Param(m.sST,                                             doc = 'ST expected life (used for residual value). Note it is not the life span, which is calculated using decommision probability [year]') 
     m.pSTFixom           = Param(m.sST,                                             doc = 'ST Fixom cost                                                                                        [k€ per ST unit       ]') 
-    m.pSTVarom           = Param(m.sST,m.sES,                                       doc = 'ST Varom cost                                                                                        [ € per ES unit       ]')         
+    m.pSTVarom           = Param(m.sST,m.sES,                                       doc = 'ST Varom cost                                                                                        [ € per ES unit       ]')
+    m.pSTInsPathwayCap   = Param(m.sST,m.sYear,                                     doc = 'Installed capacity of ST in the pathway                                                              [ST units             ]')
+    m.pSTCapExcess       = Param(                                                   doc = 'Excess capacity of ST in the pathway                                                                 [ST units             ]')
     m.pESLoad            = Param(m.sES,m.sSeason,m.sDay,m.sHour,                    doc = 'ES load curve                                                                                        [%                    ]')         
                                                  
     #Activity factors                                                                                             
@@ -340,8 +355,8 @@ def make_model():
     m.pDeltaDC           = Param(m.sSD,m.sMD,            m.sDM,                     doc = 'Demand shift Measures max improvement allowed                                                        [%                    ]')
     
     # Demand characterization and Macro data                                        
-    m.pDC                = Param(m.sSD,m.sMD,                                       doc = 'Demand characterization                                                                              [DC unit              ]')
-    m.pMD                = Param(m.sMD,m.sYear,                                     doc = 'Macro data                                                                                           [MD unit              ]')
+    m.pDC                = Param(m.sSD,m.sMD,mutable=True,                          doc = 'Demand characterization                                                                              [DC unit              ]')
+    m.pMD                = Param(m.sMD,m.sYear,mutable=True,                        doc = 'Macro data                                                                                           [MD unit              ]')
     
     
     # Variables definition
@@ -356,11 +371,11 @@ def make_model():
     m.vInvCostST          = Var  (      m.sST,                     m.sYear,                within = Reals,            doc = "Annual Total ST investment cost                                                              [G€              ]")
     m.vOpCost             = Var  (                                 m.sYear,                within = Reals,            doc = "Annual Total operation cost                                                                  [M€              ]")
     m.vOpVarom            = Var  (                                 m.sYear,                within = Reals,            doc = "Annual Total Varom cost                                                                      [k€              ]")
-                    
+    m.vEmiCO2Cost         = Var  (                                 m.sYear,                within = Reals,            doc = "Annual CO2 emissions cost                                                                    [G€              ]")                
                                     
     #Origin of PE - variables                                 
-    m.vQPEDom             = Var  (m.sPE,                           m.sTime,                within = NonNegativeReals, doc = "PE domestic consumption                                                                      [GWh             ]")
-    m.vQPEImp             = Var  (m.sPE,                           m.sTime,                within = NonNegativeReals, doc = "PE imports                                                                                   [GWh             ]")
+    m.vQPEDom             = Var  (m.sPE,                           m.sYear,                within = NonNegativeReals, doc = "PE domestic consumption                                                                      [GWh             ]")
+    m.vQPEImp             = Var  (m.sPE,                           m.sYear,                within = NonNegativeReals, doc = "PE imports                                                                                   [GWh             ]")
                             
     #CE conversion technologies using PE commodities - var       iables                       
     m.vQCEPriIN           = Var  (      m.sQCEPriIN,               m.sTime,                within = NonNegativeReals, doc = "PE consumed by CE techs                                                                      [GWh             ]")
@@ -413,7 +428,7 @@ def make_model():
     m.vCEActCap           = Var  (      m.sCE,                     m.sYear,                within = NonNegativeReals, doc = "Active CE capacity                                                                           [GW              ]")
     m.vCEHibCap           = Var  (      m.sCE,                     m.sYear,                within = NonNegativeReals, doc = "CE capacity in hibernation                                                                   [GW              ]")
     m.vCEDeltaActCap      = Var  (      m.sCE,                     m.sYear,                within = NonNegativeReals, doc = "Reactivation of CE inactive capacity                                                         [GW              ]")
-    
+    m.vCECapExc           = Var  (      m.sCE,                     m.sYear,                within = NonNegativeReals, doc = "Excess of CE capacity regarding the pathway                                                   [GW              ]")
     m.vCEEleReserv        = Var  (      m.sCE_Ele,                 m.sTime,                within = NonNegativeReals, doc = "CE electricity reserves                                                                      [GW              ]")
     m.vEleMaxDem          = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Yearly maximum electricity demand in a time slice                                            [GW              ]")
     
@@ -422,7 +437,7 @@ def make_model():
     m.vSTNewCap           = Var  (      m.sST,                     m.sYear,                within = NonNegativeReals, doc = "ST new installed capacity                                                                    [GW              ]")
     m.vSTDecCap           = Var  (      m.sST,      m.sVinYear,                            within = NonNegativeReals, doc = "ST decommissioned capacity                                                                   [GW              ]")
     m.vSTTotCap           = Var  (      m.sST,      m.sVinYear,                            within = NonNegativeReals, doc = "ST accumulated installed capacity                                                            [GW              ]")
-                            
+    m.vSTCapExc           = Var  (      m.sST,                     m.sYear,                within = NonNegativeReals, doc = "Excess of ST capacity regarding the pathway                                                   [GW              ]")                   
     #CO2 Emission variables                               
     m.vEmiCO2CE           = Var  (      m.sCE,                     m.sYear,                within = NonNegativeReals, doc = "CO2 emissions produced in CE processes                                                       [ktCO2           ]")
     m.vEmiCO2CEPri        = Var  (m.sQCEPriIN,                     m.sYear,                within = NonNegativeReals, doc = "CO2 emissions produced in Primary CE processes                                               [ktCO2           ]")
@@ -433,7 +448,8 @@ def make_model():
     m.vEmiCO2STPro        = Var  (                  m.sQSTOUT,     m.sYear,                within = NonNegativeReals, doc = "CO2 emissions produced in ST due to activity processes                                       [ktCO2           ]")
     m.vEmiCO2ST           = Var  (                  m.sQSTOUT,     m.sYear,                within = NonNegativeReals, doc = "CO2 emissions produced in ST                                                                 [ktCO2           ]")
     m.vEmiCO2ESNS         = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "CO2 emissions related to ESNS                                                                [ktCO2           ]")
-    m.vEmiCO2Tot          = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Annual Total CO2 emissions                                                                   [MtCO2           ]")
+    m.vEmiCO2Year         = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Annual Total CO2 emissions                                                                   [MtCO2           ]")
+    m.vEmiCO2Tot          = Var  (                                                         within = NonNegativeReals, doc = "       Total CO2 emissions                                                                   [MtCO2           ]")
     m.vEmiCO2CapExc       = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Excess of CO2 emissions regarding Carbon Cap 2050 onwards (slack variable)                   [MtCO2           ]")
     m.vEmiCO2BudgetExc    = Var  (                                                         within = NonNegativeReals, doc = "Excess of CO2 emissions regarding Carbon Budget (slack variable)                             [MtCO2           ]")
                     
@@ -446,7 +462,8 @@ def make_model():
     m.vEmiNOxSTPro        = Var  (                  m.sQSTOUT,     m.sYear,                within = NonNegativeReals, doc = "NOx emissions produced in ST due to activity processes                                       [ tNOx           ]")
     m.vEmiNOxST           = Var  (                  m.sQSTOUT,     m.sYear,                within = NonNegativeReals, doc = "NOx emissions produced in ST                                                                 [ktNOx           ]")
     m.vEmiNOxESNS         = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "NOx emissions related to ESNS                                                                [ktNOx           ]")
-    m.vEmiNOxTot          = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Total NOx emissions produced yearly                                                          [MtNOx           ]")
+    m.vEmiNOxYear          = Var  (                                m.sYear,                within = NonNegativeReals, doc = "Annual NOx emissions                                                          [MtNOx           ]")
+    m.vEmiNOxTot          = Var  (                                                         within = NonNegativeReals, doc = "Total NOx emissions                                                          [MtNOx           ]")
     m.vEmiNOxCapExc       = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Excess of NOx emissions regarding cap 2050 onwards (slack variable)                          [MtNOx           ]")
                     
     #SOx Emission variables                               
@@ -458,7 +475,8 @@ def make_model():
     m.vEmiSOxSTPro        = Var  (                  m.sQSTOUT,     m.sYear,                within = NonNegativeReals, doc = "SOx emissions produced in ST due to activity processes                                       [ tSOx           ]")
     m.vEmiSOxST           = Var  (                  m.sQSTOUT,     m.sYear,                within = NonNegativeReals, doc = "SOx emissions produced in ST                                                                 [ktSOx           ]")
     m.vEmiSOxESNS         = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "SOx emissions related to ESNS                                                                [ktSOx           ]")
-    m.vEmiSOxTot          = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Total SOx emissions produced yearly                                                          [MtSOx           ]")
+    m.vEmiSOxYear          = Var  (                                m.sYear,                within = NonNegativeReals, doc = "Annual SOx emissions                                                           [MtSOx           ]")
+    m.vEmiSOxTot          = Var  (                                                         within = NonNegativeReals, doc = "Total SOx emissions                                                           [MtSOx           ]")
     m.vEmiSOxCapExc       = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Excess of SOx emissions regarding cap 2050 onwards (slack variable)                          [MtSOx           ]")
                     
     #PM25 Emission variables                               
@@ -471,7 +489,8 @@ def make_model():
     m.vEmiPM25ST          = Var  (                  m.sQSTOUT,     m.sYear,                within = NonNegativeReals, doc = "PM25 emissions produced in ST                                                                [ktPM25          ]")
     m.vEmiPM25ESNS        = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "PM25 emissions related to ESNS                                                               [ktPM25          ]")
     m.vEmiPM25CapExc      = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Excess of PM25 emissions regarding cap 2050 onwards (slack variable)                         [MtPM25          ]")
-    m.vEmiPM25Tot         = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Total PM25 emissions produced yearly                                                         [MtPM25          ]")
+    m.vEmiPM25Year        = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Annual PM25 emissions                                                          [MtPM25          ]")
+    m.vEmiPM25Tot         = Var  (                                                         within = NonNegativeReals, doc = "Total PM25 emissions                                                          [MtPM25          ]")
     
     
     #CO2 sectorial emission slack variables  
@@ -482,6 +501,9 @@ def make_model():
     m.vEmiCO2CapOthExc    = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Excess of CO2 emissions regarding Carbon Cap in Residential&Service sector  (slack variable) [MtCO2           ]")
     m.vEmiCO2CapRefExc    = Var  (                                 m.sYear,                within = NonNegativeReals, doc = "Excess of CO2 emissions regarding Carbon Cap in Refinery sector             (slack variable) [MtCO2           ]")
     
+    #Residual value variables
+    m.vResVal             = Var  (                                                         within = NonNegativeReals, doc = "Residual value                                                                               [G€              ]")
+
     #Correlation Uncertainty
     m.vBeta               = Var  (m.f,m.sYear,                                             within = NonNegativeReals, doc = "PCA beta (dual variable)                  ")
     m.vUncCost            = Var  (    m.sYear,                                             within = NonNegativeReals, doc = "Uncertain cost                            ")    
@@ -517,9 +539,9 @@ def make_model():
 
 
     def EQ_UncCost         (m, sYear        ):
-        return m.vUncCost[sYear] ==   (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) *(
-                                   1e-3*m.pYrGap              * sum(m.pUnc   [sPE,sYear] *    (m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
-                                  +                             sum(m.pUnc   [sCE,sYear] *     m.vCENewCap[sCE,sYear]                                                               for  sCE                     in m.sCE        ) 
+        return m.vUncCost[sYear] ==   (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) *(
+                                   1e-3*m.pYrGap              * sum(m.pUnc   [sPE,sYear] *    (m.vQPEImp  [sPE,sYear] + m.vQPEDom[sPE,sYear]) for sPE in m.sPE)
+                                  +                             sum(m.pUnc   [sCE,sYear] *     m.vCENewCap[sCE,sYear]                         for sCE in m.sCE) 
                                       ) * 1e-3
     #M€
     d['EQ_UncCost']               = Constraint(m.sYear,         rule = EQ_UncCost,              doc = 'Annual Total Operation Cost [M€]')
@@ -528,30 +550,30 @@ def make_model():
 
     def EQ_UncCost_Cher         (m, sYear        ):
         return m.vUncCost[sYear] ==   (sum(m.vBeta[f,sYear] for f in m.f1)
-                                    + (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
-                                       1e-3 * m.pYrGap * sum((m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) * (m.pS[sPE] + sum(m.pAlpha_do[sPE,f] for f in m.f1) + sum(m.pRest[sPE,f] for f in m.fr)) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
-                                    +                    sum( m.vCENewCap[sCE,sYear]                                                               * (m.pS[sCE] + sum(m.pAlpha_do[sCE,f] for f in m.f1) + sum(m.pRest[sCE,f] for f in m.fr)) for  sCE                     in m.sCE        ) 
+                                    + (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) * (
+                                       1e-3 * m.pYrGap * sum((m.vQPEImp  [sPE,sYear] + m.vQPEDom[sPE,sYear]) * (m.pS[sPE] + sum(m.pAlpha_do[sPE,f] for f in m.f1) + sum(m.pRest[sPE,f] for f in m.fr)) for sPE in m.sPE)
+                                    +                    sum( m.vCENewCap[sCE,sYear]                         * (m.pS[sCE] + sum(m.pAlpha_do[sCE,f] for f in m.f1) + sum(m.pRest[sCE,f] for f in m.fr)) for sCE in m.sCE) 
                                       )) * 1e-3
     #M€
     d['EQ_UncCost_Cher']               = Constraint(m.sYear,         rule = EQ_UncCost_Cher,              doc = 'Annual Total Operation Cost [M€]')
 
 
     def EQ_UncCost_Cher2         (m, f1, sYear        ):
-        return m.vBeta[f1,sYear] >=        (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * 1e-3* (
-                                       1e-3 * m.pYrGap * sum((m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) * (m.pAlpha_up[sPE,f1] - m.pAlpha_do[sPE,f1]) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
-                                    +                    sum( m.vCENewCap[sCE,sYear]                                                               * (m.pAlpha_up[sCE,f1] - m.pAlpha_do[sCE,f1]) for  sCE                     in m.sCE        ) 
+        return m.vBeta[f1,sYear] >=        (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) * 1e-3* (
+                                       1e-3 * m.pYrGap * sum((m.vQPEImp  [sPE,sYear] + m.vQPEDom[sPE,sYear]) * (m.pAlpha_up[sPE,f1] - m.pAlpha_do[sPE,f1]) for sPE in m.sPE)
+                                    +                    sum( m.vCENewCap[sCE,sYear]                         * (m.pAlpha_up[sCE,f1] - m.pAlpha_do[sCE,f1]) for sCE in m.sCE) 
                                       )
     #M€
     d['EQ_UncCost_Cher2']               = Constraint(m.f1,m.sYear,         rule = EQ_UncCost_Cher2,              doc = '')
 
 
     def EQ_OpCost_Unc         (m, sYear        ):
-        return m.vOpCost[sYear] ==   m.pYrGap * (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) *(                                                                                                                    
-                              1e3 * sum(m.pCEFixom[sCE]       *     m.vCEActCap[sCE,             sYear                    ] for sCE                                          in m.sCE) 
-                            + 1e3 * sum(m.pRMCost [sRM,sYear] *     m.vQSTInRM [sRM,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,sRM,sST,sES,sVin,sSeason,sDay,sHour)      in m.sQSTInRM_indexed[sYear])
-                            + 1e-3* sum(m.pSTFixom[sST      ] *     m.vSTTotCap[    sST,    sVin,sYear                   ]  for (_,sST,sVin)                                 in m.sQSTVin_indexed[sYear])
-                            + 1e-3* sum(m.pSTVarom[sST,sES  ] *    (m.vQSTOut  [    sST,sES,sVin,sYear,sSeason,sDay,sHour]) for (_,sST,sES,sVin,sSeason,sDay,sHour)          in m.sQSTOUT_VinTime_indexed[sYear]) 
-                           #+ 1e3*      m.pESNSCost           * sum(m.vQESNS   [sST,sES,         sYear,sSeason,sDay,sHour]  for (_,sST,sES,sSeason,sDay,sHour)               in m.sQSTOUT_Time_indexed[sYear])
+        return m.vOpCost[sYear] ==   m.pYrGap * (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) *(                                                                                                                    
+                              1e3 * sum(m.pCEFixom[sCE]       *                                                       m.vCEActCap[sCE,             sYear                    ] for sCE                                          in m.sCE) 
+                            + 1e3 * sum(m.pRMCost [sRM,sYear] *     m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQSTInRM [sRM,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,sRM,sST,sES,sVin,sSeason,sDay,sHour)      in m.sQSTInRM_indexed[sYear])
+                            + 1e-3* sum(m.pSTFixom[sST      ] *                                                       m.vSTTotCap[    sST,    sVin,sYear                   ]  for (_,sST,sVin)                                 in m.sQSTVin_indexed[sYear])
+                            + 1e-3* sum(m.pSTVarom[sST,sES  ] *    (m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQSTOut  [    sST,sES,sVin,sYear,sSeason,sDay,sHour]) for (_,sST,sES,sVin,sSeason,sDay,sHour)          in m.sQSTOUT_VinTime_indexed[sYear]) 
+                           #+ 1e3*      m.pESNSCost           * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQESNS   [sST,sES,         sYear,sSeason,sDay,sHour]  for (_,sST,sES,sSeason,sDay,sHour)               in m.sQSTOUT_Time_indexed[sYear])
                             +           m.vOpVarom[sYear]  
                             ) * 1e-3
     #M€
@@ -559,7 +581,7 @@ def make_model():
 
 
     def EQ_InvCostCE_Unc         (m, sCE, sYear        ):
-         return m.vInvCostCE[sCE,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
+         return m.vInvCostCE[sCE,sYear] == (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) * (
                                             m.pCEDecom[sCE,sYear] * m.vCEDecCap     [sCE,sYear] 
                                           + m.pCEReact[sCE,sYear] * m.vCEDeltaActCap[sCE,sYear]
                                            ) *1e-3
@@ -570,18 +592,18 @@ def make_model():
     # RO Bertsimas
 
     def EQ_UncCost_Bert         (m, sYear        ):
-        return m.vUncCost[sYear] ==   (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) *(
-                                   1e-3*m.pYrGap              * sum(m.pUnc   [sPE,sYear] *    (m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
-                                  +                             sum(m.pUnc   [sCE,sYear] *     m.vCENewCap[sCE,sYear]                                                               for  sCE                     in m.sCE        ) 
+        return m.vUncCost[sYear] ==   (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) *(
+                                   1e-3*m.pYrGap              * sum(m.pUnc   [sPE,sYear] *    (m.vQPEImp  [sPE,sYear] + m.vQPEDom[sPE,sYear]) for sPE in m.sPE)
+                                  +                             sum(m.pUnc   [sCE,sYear] *     m.vCENewCap[sCE,sYear]                         for sCE in m.sCE) 
     #                                  ) * 1e-3 +  sum(m.vP[sUnc,sYear] for (sUnc,sYear) in m.sUnc*m.sYear) + m.vW * m.pTau
                                       ) * 1e-3 +  sum(m.vP[sUnc,sYear] for sUnc in m.sUnc) + m.vW * m.pTau
     #M€
     d['EQ_UncCost_Bert']               = Constraint(m.sYear,         rule = EQ_UncCost_Bert,              doc = 'Annual Total Operation Cost [M€]')
 
     def EQ_UncCost_Bert2         (m, sUnc, sYear        ):
-        return m.vW + m.vP[sUnc,sYear] >=   (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) *(
-                                   1e-3*m.pYrGap              * sum(m.pDeltaUnc   [sPE,sYear] *    (m.vQPEImp  [sPE,sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)
-                                  +                             sum(m.pDeltaUnc   [sCE,sYear] *     m.vCENewCap[sCE,sYear]                                                               for  sCE                     in m.sCE        ) 
+        return m.vW + m.vP[sUnc,sYear] >=   (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) *(
+                                   1e-3*m.pYrGap              * sum(m.pDeltaUnc   [sPE,sYear] *    (m.vQPEImp  [sPE,sYear] + m.vQPEDom[sPE,sYear]) for sPE in m.sPE)
+                                  +                             sum(m.pDeltaUnc   [sCE,sYear] *     m.vCENewCap[sCE,sYear]                         for sCE in m.sCE) 
                                       ) * 1e-3
     #M€
     d['EQ_UncCost_Bert2']               = Constraint(m.sUnc, m.sYear,         rule = EQ_UncCost_Bert2,              doc = 'Annual Total Operation Cost [M€]')
@@ -592,34 +614,69 @@ def make_model():
     
     def EQ_SysCost           (m        ):
         return m.vSysCost ==        (sum(m.vTotalCost      [sYear] for       sYear  in       m.sYear)  
-                            +        sum(m.vPenalCost      [sYear] for       sYear  in       m.sYear)
+                            #+        sum(m.vPenalCost      [sYear] for       sYear  in       m.sYear)
                             +        sum(m.vBMCost     [sBM,sYear] for (sBM, sYear) in m.sBM*m.sYear)
                             +        sum(m.vDMCost     [sDM,sYear] for (sDM, sYear) in m.sDM*m.sYear)
-                            +            m.pEmiCO2BudgetRestr * m.vEmiCO2BudgetExc
+                            +        sum(m.vEmiCO2Cost [    sYear] for       sYear  in       m.sYear)  
+                            #+            m.pEmiCO2BudgetRestr * m.vEmiCO2BudgetExc
+                            +            m.vResVal
+                            +        1e2*m.pCECapExcess*sum(m.vCECapExc[sCE,sYear] for (sCE,sYear) in m.sCE*m.sYear) #Penal cost for investing in excess capacity
                             )
     #G€
     d['EQ_SysCost']              = Constraint(                 rule = EQ_SysCost,             doc = 'Total System Cost [G€]')
     
-    
+    '''
     def EQ_PenalCost           (m, sYear ):
-        return m.vPenalCost [sYear] ==  m.pYrGap * (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * m.pESNSCost * ( 
+        return m.vPenalCost [sYear] ==  m.pYrGap * (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) * m.pESNSCost * (( 
                              + (1-m.pEmiCO2CapSectRestr) * (1 - m.pEmiCO2BudgetRestr) *      m.vEmiCO2CapExc   [sYear]
                              +    m.pEmiCO2CapSectRestr  * (1 - m.pEmiCO2BudgetRestr) * sum((m.vEmiCO2CapTraExc[sYear] + m.vEmiCO2CapEleExc[sYear] + m.vEmiCO2CapIndTEExc[sYear] + m.vEmiCO2CapIndProExc[sYear] + m.vEmiCO2CapOthExc[sYear] + m.vEmiCO2CapRefExc[sYear]) for sYear in m.sYear)
-                             +                                                          sum((m.vEmiNOxCapExc   [sYear] + m.vEmiSOxCapExc   [sYear] + m.vEmiPM25CapExc    [sYear]                                                                                       ) for sYear in m.sYear)
-                            ) * 1e-2
+                             #+                                                          sum((m.vEmiNOxCapExc   [sYear] + m.vEmiSOxCapExc   [sYear] + m.vEmiPM25CapExc    [sYear]                                                                                       ) for sYear in m.sYear)
+                             ) * 1e-2) 
+                             #+ 1e2* m.pCECapExcess*sum(m.vCECapExc[sCE,sYear] for sCE in m.sCE)
+                             #+ 1e2* m.pSTCapExcess*sum(m.vSTCapExc[sST,sYear] for sST in m.sST))
     #G€
-    d['EQ_PenalCost']            = Constraint(m.sYear,         rule = EQ_PenalCost,           doc = 'Penalization Cost [G€]')
-    
+    d['EQ_PenalCost']            = Constraint(m.sYear,         rule = EQ_PenalCost,           doc = 'Penalization Cost [G€]')   
+    '''
     
     def EQ_TotalCost         (m, sYear        ):
-        return m.vTotalCost[sYear] ==  (1e-3*m.vOpCost[sYear]) + sum(m.vInvCostCE[sCE,sYear] for sCE in m.sCE) + sum(m.vInvCostST[sST,sYear] for sST in m.sST)
+        return m.vTotalCost[sYear] ==  (
+                                        (1e-3*m.vOpCost    [    sYear]) 
+                                        + sum(m.vInvCostCE [sCE,sYear] for sCE in m.sCE) 
+                                        + sum(m.vInvCostST [sST,sYear] for sST in m.sST)
+                                        )
     #G€
     d['EQ_TotalCost']            = Constraint(m.sYear,         rule = EQ_TotalCost,           doc = 'Annual Total Cost = Total Investment Cost + Total Operation Cost [G€]')
     
+
+    def EQ_ResCost         (m        ):
+        return m.vResVal == (1/((1+m.pDisRate)**((m.pYrGap*len(m.sYear))-1)))*((1+m.pGrowthRate)/(m.pDisRate-m.pGrowthRate))   * (
+                                         1e-3* sum(((m.pCECapex[sCE,m.sYear.last()]*m.pDisRate/(1+m.pDisRate))*(1/(1-((1+m.pDisRate)**(-m.pCELife   [sCE]))))) * m.vCETotCap [sCE,       m.sYear.last()] for  sCE       in m.sCE)
+                                       + 1e-3* sum(((m.pSTCapex[sST,m.sYear.last()]*m.pDisRate/(1+m.pDisRate))*(1/(1-((1+m.pDisRate)**(-m.pSTLifeExp[sST]))))) * m.vSTTotCap [sST,sVin,  m.sYear.last()] for (sST,sVin) in m.sST*m.sVin if (sVin,m.sYear.last()) in m.sVinYear) 
+                                       + 1e-3*       m.vOpCost     [m.sYear.last()]                                                                                                                            /(m.pYrGap * (1/((1+m.pDisRate)**((m.pYrGap*len(m.sYear))-1)))) #le quitamos el descuento
+                                       #+ sum(m.vBMCost     [sBM,m.sYear.last()] for sBM in m.sBM)                                                                                                       /(m.pYrGap * (1/((1+m.pDisRate)**((m.pYrGap*len(m.sYear))-1)))) #le quitamos el descuento
+                                       #+ sum(m.vDMCost     [sDM,m.sYear.last()] for sDM in m.sDM)                                                                                                       /(m.pYrGap * (1/((1+m.pDisRate)**((m.pYrGap*len(m.sYear))-1)))) #le quitamos el descuento
+                                       +             m.vEmiCO2Cost [m.sYear.last()]                                                                                                                            /(m.pYrGap * (1/((1+m.pDisRate)**((m.pYrGap*len(m.sYear))-1)))) #le quitamos el descuento
+                                       #+ sum(m.pCEDecom    [sCE,m.sYear.last()] * m.vCEDecCap     [sCE,     m.sYear.last()] for sCE in m.sCE)*1e-3                                                      /(m.pYrGap * (1/((1+m.pDisRate)**((m.pYrGap*len(m.sYear))-1)))) #le quitamos el descuento 
+                                       #+ sum(m.pCEReact    [sCE,m.sYear.last()] * m.vCEDeltaActCap[sCE,     m.sYear.last()] for sCE in m.sCE)*1e-3                                                      /(m.pYrGap * (1/((1+m.pDisRate)**((m.pYrGap*len(m.sYear))-1)))) #le quitamos el descuento
+                                       #+ sum(m.pSTDecom    [sST,m.sYear.last()] * m.vSTDecCap     [sST,sVin,m.sYear.last()] for (sST,sVin) in m.sST*m.sVin if (sVin,m.sYear.last()) in m.sVinYear)*1e-3 /(m.pYrGap * (1/((1+m.pDisRate)**((m.pYrGap*len(m.sYear))-1)))) #le quitamos el descuento
+                                     ) 
+                                           
+    #G€
+    d['EQ_ResCost']               = Constraint(   rule = EQ_ResCost,              doc = 'Residual Cost [G€]')
+
+
+    def EQ_EmiCost         (m, sYear        ):
+        return m.vEmiCO2Cost[sYear] ==  1e-3 * m.pYrGap * (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) * (
+                                                m.pEmiCO2Cost[sYear] * m.vEmiCO2Year [sYear]
+                                                )
+    #G€
+    d['EQ_EmiCost']            = Constraint(m.sYear,         rule = EQ_EmiCost,           doc = 'Annual Total Cost of CO2 emissions [G€]')
     
+   
+
     
     def EQ_BMCost         (m, sBM,sYear        ):
-        return m.vBMCost[sBM,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
+        return m.vBMCost[sBM,sYear] == (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) * (
                                         sum(m.pBMCost[sBM,sYear] * m.vBMTra[sST_Tra,sES_Tra,sSD_Tra,sBM,sYear] for (sST_Tra,sES_Tra,sSD_Tra) in m.sQSTESSD_Tra if sBM in m.sBM_Tra) 
                                       + sum(m.pBMCost[sBM,sYear] * m.vBMOth[sES_Oth,sSD_Oth,sMD_Oth,sBM,sYear] for (sES_Oth,sSD_Oth,sMD_Oth) in m.sQESSDMD_Oth if sBM in m.sBM_Oth)
                                       )
@@ -629,7 +686,7 @@ def make_model():
     
     
     def EQ_DMCost         (m, sDM,sYear        ):
-        return m.vDMCost[sDM,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
+        return m.vDMCost[sDM,sYear] == (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) * (
                                         sum(m.pDMCost          [sDM,             sYear] *  m.vDMTra   [sSD_Tra,sMD_Tra,sDM,sYear] for (sSD_Tra,sMD_Tra) in m.sQSDMD_Tra if sDM in m.sDM_Tra) 
                                       + sum(m.pDMCost          [sDM,             sYear] * (m.vDMOth_HE[        sMD_Oth,sDM,sYear] 
                                       -    (m.vDMOth_HE[sMD_Oth,sDM,m.sYear.prev(sYear)] if not sYear==m.sYear.first() else 0))   for  sMD_Oth          in m.sMD_Oth    if sDM in m.sDM_Oth)
@@ -640,20 +697,33 @@ def make_model():
     
     
     def EQ_InvCostCE         (m, sCE, sYear        ):
-         return m.vInvCostCE[sCE,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
+        if  m.pYr[sYear]  <= m.pYr[m.sYear.last()] - m.pCELife[sCE] + m.pYrGap:
+            return m.vInvCostCE[sCE,sYear] == (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) * (
                                             m.pCECapex[sCE,sYear] * m.vCENewCap     [sCE,sYear] 
+                                          + m.pCEDecom[sCE,sYear] * m.vCEDecCap     [sCE,sYear] 
+                                          + m.pCEReact[sCE,sYear] * m.vCEDeltaActCap[sCE,sYear]
+                                           ) *1e-3
+        
+        elif  m.pYr[sYear]  > m.pYr[m.sYear.last()] - m.pCELife[sCE] + m.pYrGap:
+            return m.vInvCostCE[sCE,sYear] == (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) * (
+                                           (m.pCECapex[sCE,sYear] - sum(((m.pCECapex[sCE,m.sYear.last()]*m.pDisRate/(1+m.pDisRate))*(1/(1-((1+m.pDisRate)**(-m.pCELife[sCE])))))/((1+m.pDisRate)**(i-m.pYr[sYear])) for i in range(m.pYr[m.sYear.last()]+1, m.pYr[sYear]+m.pCELife[sCE]-1))) * m.vCENewCap [sCE,sYear] 
                                           + m.pCEDecom[sCE,sYear] * m.vCEDecCap     [sCE,sYear] 
                                           + m.pCEReact[sCE,sYear] * m.vCEDeltaActCap[sCE,sYear]
                                            ) *1e-3
     #G€
     d['EQ_InvCostCE']            = Constraint(m.sCE, m.sYear,  rule = EQ_InvCostCE,           doc = 'Annual Total CE Investment Cost [G€]')
-    
-
 
     
     def EQ_InvCostST         (m, sST, sYear        ):
-         return m.vInvCostST[sST,sYear] == (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) * (
+        if  m.pYr[sYear]  <= m.pYr[m.sYear.last()] - m.pSTLifeExp[sST] + m.pYrGap:
+            return m.vInvCostST[sST,sYear] == (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) * (
                                             m.pSTCapex[sST,sYear] *     m.vSTNewCap     [sST,     sYear] 
+                                          + m.pSTDecom[sST,sYear] * sum(m.vSTDecCap     [sST,sVin,sYear] for sVin in m.sVin if (sVin,sYear) in m.sVinYear) 
+                                           ) *1e-3
+        
+        elif  m.pYr[sYear]  > m.pYr[m.sYear.last()] - m.pSTLifeExp[sST] + m.pYrGap:
+            return m.vInvCostST[sST,sYear] == (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) * (
+                                            (m.pSTCapex[sST,sYear] - sum(((m.pSTCapex[sST,m.sYear.last()]*m.pDisRate/(1+m.pDisRate))*(1/(1-(1+m.pDisRate)**(-m.pSTLifeExp[sST]))))/((1+m.pDisRate)**(i-m.pYr[sYear])) for i in range(m.pYr[m.sYear.last()]+1, m.pYr[sYear]+m.pSTLifeExp[sST]-1))) * m.vSTNewCap [sST,sYear] 
                                           + m.pSTDecom[sST,sYear] * sum(m.vSTDecCap     [sST,sVin,sYear] for sVin in m.sVin if (sVin,sYear) in m.sVinYear) 
                                            ) *1e-3
     #G€
@@ -662,13 +732,13 @@ def make_model():
 
 
     def EQ_OpCost         (m, sYear        ):
-        return m.vOpCost[sYear] ==   m.pYrGap * (1/((1+m.pDisRate)**(m.pYrGap*(m.sYear.ord(sYear)-1)))) *(
-                                    sum(m.pPECost [sPE,sYear] *    (m.vQPEImp  [sPE,             sYear,sSeason,sDay,sHour] + m.vQPEDom[sPE,sYear,sSeason,sDay,sHour]) for (sPE,sSeason,sDay,sHour) in m.sPEYearTime)                                                                                                                      
-                            + 1e3 * sum(m.pCEFixom[sCE]       *     m.vCEActCap[sCE,             sYear                    ] for sCE                                          in m.sCE) 
-                            + 1e3 * sum(m.pRMCost [sRM,sYear] *     m.vQSTInRM [sRM,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,sRM,sST,sES,sVin,sSeason,sDay,sHour)      in m.sQSTInRM_indexed[sYear])
-                            + 1e-3* sum(m.pSTFixom[sST      ] *     m.vSTTotCap[    sST,    sVin,sYear                   ]  for (_,sST,sVin)                                 in m.sQSTVin_indexed[sYear])
-                            + 1e-3* sum(m.pSTVarom[sST,sES  ] *    (m.vQSTOut  [    sST,sES,sVin,sYear,sSeason,sDay,sHour]) for (_,sST,sES,sVin,sSeason,sDay,sHour)          in m.sQSTOUT_VinTime_indexed[sYear]) 
-                           #+ 1e3*      m.pESNSCost           * sum(m.vQESNS   [sST,sES,         sYear,sSeason,sDay,sHour]  for (_,sST,sES,sSeason,sDay,sHour)               in m.sQSTOUT_Time_indexed[sYear])
+        return m.vOpCost[sYear] ==   m.pYrGap * (1/((1+m.pDisRate)**((m.pYrGap*m.sYear.ord(sYear))-1))) *(
+                                    sum(m.pPECost [sPE,sYear] *                                                      (m.vQPEImp  [sPE,             sYear                   ] + m.vQPEDom[sPE,sYear]) for sPE in m.sPE)                                                                                                                      
+                            + 1e3 * sum(m.pCEFixom[sCE]       *                                                       m.vCEActCap[sCE,             sYear                   ]  for sCE                                          in m.sCE) 
+                            + 1e3 * sum(m.pRMCost [sRM,sYear] *    m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] *  m.vQSTInRM [sRM,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,sRM,sST,sES,sVin,sSeason,sDay,sHour)      in m.sQSTInRM_indexed[sYear])
+                            + 1e-3* sum(m.pSTFixom[sST      ] *                                                       m.vSTTotCap[    sST,    sVin,sYear                   ]  for (_,sST,sVin)                                 in m.sQSTVin_indexed[sYear])
+                            + 1e-3* sum(m.pSTVarom[sST,sES  ] *    m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * (m.vQSTOut  [    sST,sES,sVin,sYear,sSeason,sDay,sHour]) for (_,sST,sES,sVin,sSeason,sDay,sHour)          in m.sQSTOUT_VinTime_indexed[sYear]) 
+                            + 1e3*      m.pESNSCost           *sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] *  m.vQESNS   [sST,sES,         sYear,sSeason,sDay,sHour]  for (_,sST,sES,sSeason,sDay,sHour)               in m.sQSTOUT_Time_indexed[sYear])
                             +           m.vOpVarom[sYear]  
                             ) * 1e-3
     #M€
@@ -680,9 +750,9 @@ def make_model():
     def EQ_OpVarom         (m, sYear        ):
         return m.vOpVarom[sYear] ==  (
     
-                                   + sum(m.pCEVarom[sCE,sTE] * (m.vQCEPriOUT[sCE,sTE,sYear,sSeason,sDay,sHour]) for (_,sCE,sTE,sSeason,sDay,sHour) in m.sQCEPriOUT_Time_indexed[sYear])
-                                   + sum(m.pCEVarom[sCE,sTE] * (m.vQCESecOUT[sCE,sTE,sYear,sSeason,sDay,sHour]) for (_,sCE,sTE,sSeason,sDay,sHour) in m.sQCESecOUT_Time_indexed[sYear])
-                                   + sum(m.pCEVarom[sCE,sTE] * (m.vQCEStoOUT[sCE,sTE,sYear,sSeason,sDay,sHour]) for (_,sCE,sTE,sSeason,sDay,sHour) in m.sQCEStoOUT_Time_indexed[sYear])
+                                   + sum(m.pCEVarom[sCE,sTE] * (m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEPriOUT[sCE,sTE,sYear,sSeason,sDay,sHour]) for (_,sCE,sTE,sSeason,sDay,sHour) in m.sQCEPriOUT_Time_indexed[sYear])
+                                   + sum(m.pCEVarom[sCE,sTE] * (m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCESecOUT[sCE,sTE,sYear,sSeason,sDay,sHour]) for (_,sCE,sTE,sSeason,sDay,sHour) in m.sQCESecOUT_Time_indexed[sYear])
+                                   + sum(m.pCEVarom[sCE,sTE] * (m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEStoOUT[sCE,sTE,sYear,sSeason,sDay,sHour]) for (_,sCE,sTE,sSeason,sDay,sHour) in m.sQCEStoOUT_Time_indexed[sYear])
                                                                          
                                     )
     #k€
@@ -693,69 +763,259 @@ def make_model():
 
 
     # Primary energy (PE)-related constraints
-    
-    
-    def EQ_PEDomCap         (m, sPE, sYear, sSeason, sDay, sHour        ):
-        return m.pPEDomCap [sPE] * m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] >= m.vQPEDom   [sPE,sYear,sSeason,sDay,sHour]
+
+
+    def EQ_PEDomCap         (m, sPE, sYear        ):
+        return m.pPEDomCap [sPE,sYear] >= m.vQPEDom [sPE,sYear]
     #GWh
-    d['EQ_PEDomCap']            = Constraint(m.sPE,m.sTime,         rule = EQ_PEDomCap,           doc = 'PE domestic production capacity [GWh]')
+    d['EQ_PEDomCap']            = Constraint(m.sPE,m.sYear,         rule = EQ_PEDomCap,           doc = 'PE domestic production capacity [GWh]')
+
     
-    
-    def EQ_PEImpCap         (m, sPE, sYear, sSeason, sDay, sHour        ):
-        return m.pPEImpCap [sPE] * m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] >= m.vQPEImp [sPE,sYear,sSeason,sDay,sHour]
+    def EQ_PEImpCap         (m, sPE, sYear        ):
+        return m.pPEImpCap [sPE,sYear] >= m.vQPEImp [sPE,sYear]
     #GWh
-    d['EQ_PEImpCap']            = Constraint(m.sPE,m.sTime,         rule = EQ_PEImpCap,           doc = 'PE importation capacity [GWh]')
-    
-    
-    def EQ_PEBalance         (m, sPE, sYear, sSeason, sDay, sHour        ):
-        return m.vQPEDom[sPE,sYear,sSeason,sDay,sHour] + m.vQPEImp[sPE,sYear,sSeason,sDay,sHour] == sum(m.vQCEPriIN[sPE,sCE,sYear,sSeason,sDay,sHour] for (_,sCE) in m.sQCEPriIN_indexed[sPE])
+    d['EQ_PEImpCap']            = Constraint(m.sPE,m.sYear,         rule = EQ_PEImpCap,           doc = 'PE importation capacity [GWh]')
+
+
+    def EQ_PEBalance         (m, sPE, sYear        ):
+        return m.vQPEDom[sPE,sYear] + m.vQPEImp[sPE,sYear] == sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEPriIN[sPE,sCE,sYear,sSeason,sDay,sHour] for (_,sCE,sSeason,sDay,sHour) in m.sQCEPriIN_indexed[sPE]*m.sYearTime)
     #GWh
-    d['EQ_PEBalance']           = Constraint(m.sPE,m.sTime,         rule = EQ_PEBalance,          doc = 'PE energy balance [GWh]')
+    d['EQ_PEBalance']           = Constraint(m.sPE,m.sYear,         rule = EQ_PEBalance,          doc = 'PE energy balance [GWh]')
     
     
     # Primary Conversion Energy (CE_Pri)-related contraints
     
-    
-    def EQ_CEPriBalance         (m, sCEPri, sYear, sSeason, sDay, sHour        ):
-        return (sum(((m.vQCEPriIN [sPE,sCEPri,sYear,sSeason,sDay,sHour] if (sPE,sCEPri) in m.sQCEPriIN  else 0) * (m.pCEPriEff[sPE, sCEPri] if (sPE,sCEPri) in m.sQCEPriIN else 0)) for sPE in m.sPE) 
-            ==  sum(( m.vQCEPriOUT[sCEPri,sTE,sYear,sSeason,sDay,sHour] if (sCEPri,sTE) in m.sQCEPriOUT else 0)                                                                     for sTE in m.sTE))
-    #GWh
-    d['EQ_CEPriBalance']            = Constraint(m.sCEPri,m.sTime,         rule = EQ_CEPriBalance,           doc = 'Balance for Primary CE techs (using PE commodities) [GWh]')
-    
-    
-    def EQ_CEPriOutShareMin         (m, sCEPri,sTE,sYear,sSeason,sDay,sHour        ):
-        return m.vQCEPriOUT [sCEPri,sTE,sYear,sSeason,sDay,sHour] >=  m.pCEOutShareMin [sCEPri,sTE] * sum(m.vQCEPriOUT [sCEPri,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCEPriOUT_CE_indexed[sCEPri])
-    #GWh
-    d['EQ_CEPriOutShareMin']        = Constraint(m.sQCEPriOUT,m.sTime,     rule = EQ_CEPriOutShareMin,       doc = 'Minimum CE output shares restriction [GWh]')
-    
-    
-    def EQ_CEPriOutShareMax         (m, sCEPri,sTE,sYear,sSeason,sDay,sHour        ):
-        return m.pCEOutShareMax [sCEPri,sTE] * sum(m.vQCEPriOUT [sCEPri,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCEPriOUT_CE_indexed[sCEPri]) >= m.vQCEPriOUT [sCEPri,sTE,sYear,sSeason,sDay,sHour]
-    #GWh
-    d['EQ_CEPriOutShareMax']        = Constraint(m.sQCEPriOUT,m.sTime,     rule = EQ_CEPriOutShareMax,       doc = 'Maximum CE output shares restriction [GWh]')
-    
+
+    def EQ_CEPriBalance_Hour(m, sCEPri, sYear, sSeason, sDay, sHour):
+        if sCEPri in m.sCE_Hour:
+            return (
+                sum(
+                    (m.vQCEPriIN[sPE, sCEPri, sYear, sSeason, sDay, sHour] if (sPE, sCEPri) in m.sQCEPriIN else 0) * 
+                    (m.pCEPriEff[sPE, sCEPri]                              if (sPE, sCEPri) in m.sQCEPriIN else 0)
+                    for sPE in m.sPE
+                ) == 
+                sum(
+                    m.vQCEPriOUT[sCEPri, sTE, sYear, sSeason, sDay, sHour] if (sCEPri, sTE) in m.sQCEPriOUT else 0
+                    for sTE in m.sTE
+                )
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_CEPriBalance_Hour'] = Constraint(m.sCEPri, m.sTime, rule=EQ_CEPriBalance_Hour, doc='Balance for Primary CE techs (using PE commodities) [GWh]')
+
+
+    def EQ_CEPriBalance_Aggr(m, sCEPri, sYear, sSeason):
+        if sCEPri not in m.sCE_Hour:
+            return (
+                sum(
+                    (m.vQCEPriIN[sPE, sCEPri, sYear, sSeason, sDay, sHour] if (sPE, sCEPri) in m.sQCEPriIN else 0) * 
+                    (m.pCEPriEff[sPE, sCEPri] if (sPE, sCEPri) in m.sQCEPriIN else 0)
+                    for sPE, sDay, sHour in m.sPE * m.sDay * m.sHour
+                ) == 
+                sum(
+                    m.vQCEPriOUT[sCEPri, sTE, sYear, sSeason, sDay, sHour] if (sCEPri, sTE) in m.sQCEPriOUT else 0
+                    for sTE, sDay, sHour in m.sTE * m.sDay * m.sHour
+                )
+            )
+        else:
+            return Constraint.Skip
+
+    # GWh
+    d['EQ_CEPriBalance_Aggr'] = Constraint(m.sCEPri, m.sYear, m.sSeason, rule=EQ_CEPriBalance_Aggr, doc='Balance for Primary CE techs (using PE commodities) [GWh]')
+
+
+
+
+    def EQ_CEPriOutShareMin_Hour(m, sCEPri, sTE, sYear, sSeason, sDay, sHour):
+        if sCEPri in m.sCE_Hour:
+            return (
+                m.vQCEPriOUT[sCEPri, sTE, sYear, sSeason, sDay, sHour] >= 
+                m.pCEOutShareMin[sCEPri, sTE] * 
+                sum(m.vQCEPriOUT[sCEPri, sTE, sYear, sSeason, sDay, sHour] for (_, sTE) in m.sQCEPriOUT_CE_indexed[sCEPri])
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_CEPriOutShareMin_Hour'] = Constraint(m.sQCEPriOUT, m.sTime, rule=EQ_CEPriOutShareMin_Hour, doc='Minimum share of CE output [GWh]')
+
+
+    def EQ_CEPriOutShareMin_Aggr(m, sCEPri, sTE, sYear, sSeason):
+        if sCEPri not in m.sCE_Hour:
+            return (
+                sum(
+                    m.vQCEPriOUT[sCEPri, sTE, sYear, sSeason, sDay, sHour]
+                    for sDay, sHour in m.sDay * m.sHour
+                ) >= 
+                m.pCEOutShareMin[sCEPri, sTE] * 
+                sum(
+                    m.vQCEPriOUT[sCEPri, sTE, sYear, sSeason, sDay, sHour]
+                    for (_,sTE,sDay,sHour) in m.sQCEPriOUT_CE_indexed[sCEPri]*m.sDay*m.sHour
+                )
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_CEPriOutShareMin_Aggr'] = Constraint(m.sQCEPriOUT, m.sYear, m.sSeason, rule=EQ_CEPriOutShareMin_Aggr, doc='Minimum CE output shares restriction [GWh]')
+
+
+
+    def EQ_CEPriOutShareMax_Hour(m, sCEPri, sTE, sYear, sSeason, sDay, sHour):
+        if sCEPri in m.sCE_Hour:
+            return (
+                m.pCEOutShareMax[sCEPri, sTE] * 
+                sum(
+                    m.vQCEPriOUT[sCEPri, sTE, sYear, sSeason, sDay, sHour]
+                    for (_, sTE) in m.sQCEPriOUT_CE_indexed[sCEPri]
+                ) >= 
+                m.vQCEPriOUT[sCEPri, sTE, sYear, sSeason, sDay, sHour]
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_CEPriOutShareMax_Hour'] = Constraint(m.sQCEPriOUT, m.sTime, rule=EQ_CEPriOutShareMax_Hour, doc='Maximum CE output shares restriction [GWh]')
+
+
+    def EQ_CEPriOutShareMax_Aggr(m, sCEPri, sTE, sYear, sSeason):
+        if sCEPri not in m.sCE_Hour:
+            return (
+                m.pCEOutShareMax[sCEPri, sTE] * 
+                sum(
+                    m.vQCEPriOUT[sCEPri, sTE, sYear, sSeason, sDay, sHour]
+                    for (_, sTE) in m.sQCEPriOUT_CE_indexed[sCEPri]
+                    for sDay, sHour in m.sDay * m.sHour
+                ) >= 
+                sum(
+                    m.vQCEPriOUT[sCEPri, sTE, sYear, sSeason, sDay, sHour]
+                    for sDay, sHour in m.sDay * m.sHour
+                )
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_CEPriOutShareMax_Aggr'] = Constraint(m.sQCEPriOUT, m.sYear, m.sSeason, rule=EQ_CEPriOutShareMax_Aggr, doc='Maximum CE output shares restriction [GWh]')
+
+
+
     
     # Secondary Conversion Energy (CE_Sec)-related constraints
     
-    
-    def EQ_CESecBalance         (m, sCESec,sYear,sSeason,sDay,sHour        ): 
-        return (sum(((m.vQCESecIN [sTE,sCESec,sYear,sSeason,sDay,sHour] if (sTE,sCESec) in m.sQCESecIN  else 0) * (m.pCESecEff[sTE, sCESec] if (sTE, sCESec) in m.sQCESecIN else 0)) for sTE in m.sTE) 
-           ==   sum(( m.vQCESecOUT[sCESec,sTE,sYear,sSeason,sDay,sHour] if (sCESec,sTE) in m.sQCESecOUT else 0)                                                                      for sTE in m.sTE))
-    #GWh
-    d['EQ_CESecBalance']            = Constraint(m.sCESec,m.sTime,         rule = EQ_CESecBalance,           doc = 'Balance for CE techs using TE commodities [GWh]')
-    
-    
-    def EQ_CESecOutShareMin         (m, sCESec,sTE,sYear,sSeason,sDay,sHour        ):
-        return m.vQCESecOUT [sCESec,sTE,sYear,sSeason,sDay,sHour] >= m.pCEOutShareMin [sCESec,sTE] * sum(m.vQCESecOUT [sCESec,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCESecOUT_CE_indexed[sCESec])
-    #GWh
-    d['EQ_CESecOutShareMin']        = Constraint(m.sQCESecOUT,m.sTime,     rule = EQ_CESecOutShareMin,       doc = 'Minimum CE output shares restriction [GWh]')
-    
-    
-    def EQ_CESecOutShareMax         (m, sCESec,sTE,sYear,sSeason,sDay,sHour        ):
-        return m.pCEOutShareMax[sCESec,sTE] * sum(m.vQCESecOUT [sCESec,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCESecOUT_CE_indexed[sCESec]) >= m.vQCESecOUT [sCESec,sTE,sYear,sSeason,sDay,sHour]
-    #GWh
-    d['EQ_CESecOutShareMax']        = Constraint(m.sQCESecOUT,m.sTime,     rule = EQ_CESecOutShareMax,       doc = 'Maximum CE output shares restriction [GWh]')
-    
+
+    def EQ_CESecBalance_Hour(m, sCESec, sYear, sSeason, sDay, sHour):
+        if sCESec in m.sCE_Hour:
+            return (
+                sum(
+                    (m.vQCESecIN[sTE, sCESec, sYear, sSeason, sDay, sHour] if (sTE, sCESec) in m.sQCESecIN else 0) * 
+                    (m.pCESecEff[sTE, sCESec] if (sTE, sCESec) in m.sQCESecIN else 0)
+                    for sTE in m.sTE
+                ) == 
+                sum(
+                    m.vQCESecOUT[sCESec, sTE, sYear, sSeason, sDay, sHour] if (sCESec, sTE) in m.sQCESecOUT else 0
+                    for sTE in m.sTE
+                )
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_CESecBalance_Hour'] = Constraint(m.sCESec, m.sTime, rule=EQ_CESecBalance_Hour, doc='Balance for CE techs using TE commodities [GWh]')
+
+
+    def EQ_CESecBalance_Aggr(m, sCESec, sYear, sSeason):
+        if sCESec not in m.sCE_Hour:
+            return (
+                sum(
+                    (m.vQCESecIN[sTE, sCESec, sYear, sSeason, sDay, sHour] if (sTE, sCESec) in m.sQCESecIN else 0) * 
+                    (m.pCESecEff[sTE, sCESec] if (sTE, sCESec) in m.sQCESecIN else 0)
+                    for sTE, sDay, sHour  in m.sTE * m.sDay * m.sHour
+                ) == 
+                sum(
+                    m.vQCESecOUT[sCESec, sTE, sYear, sSeason, sDay, sHour] if (sCESec, sTE) in m.sQCESecOUT else 0
+                    for sTE, sDay, sHour  in m.sTE * m.sDay * m.sHour
+                )
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_CESecBalance_Aggr'] = Constraint(m.sCESec, m.sYear, m.sSeason, rule=EQ_CESecBalance_Aggr, doc='Balance for CE techs using TE commodities [GWh]')
+
+
+
+
+    def EQ_CESecOutShareMin_Hour(m, sCESec, sTE, sYear, sSeason, sDay, sHour):
+        if sCESec in m.sCE_Hour:
+            return (
+                m.vQCESecOUT[sCESec, sTE, sYear, sSeason, sDay, sHour] >= 
+                m.pCEOutShareMin[sCESec, sTE] * 
+                sum(
+                    m.vQCESecOUT[sCESec, sTE, sYear, sSeason, sDay, sHour]
+                    for (_, sTE) in m.sQCESecOUT_CE_indexed[sCESec]
+                )
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_CESecOutShareMin_Hour'] = Constraint(m.sQCESecOUT, m.sTime, rule=EQ_CESecOutShareMin_Hour, doc='Minimum CE output shares restriction [GWh]')
+
+
+    def EQ_CESecOutShareMin_Aggr(m, sCESec, sTE, sYear, sSeason):
+        if sCESec not in m.sCE_Hour:
+            return (
+                sum(
+                    m.vQCESecOUT[sCESec, sTE, sYear, sSeason, sDay, sHour]
+                    for sDay, sHour in m.sDay * m.sHour
+                ) >= 
+                m.pCEOutShareMin[sCESec, sTE] * 
+                sum(
+                    m.vQCESecOUT[sCESec, sTE, sYear, sSeason, sDay, sHour]
+                    for (_, sTE) in m.sQCESecOUT_CE_indexed[sCESec]
+                    for sDay, sHour in m.sDay * m.sHour
+                )
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_CESecOutShareMin_Aggr'] = Constraint(m.sQCESecOUT, m.sYear, m.sSeason, rule=EQ_CESecOutShareMin_Aggr, doc='Minimum CE output shares restriction [GWh]')
+
+
+
+
+    def EQ_CESecOutShareMax_Hour(m, sCESec, sTE, sYear, sSeason, sDay, sHour):
+        if sCESec in m.sCE_Hour:
+            return (
+                m.pCEOutShareMax[sCESec, sTE] * 
+                sum(
+                    m.vQCESecOUT[sCESec, sTE, sYear, sSeason, sDay, sHour]
+                    for (_, sTE) in m.sQCESecOUT_CE_indexed[sCESec]
+                ) >= 
+                m.vQCESecOUT[sCESec, sTE, sYear, sSeason, sDay, sHour]
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_CESecOutShareMax_Hour'] = Constraint(m.sQCESecOUT, m.sTime, rule=EQ_CESecOutShareMax_Hour, doc='Maximum CE output shares restriction [GWh]')
+
+
+    def EQ_CESecOutShareMax_Aggr(m, sCESec, sTE, sYear, sSeason):
+        if sCESec not in m.sCE_Hour:
+            return (
+                m.pCEOutShareMax[sCESec, sTE] * 
+                sum(
+                    m.vQCESecOUT[sCESec, sTE, sYear, sSeason, sDay, sHour]
+                    for (_, sTE) in m.sQCESecOUT_CE_indexed[sCESec]
+                    for sDay, sHour in m.sDay * m.sHour
+                ) >= 
+                sum(
+                    m.vQCESecOUT[sCESec, sTE, sYear, sSeason, sDay, sHour]
+                    for sDay, sHour in m.sDay * m.sHour
+                )
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_CESecOutShareMax_Aggr'] = Constraint(m.sQCESecOUT, m.sYear, m.sSeason, rule=EQ_CESecOutShareMax_Aggr, doc='Maximum CE output shares restriction [GWh]')
+
+
+
     
     # Storage-related constraints
     
@@ -791,38 +1051,104 @@ def make_model():
     
     
     def EQ_CEStoMaxSto         (m, sCESto,sYear,sSeason,sDay,sHour        ):
-        return m.pCEStoCap [sCESto] >= m.vCEStoLevel [sCESto,sYear,sSeason,sDay,sHour]
+        return m.pCEStoRat [sCESto] * m.vCEActCap [sCESto,sYear] >= m.vCEStoLevel [sCESto,sYear,sSeason,sDay,sHour]
     #GWh
     d['EQ_CEStoMaxSto']           = Constraint(m.sCESto,m.sTime,            rule = EQ_CEStoMaxSto,          doc = 'Storage maximum level restriction [GWh]')
     
     
+    
+    #Balances for hydroelectric CE technologies
+
+    def EQ_CEHydroReservoir         (m,sYear,sSeason        ):
+        #return m.pCEHydro [sYear,sSeason] * (1-m.pCEHRR) * (m.vCEActCap [sCE_Hydro_Reserv,sYear]/m.pCEInsCap [sCE_Hydro_Reserv]) >= sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEPriOUT[sCE_Hydro_Reserv,sTE,sYear,sSeason,sDay,sHour] for (sTE,sDay,sHour) in m.sTE*m.sDay*m.sHour if (sCE_Hydro_Reserv, sTE) in m.sQCEPriOUT)
+        return m.pCEHydro [sYear,sSeason] * (1-m.pCEHRR) >= sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEPriOUT[sCE_Hydro_Reserv,sTE,sYear,sSeason,sDay,sHour] for (sCE_Hydro_Reserv,sTE,sDay,sHour) in m.sCE_Hydro_Reserv*m.sTE*m.sDay*m.sHour if (sCE_Hydro_Reserv, sTE) in m.sQCEPriOUT)
+    #GWh; it allows to increase the hidraulicity proportionally with the reservoir capacity
+    d['EQ_CEHydroReservoir']           = Constraint(m.sYear,m.sSeason,            rule = EQ_CEHydroReservoir,          doc = 'Hidraulicity constraint per season for Hydro with reservoir capacity [GWh]')
+    
+    def EQ_CEHydroRunOfRiver         (m,sYear,sSeason        ):
+        #return m.pCEHydro [sYear,sSeason] * (  m.pCEHRR) * (m.vCEActCap [sCE_Hydro_Run,   sYear]/m.pCEInsCap [sCE_Hydro_Run   ]) >= sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEPriOUT[sCE_Hydro_Run,   sTE,sYear,sSeason,sDay,sHour] for (sTE,sDay,sHour) in m.sTE*m.sDay*m.sHour if (sCE_Hydro_Run,    sTE) in m.sQCEPriOUT)
+        return m.pCEHydro [sYear,sSeason] * (  m.pCEHRR) >= sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEPriOUT[sCE_Hydro_Run,   sTE,sYear,sSeason,sDay,sHour] for (sCE_Hydro_Run,sTE,sDay,sHour) in m.sCE_Hydro_Run*m.sTE*m.sDay*m.sHour if (sCE_Hydro_Run,    sTE) in m.sQCEPriOUT)
+    #GWh; it allows to increase the hidraulicity proportionally with the run-of-river capacity
+    d['EQ_CEHydroRunOfRiver']           = Constraint(m.sYear,m.sSeason,            rule = EQ_CEHydroRunOfRiver,          doc = 'Hidraulicity constraint per season for Hydro Run of River [GWh]')
+ 
+    
+
     # Transported Energy (TE)-related constraints
     
     
     # TE
     
-    def EQ_TEBalance             (m, sTE,sYear,sSeason,sDay,sHour  ):
-              
-        return  (quicksum(m.vQCEPriOUT [sCE,sTE,         sYear,sSeason,sDay,sHour] for (_,sCE)            in m.sQCEPriOUT_indexed[sTE]       ) 
-               + quicksum(m.vQCESecOUT [sCE,sTE,         sYear,sSeason,sDay,sHour] for (_,sCE)            in m.sQCESecOUT_indexed[sTE]       ) 
-               + quicksum(m.vQCEStoOUT [sCE,sTE,         sYear,sSeason,sDay,sHour] for (_,sCE)            in m.sQCEStoOUT_indexed[sTE]       ) 
-               - quicksum(m.vQCESecIN  [sTE,sCE,         sYear,sSeason,sDay,sHour] for (_,sCE)            in m.sQCESecIN_indexed [sTE]       ) 
-               - quicksum(m.vQCEStoIN  [sTE,sCE,         sYear,sSeason,sDay,sHour] for (_,sCE)            in m.sQCEStoIN_indexed [sTE]       )     
-               -          m.vQTELoss   [sTE,             sYear,sSeason,sDay,sHour] 
-              >= quicksum(m.vQSTInTE   [sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour] for (_,_,sST,sES,sVin) in m.sSTESVin_indexed  [sTE, sYear]))
-    #GWh
-    d['EQ_TEBalance']            = Constraint(m.sTE,m.sTime,         rule = EQ_TEBalance,           doc = 'Balance for TE [GWh]')
-    
-    
-    def EQ_TELoss         (m, sTE,sYear,sSeason,sDay,sHour        ):
-        return  (m.vQTELoss [sTE,sYear,sSeason,sDay,sHour]  ==  m.pTELoss[sTE] * (
-                                                            sum(m.vQCEPriOUT [sCE,sTE,sYear,sSeason,sDay,sHour] for (_,sCE) in m.sQCEPriOUT_indexed[sTE]) 
-                                                          + sum(m.vQCESecOUT [sCE,sTE,sYear,sSeason,sDay,sHour] for (_,sCE) in m.sQCESecOUT_indexed[sTE]) 
-                                                          + sum(m.vQCEStoOUT [sCE,sTE,sYear,sSeason,sDay,sHour] for (_,sCE) in m.sQCEStoOUT_indexed[sTE])))
-    #GWh
-    d['EQ_TELoss']               = Constraint(m.sTE,m.sTime,         rule = EQ_TELoss,              doc = 'TE losses for transportation processes [GWh]')
-    
-    
+
+    def EQ_TEBalance_Hour(m, sTE, sYear, sSeason, sDay, sHour):
+        if sTE in m.sTE_Hour:
+            return (
+                + quicksum( m.vQCEPriOUT[sCE, sTE,            sYear, sSeason, sDay, sHour] for (_, sCE) in m.sQCEPriOUT_indexed[sTE])
+                + quicksum( m.vQCESecOUT[sCE, sTE,            sYear, sSeason, sDay, sHour] for (_, sCE) in m.sQCESecOUT_indexed[sTE])
+                + quicksum( m.vQCEStoOUT[sCE, sTE,            sYear, sSeason, sDay, sHour] for (_, sCE) in m.sQCEStoOUT_indexed[sTE])
+                - quicksum( m.vQCESecIN [sTE, sCE,            sYear, sSeason, sDay, sHour] for (_, sCE) in m.sQCESecIN_indexed[sTE])
+                - quicksum( m.vQCEStoIN [sTE, sCE,            sYear, sSeason, sDay, sHour] for (_, sCE) in m.sQCEStoIN_indexed[sTE])
+                -           m.vQTELoss  [sTE,                 sYear, sSeason, sDay, sHour]
+                >= quicksum(m.vQSTInTE  [sTE, sST, sES, sVin, sYear, sSeason, sDay, sHour] for (_, _, sST, sES, sVin) in m.sSTESVin_indexed[sTE, sYear])
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_TEBalance_Hour'] = Constraint(m.sTE, m.sTime, rule=EQ_TEBalance_Hour, doc='Balance for TE [GWh]')
+
+
+    def EQ_TEBalance_Aggr(m, sTE, sYear, sSeason):
+        if sTE not in m.sTE_Hour:
+            return (
+                +  quicksum(m.vQCEPriOUT[sCE, sTE,            sYear, sSeason, sDay, sHour] for (_, sCE,               sDay, sHour) in m.sQCEPriOUT_indexed[sTE]        * m.sDay * m.sHour)
+                +  quicksum(m.vQCESecOUT[sCE, sTE,            sYear, sSeason, sDay, sHour] for (_, sCE,               sDay, sHour) in m.sQCESecOUT_indexed[sTE]        * m.sDay * m.sHour)
+                +  quicksum(m.vQCEStoOUT[sCE, sTE,            sYear, sSeason, sDay, sHour] for (_, sCE,               sDay, sHour) in m.sQCEStoOUT_indexed[sTE]        * m.sDay * m.sHour)
+                -  quicksum(m.vQCESecIN [sTE, sCE,            sYear, sSeason, sDay, sHour] for (_, sCE,               sDay, sHour) in m.sQCESecIN_indexed [sTE]        * m.sDay * m.sHour)
+                -  quicksum(m.vQCEStoIN [sTE, sCE,            sYear, sSeason, sDay, sHour] for (_, sCE,               sDay, sHour) in m.sQCEStoIN_indexed [sTE]        * m.sDay * m.sHour)
+                -  quicksum(m.vQTELoss  [sTE,                 sYear, sSeason, sDay, sHour] for (                      sDay, sHour) in                                    m.sDay * m.sHour)
+                >= quicksum(m.vQSTInTE  [sTE, sST, sES, sVin, sYear, sSeason, sDay, sHour] for (_, _, sST, sES, sVin, sDay, sHour) in m.sSTESVin_indexed  [sTE, sYear] * m.sDay * m.sHour)
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_TEBalance_Aggr'] = Constraint(m.sTE, m.sYear, m.sSeason, rule=EQ_TEBalance_Aggr, doc='Balance for TE [GWh]')
+
+
+
+
+    def EQ_TELoss_Hour(m, sTE, sYear, sSeason, sDay, sHour):
+        if sTE in m.sTE_Hour:
+            return (
+                m.vQTELoss[sTE, sYear, sSeason, sDay, sHour] == 
+                m.pTELoss[sTE] * (
+                    + sum(m.vQCEPriOUT[sCE, sTE, sYear, sSeason, sDay, sHour] for (_, sCE) in m.sQCEPriOUT_indexed[sTE])
+                    + sum(m.vQCESecOUT[sCE, sTE, sYear, sSeason, sDay, sHour] for (_, sCE) in m.sQCESecOUT_indexed[sTE])
+                    + sum(m.vQCEStoOUT[sCE, sTE, sYear, sSeason, sDay, sHour] for (_, sCE) in m.sQCEStoOUT_indexed[sTE])
+                )
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_TELoss_Hour'] = Constraint(m.sTE, m.sTime, rule=EQ_TELoss_Hour, doc='TE losses for transportation processes [GWh]')
+
+
+    def EQ_TELoss_Aggr(m, sTE, sYear, sSeason):
+        if sTE not in m.sTE_Hour:
+            return (
+                sum(m.vQTELoss[sTE, sYear, sSeason, sDay, sHour] for (sDay, sHour) in m.sDay * m.sHour) == 
+                m.pTELoss[sTE] * (
+                    + sum(m.vQCEPriOUT[sCE, sTE, sYear, sSeason, sDay, sHour] for (_, sCE, sDay, sHour) in m.sQCEPriOUT_indexed[sTE] * m.sDay * m.sHour)
+                    + sum(m.vQCESecOUT[sCE, sTE, sYear, sSeason, sDay, sHour] for (_, sCE, sDay, sHour) in m.sQCESecOUT_indexed[sTE] * m.sDay * m.sHour)
+                    + sum(m.vQCEStoOUT[sCE, sTE, sYear, sSeason, sDay, sHour] for (_, sCE, sDay, sHour) in m.sQCEStoOUT_indexed[sTE] * m.sDay * m.sHour)
+                )
+            )
+        else:
+            return Constraint.Skip
+    # GWh
+    d['EQ_TELoss_Aggr'] = Constraint(m.sTE, m.sYear, m.sSeason, rule=EQ_TELoss_Aggr, doc='TE losses for transportation processes [GWh]')
+
+
+
+
     # Supply Technologies (ST)-related constraints
     
     
@@ -1065,7 +1391,7 @@ def make_model():
     
     
     def EQ_ESBalance         (m,sST,sES,sYear,sSeason,sDay,sHour        ):
-        return       sum(m.vQSTOut [sST,sES,sVin,sYear,sSeason,sDay,sHour] for (_,sVin) in m.sVinYear_indexed[sYear]) >= m.vQES [sST,sES,sYear] * m.pESLoad[sES,sSeason,sDay,sHour] #- m.vQESNS [sST,sES,sYear,sSeason,sDay,sHour]
+        return       sum(m.vQSTOut [sST,sES,sVin,sYear,sSeason,sDay,sHour] for (_,sVin) in m.sVinYear_indexed[sYear]) >= m.vQES [sST,sES,sYear] * m.pESLoad[sES,sSeason,sDay,sHour] / (m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour]) - m.vQESNS [sST,sES,sYear,sSeason,sDay,sHour]
     #ES units
     d['EQ_ESBalance']            = Constraint(m.sQSTOUT,m.sTime,         rule = EQ_ESBalance,           doc = 'Balance for ES [ES units]')
     
@@ -1223,19 +1549,19 @@ def make_model():
     
     
     def EQ_CEMaxPro_Pri         (m, sCEPri,sYear,sSeason,sDay,sHour        ):
-        return m.vCEActCap [sCEPri,sYear] * m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.pCEAF [sCEPri,sSeason,sDay,sHour]  >=  (m.vCEEleReserv [sCEPri,sYear,sSeason,sDay,sHour] if sCEPri in m.sCE_Ele else 0) + sum(m.vQCEPriOUT [sCEPri,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCEPriOUT_CE_indexed[sCEPri])
+        return m.vCEActCap [sCEPri,sYear] * m.pCEAF [sCEPri,sSeason,sDay,sHour]  >=  (m.vCEEleReserv [sCEPri,sYear,sSeason,sDay,sHour] if sCEPri in m.sCE_Ele else 0) + sum(m.vQCEPriOUT [sCEPri,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCEPriOUT_CE_indexed[sCEPri])
     #GWh
     d['EQ_CEMaxPro_Pri']            = Constraint(m.sCEPri,m.sTime,         rule = EQ_CEMaxPro_Pri,           doc = 'CE maximum production (sCEPri) [GWh]')
     
     
     def EQ_CEMaxPro_Sec         (m, sCESec,sYear,sSeason,sDay,sHour        ):
-        return m.vCEActCap [sCESec,sYear] * m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.pCEAF [sCESec,sSeason,sDay,sHour]  >=  (m.vCEEleReserv [sCESec,sYear,sSeason,sDay,sHour] if sCESec in m.sCE_Ele else 0) + sum(m.vQCESecOUT [sCESec,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCESecOUT_CE_indexed[sCESec])
+        return m.vCEActCap [sCESec,sYear] * m.pCEAF [sCESec,sSeason,sDay,sHour]  >=  (m.vCEEleReserv [sCESec,sYear,sSeason,sDay,sHour] if sCESec in m.sCE_Ele else 0) + sum(m.vQCESecOUT [sCESec,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCESecOUT_CE_indexed[sCESec])
     #GWh
     d['EQ_CEMaxPro_Sec']            = Constraint(m.sCESec,m.sTime,         rule = EQ_CEMaxPro_Sec,           doc = 'CE maximum production (sCESec) [GWh]')
     
     
     def EQ_CEMaxPro_Sto         (m, sCESto,sYear,sSeason,sDay,sHour        ):
-        return m.vCEActCap [sCESto,sYear] * m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.pCEAF [sCESto,sSeason,sDay,sHour]  >=  (m.vCEEleReserv [sCESto,sYear,sSeason,sDay,sHour] if sCESto in m.sCE_Ele else 0) + sum(m.vQCEStoOUT [sCESto,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCEStoOUT_CE_indexed[sCESto])
+        return m.vCEActCap [sCESto,sYear] * m.pCEAF [sCESto,sSeason,sDay,sHour]  >=  (m.vCEEleReserv [sCESto,sYear,sSeason,sDay,sHour] if sCESto in m.sCE_Ele else 0) + sum(m.vQCEStoOUT [sCESto,sTE,sYear,sSeason,sDay,sHour] for (_,sTE) in m.sQCEStoOUT_CE_indexed[sCESto])
     #GWh
     d['EQ_CEMaxPro_Sto']            = Constraint(m.sCESto,m.sTime,         rule = EQ_CEMaxPro_Sto,           doc = 'CE maximum production (sCESto) [GWh]')
     
@@ -1276,7 +1602,7 @@ def make_model():
     
     def EQ_CEEleReserv         (m, sYear,sSeason,sDay,sHour        ):
         return sum(m.vCEEleReserv [sCE_Ele,sYear,sSeason,sDay,sHour] * m.pCEFlex [sCE_Ele] for sCE_Ele in m.sCE_Ele) >= (    m.pCEFailCap
-                                                                                                                      + sum((m.vQSTInTE [sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]/(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour])) for (_,_,_,_,sTE,sST,sES,sVin) in m.sTESTESVinTime_Ele_indexed[sYear,sSeason,sDay,sHour]) * m.pCEDemErr
+                                                                                                                      + sum((m.vQSTInTE [sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]) for (_,_,_,_,sTE,sST,sES,sVin) in m.sTESTESVinTime_Ele_indexed[sYear,sSeason,sDay,sHour]) * m.pCEDemErr
                                                                                                                       + sum( m.vCEActCap[sCE_Var,sYear] * m.pCEAF [sCE_Var,sSeason,sDay,sHour] for  sCE_Var      in  m.sCE_Var) * m.pCEAFErr
                                                                                                                         )   
     #GW
@@ -1285,7 +1611,7 @@ def make_model():
     
     
     def EQ_EleMaxDem         (m, sYear,sSeason,sDay,sHour         ):
-        return m.vEleMaxDem [sYear]  >= sum((m.vQSTInTE [sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]/(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour])) for (_,_,_,_,sTE,sST,sES,sVin)     in  m.sTESTESVinTime_Ele_indexed[sYear,sSeason,sDay,sHour])
+        return m.vEleMaxDem [sYear]  >= sum((m.vQSTInTE [sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]) for (_,_,_,_,sTE,sST,sES,sVin)     in  m.sTESTESVinTime_Ele_indexed[sYear,sSeason,sDay,sHour])
     #GW 
     d['EQ_EleMaxDem']               = Constraint(m.sTime,                  rule = EQ_EleMaxDem,              doc = 'Yearly maximum electricity power demand [GW]')
       
@@ -1308,27 +1634,40 @@ def make_model():
     #GW  
     d['EQ_CoalCap']                 = Constraint(m.sCE_Coal,m.sYear,       rule = EQ_CoalCap,                doc = 'Coal phase-out restriction [GW]')
     
+    # CE limitations
+
+    def EQ_CELimit         (m, sCE,sYear        ):
+        return m.pCEInsPathwayCap[sCE,sYear] >= m.vCEActCap[sCE,sYear] - m.vCECapExc [sCE,sYear]
+    #GW
+    d['EQ_CELimit']                 = Constraint(m.sCE,m.sYear,            rule = EQ_CELimit,                doc = 'CE capacity limitations [GW]')
+
+    # ST limitations
+
+    def EQ_STLimit         (m, sST,sYear        ):
+        return m.pSTInsPathwayCap[sST,sYear] >= m.vSTNewCap[sST,sYear] - m.vSTCapExc [sST,sYear]
+    #GW
+    d['EQ_STLimit']                 = Constraint(m.sST,m.sYear,            rule = EQ_STLimit,                doc = 'ST capacity limitations [GW]')
     
     # Supply Technologies (ST) capacity constraints
     
     
     def EQ_STMaxProCap         (m, sST_Cap,sVin,sYear,sSeason,sDay,sHour        ):
-        return m.vSTTotCap [sST_Cap,sVin,sYear] * m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] >=  sum(m.vQSTOut [sST_Cap,sES,sVin,sYear,sSeason,sDay,sHour] for (_,sES) in m.sQSTOUT_sST_Cap[sST_Cap])
+        return m.vSTTotCap [sST_Cap,sVin,sYear] >=  sum(m.vQSTOut [sST_Cap,sES,sVin,sYear,sSeason,sDay,sHour] for (_,sES) in m.sQSTOUT_sST_Cap[sST_Cap])
     #GWh
     d['EQ_STMaxProCap']            = Constraint(m.sST_Cap,m.sVinTime,         rule = EQ_STMaxProCap,           doc = 'ST maximum production [ES units]')
     
     
     def EQ_STMaxProUni         (m, sST_Uni,sVin,sYear        ):
-        return m.vSTTotCap [sST_Uni,sVin,sYear] * m.pSTMaxPro[sST_Uni] >=  sum(m.vQSTOut [sST_Uni,sES,sVin,sYear,sSeason,sDay,sHour] for (_,sES,sSeason,sDay,sHour) in m.sQSTOUT_sST_Uni[sST_Uni])
+        return m.vSTTotCap [sST_Uni,sVin,sYear] * m.pSTMaxPro[sST_Uni] >=  sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQSTOut [sST_Uni,sES,sVin,sYear,sSeason,sDay,sHour] for (_,sES,sSeason,sDay,sHour) in m.sQSTOUT_sST_Uni[sST_Uni])
     #GWh
     d['EQ_STMaxProUni']            = Constraint(m.sST_Uni,m.sVinYear,         rule = EQ_STMaxProUni,           doc = 'ST maximum production per unit [ES units]')
     
     
 
-    #def EQ_STMaxCap         (m, sST,sYear        ):
-    #    return m.pSTMaxCap [sST]  >=  sum(m.vSTTotCap [sST,sVin,sYear] for sVin in m.sVin if (sVin,sYear) in m.sVinYear)
-    #GW
-    #d['EQ_STMaxCap']              = Constraint(m.sST,m.sYear,                rule = EQ_STMaxCap,              doc = 'ST maximum capacity [ST units]')
+    def EQ_STMaxCap         (m, sST,sYear        ):
+       return m.pSTMaxCap [sST]  >=  sum(m.vSTTotCap [sST,sVin,sYear] for sVin in m.sVin if (sVin,sYear) in m.sVinYear)
+    # GW
+    d['EQ_STMaxCap']              = Constraint(m.sST,m.sYear,                rule = EQ_STMaxCap,              doc = 'ST maximum capacity [ST units]')
 
     
     
@@ -1355,19 +1694,19 @@ def make_model():
     ##CE
     
     def EQ_EmiCO2CEPri         (m, sPE,sCEPri,sYear        ):
-        return   m.vEmiCO2CEPri[sPE,sCEPri,sYear] == m.pEmiCO2CEPri[sPE,sCEPri] * sum(m.vQCEPriIN [sPE,sCEPri,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEPriIN_YTime_indexed[sPE,sCEPri,sYear])    
+        return   m.vEmiCO2CEPri[sPE,sCEPri,sYear] == m.pEmiCO2CEPri[sPE,sCEPri] * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEPriIN [sPE,sCEPri,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEPriIN_YTime_indexed[sPE,sCEPri,sYear])    
     #ktCO2                                              
     d['EQ_EmiCO2CEPri']            = Constraint(m.sQCEPriIN,m.sYear,        rule = EQ_EmiCO2CEPri,           doc = 'CO2 emissions in Primary CE processes [ktCO2]')
     
     
     def EQ_EmiCO2CESec         (m, sTE,sCESec,sYear        ):
-        return   m.vEmiCO2CESec[sTE,sCESec,sYear] == m.pEmiCO2CESec[sTE,sCESec] * sum(m.vQCESecIN [sTE,sCESec,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCESecIN_YTime_indexed[sTE,sCESec,sYear]) 
+        return   m.vEmiCO2CESec[sTE,sCESec,sYear] == m.pEmiCO2CESec[sTE,sCESec] * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCESecIN [sTE,sCESec,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCESecIN_YTime_indexed[sTE,sCESec,sYear]) 
     #ktCO2                                              
     d['EQ_EmiCO2CESec']            = Constraint(m.sQCESecIN,m.sYear,        rule = EQ_EmiCO2CESec,           doc = 'CO2 emissions in Secondary CE processes [ktCO2]')
     
     
     def EQ_EmiCO2CESto         (m, sTE,sCESto,sYear        ):
-        return   m.vEmiCO2CESto[sTE,sCESto,sYear] == m.pEmiCO2CESto[sTE,sCESto] * sum(m.vQCEStoIN[sTE,sCESto,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEStoIN_YTime_indexed[sTE,sCESto,sYear])  
+        return   m.vEmiCO2CESto[sTE,sCESto,sYear] == m.pEmiCO2CESto[sTE,sCESto] * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEStoIN[sTE,sCESto,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEStoIN_YTime_indexed[sTE,sCESto,sYear])  
     #ktCO2                                              
     d['EQ_EmiCO2CESto']            = Constraint(m.sQCEStoIN,m.sYear,        rule = EQ_EmiCO2CESto,           doc = 'CO2 emissions in Storage CE processes [ktCO2]')
     
@@ -1380,7 +1719,7 @@ def make_model():
     ##TE
     
     def EQ_EmiCO2TE         (m, sTE,sYear        ):
-        return   m.vEmiCO2TE[sTE,sYear] ==  m.pEmiCO2TE[sTE] * (sum(m.vQSTInTE[sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,sST,sES,sVin,sSeason,sDay,sHour) in m.sSTESVinTime_indexed[sTE,sYear])  + sum(m.vQTELoss[sTE,sYear,sSeason,sDay,sHour] for (sSeason,sDay,sHour) in m.sYearTime)) 
+        return   m.vEmiCO2TE[sTE,sYear] ==  m.pEmiCO2TE[sTE] * (sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQSTInTE[sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,sST,sES,sVin,sSeason,sDay,sHour) in m.sSTESVinTime_indexed[sTE,sYear])  + sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQTELoss[sTE,sYear,sSeason,sDay,sHour] for (sSeason,sDay,sHour) in m.sYearTime)) 
     #ktCO2
     d['EQ_EmiCO2TE']               = Constraint(m.sTE,m.sYear,              rule = EQ_EmiCO2TE,              doc = 'CO2 emissions in TE transportation [ktCO2]')
     
@@ -1388,13 +1727,13 @@ def make_model():
     
     
     def EQ_EmiCO2STTE         (m,sTE,sST,sES,sYear        ):
-        return   m.vEmiCO2STTE[sTE,sST,sES,sYear] ==  m.pEmiCO2STTE[sST,sTE] * (sum(m.vQSTInTE[sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,_,sVin,sSeason,sDay,sHour) in m.sSTESTESVinTime_indexed[sTE,sST,sES,sYear]))  
+        return   m.vEmiCO2STTE[sTE,sST,sES,sYear] ==  m.pEmiCO2STTE[sST,sTE] * (sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQSTInTE[sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,_,sVin,sSeason,sDay,sHour) in m.sSTESTESVinTime_indexed[sTE,sST,sES,sYear]))  
     #ktCO2   
     d['EQ_EmiCO2STTE']             = Constraint(m.sQTESTES,m.sYear,         rule = EQ_EmiCO2STTE,            doc = 'CO2 emissions in ST due to TE consumption [ktCO2]')
     
     
     def EQ_EmiCO2STPro         (m,sST,sES,sYear       ):
-        return   m.vEmiCO2STPro[sST,sES,sYear] ==  m.pEmiCO2STPro[sST,sES] * (sum(m.vQSTOut[sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,sVin,sSeason,sDay,sHour) in m.sQSTOUT_ST_ES_Year_indexed[sST,sES,sYear]))/1e3  
+        return   m.vEmiCO2STPro[sST,sES,sYear] ==  m.pEmiCO2STPro[sST,sES] * (sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQSTOut[sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,sVin,sSeason,sDay,sHour) in m.sQSTOUT_ST_ES_Year_indexed[sST,sES,sYear]))/1e3  
     #ktCO2   
     d['EQ_EmiCO2STPro']            = Constraint(m.sQSTOUT,m.sYear,          rule = EQ_EmiCO2STPro,           doc = 'CO2 emissions in ST due to TE consumption [ktCO2]')
     
@@ -1407,18 +1746,23 @@ def make_model():
     ##ESNS
     
     def EQ_EmiCO2ESNS         (m, sYear        ):
-        return   m.vEmiCO2ESNS [sYear]  ==  m.pEmiCO2ESNS * sum(m.vQESNS[sST,sES,sYear,sSeason,sDay,sHour] for (_,sST,sES,sSeason,sDay,sHour) in m.sQSTOUT_Time_indexed[sYear]) 
+        return   m.vEmiCO2ESNS [sYear]  ==  m.pEmiCO2ESNS * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQESNS[sST,sES,sYear,sSeason,sDay,sHour] for (_,sST,sES,sSeason,sDay,sHour) in m.sQSTOUT_Time_indexed[sYear]) 
     #ktCO2   
     d['EQ_EmiCO2ESNS']             = Constraint(m.sYear,                    rule = EQ_EmiCO2ESNS,            doc = 'CO2 penalization emissions related to ENS (TE consumption and CE process) [ktCO2]')
     
     
     ##Total
      
-    def EQ_EmiCO2Tot         (m, sYear        ):
-        return   m.vEmiCO2Tot [sYear]  ==  (sum(m.vEmiCO2CE [sCE,sYear] for sCE in m.sCE) + sum(m.vEmiCO2TE [sTE,sYear] for sTE in m.sTE) + sum(m.vEmiCO2ST [sST,sES,sYear] for (sST,sES) in m.sQSTOUT))/1e3 #+ m.vEmiCO2ESNS[sYear])/1e3
+    def EQ_EmiCO2Year         (m, sYear        ):
+        return   m.vEmiCO2Year [sYear]  ==  (sum(m.vEmiCO2CE [sCE,sYear] for sCE in m.sCE) + sum(m.vEmiCO2TE [sTE,sYear] for sTE in m.sTE) + sum(m.vEmiCO2ST [sST,sES,sYear] for (sST,sES) in m.sQSTOUT))/1e3 #+ m.vEmiCO2ESNS[sYear])/1e3
     #MtCO2
-    d['EQ_EmiCO2Tot']              = Constraint(m.sYear,                    rule = EQ_EmiCO2Tot,             doc = 'Total CO2 emissions [MtCO2]')
+    d['EQ_EmiCO2Year']              = Constraint(m.sYear,                    rule = EQ_EmiCO2Year,             doc = 'Annual CO2 emissions [MtCO2]')
     
+
+    def EQ_EmiCO2Tot         (m        ):
+        return   m.vEmiCO2Tot  ==  sum(m.pYrGap * m.vEmiCO2Year [sYear] for sYear in m.sYear)
+    #MtCO2
+    d['EQ_EmiCO2Tot']              = Constraint(                    rule = EQ_EmiCO2Tot,             doc = 'Total CO2 emissions [MtCO2]')
     
     # NOx emissions
     
@@ -1429,19 +1773,19 @@ def make_model():
     
     
     def EQ_EmiNOxCEPri         (m, sPE,sCEPri,sYear        ):
-        return   m.vEmiNOxCEPri[sPE,sCEPri,sYear] == m.pEmiNOxCEPri[sPE,sCEPri] * sum(m.vQCEPriIN [sPE,sCEPri,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEPriIN_YTime_indexed[sPE,sCEPri,sYear])    
+        return   m.vEmiNOxCEPri[sPE,sCEPri,sYear] == m.pEmiNOxCEPri[sPE,sCEPri] * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEPriIN [sPE,sCEPri,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEPriIN_YTime_indexed[sPE,sCEPri,sYear])    
     #tNOx                                              
     d['EQ_EmiNOxCEPri']            = Constraint(m.sQCEPriIN,m.sYear,        rule = EQ_EmiNOxCEPri,           doc = 'NOx emissions in Primary CE processes [tNOx]')
     
     
     def EQ_EmiNOxCESec         (m, sTE,sCESec,sYear        ):
-        return   m.vEmiNOxCESec[sTE,sCESec,sYear] == m.pEmiNOxCESec[sTE,sCESec] * sum(m.vQCESecIN [sTE,sCESec,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCESecIN_YTime_indexed[sTE,sCESec,sYear]) 
+        return   m.vEmiNOxCESec[sTE,sCESec,sYear] == m.pEmiNOxCESec[sTE,sCESec] * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCESecIN [sTE,sCESec,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCESecIN_YTime_indexed[sTE,sCESec,sYear]) 
     #tNOx                                              
     d['EQ_EmiNOxCESec']            = Constraint(m.sQCESecIN,m.sYear,        rule = EQ_EmiNOxCESec,           doc = 'NOx emissions in Secondary CE processes [tNOx]')
     
     
     def EQ_EmiNOxCESto         (m, sTE,sCESto,sYear        ):
-        return   m.vEmiNOxCESto[sTE,sCESto,sYear] == m.pEmiNOxCESto[sTE,sCESto] * sum(m.vQCEStoIN[sTE,sCESto,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEStoIN_YTime_indexed[sTE,sCESto,sYear])  
+        return   m.vEmiNOxCESto[sTE,sCESto,sYear] == m.pEmiNOxCESto[sTE,sCESto] * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEStoIN[sTE,sCESto,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEStoIN_YTime_indexed[sTE,sCESto,sYear])  
     #tNOx                                              
     d['EQ_EmiNOxCESto']            = Constraint(m.sQCEStoIN,m.sYear,        rule = EQ_EmiNOxCESto,           doc = 'NOx emissions in Storage CE processes [tNOx]')
     
@@ -1455,13 +1799,13 @@ def make_model():
     ##ST
     
     def EQ_EmiNOxSTTE         (m,sTE,sST,sES,sYear        ):
-        return   m.vEmiNOxSTTE[sTE,sST,sES,sYear] ==  m.pEmiNOxSTTE[sST,sTE] * (sum(m.vQSTInTE[sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,_,sVin,sSeason,sDay,sHour) in m.sSTESTESVinTime_indexed[sTE,sST,sES,sYear]))  
+        return   m.vEmiNOxSTTE[sTE,sST,sES,sYear] ==  m.pEmiNOxSTTE[sST,sTE] * (sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQSTInTE[sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,_,sVin,sSeason,sDay,sHour) in m.sSTESTESVinTime_indexed[sTE,sST,sES,sYear]))  
     #tNOx   
     d['EQ_EmiNOxSTTE']             = Constraint(m.sQTESTES,m.sYear,         rule = EQ_EmiNOxSTTE,           doc = 'NOx emissions in ST due to TE consumption [tNOx]')
     
     
     def EQ_EmiNOxSTPro         (m,sST,sES,sYear       ):
-        return   m.vEmiNOxSTPro[sST,sES,sYear] ==  m.pEmiNOxSTPro[sST,sES] * (sum(m.vQSTOut[sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,sVin,sSeason,sDay,sHour) in m.sQSTOUT_ST_ES_Year_indexed[sST,sES,sYear]))  
+        return   m.vEmiNOxSTPro[sST,sES,sYear] ==  m.pEmiNOxSTPro[sST,sES] * (sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQSTOut[sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,sVin,sSeason,sDay,sHour) in m.sQSTOUT_ST_ES_Year_indexed[sST,sES,sYear]))  
     #tNOx   
     d['EQ_EmiNOxSTPro']            = Constraint(m.sQSTOUT,m.sYear,          rule = EQ_EmiNOxSTPro,          doc = 'NOx emissions in ST due to TE consumption [tNOx]')
     
@@ -1475,18 +1819,23 @@ def make_model():
     ##ESNS
     
     def EQ_EmiNOxESNS         (m, sYear        ):
-        return   m.vEmiNOxESNS [sYear]  ==  m.pEmiNOxESNS * sum(m.vQESNS[sST,sES,sYear,sSeason,sDay,sHour] for (_,sST,sES,sSeason,sDay,sHour) in m.sQSTOUT_Time_indexed[sYear])*1e-3 
+        return   m.vEmiNOxESNS [sYear]  ==  m.pEmiNOxESNS * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQESNS[sST,sES,sYear,sSeason,sDay,sHour] for (_,sST,sES,sSeason,sDay,sHour) in m.sQSTOUT_Time_indexed[sYear])*1e-3 
     #ktNOx   
     d['EQ_EmiNOxESNS']             = Constraint(m.sYear,                    rule = EQ_EmiNOxESNS,           doc = 'NOx penalization emissions related to ENS (TE consumption and CE process) [ktNOx]')
     
     
     ##Total
      
-    def EQ_EmiNOxTot         (m, sYear        ):
-        return   m.vEmiNOxTot [sYear]  ==  (sum(m.vEmiNOxCE [sCE,sYear] for sCE in m.sCE) + sum(m.vEmiNOxST [sST,sES,sYear] for (sST,sES) in m.sQSTOUT) + m.vEmiNOxESNS[sYear])*1e-3
+    def EQ_EmiNOxYear         (m, sYear        ):
+        return   m.vEmiNOxYear [sYear]  ==  (sum(m.vEmiNOxCE [sCE,sYear] for sCE in m.sCE) + sum(m.vEmiNOxST [sST,sES,sYear] for (sST,sES) in m.sQSTOUT))*1e-3 #+ m.vEmiNOxESNS[sYear]
     #MtNOx
-    d['EQ_EmiNOxTot']              = Constraint(m.sYear,                    rule = EQ_EmiNOxTot,            doc = 'Total NOx emissions [MtNOx]')
-    
+    d['EQ_EmiNOxYear']              = Constraint(m.sYear,                    rule = EQ_EmiNOxYear,            doc = 'Annual NOx emissions [MtNOx]')
+
+     
+    def EQ_EmiNOxTot         (m        ):
+        return   m.vEmiNOxTot ==  sum(m.pYrGap*m.vEmiNOxYear [sYear] for sYear in m.sYear)
+    #MtNOx
+    d['EQ_EmiNOxTot']              = Constraint(                    rule = EQ_EmiNOxTot,            doc = 'Total NOx emissions [MtNOx]')
     
     
     # SOx emissions
@@ -1495,19 +1844,19 @@ def make_model():
     ##CE
     
     def EQ_EmiSOxCEPri         (m, sPE,sCEPri,sYear        ):
-        return   m.vEmiSOxCEPri[sPE,sCEPri,sYear] == m.pEmiSOxCEPri[sPE,sCEPri] * sum(m.vQCEPriIN [sPE,sCEPri,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEPriIN_YTime_indexed[sPE,sCEPri,sYear])    
+        return   m.vEmiSOxCEPri[sPE,sCEPri,sYear] == m.pEmiSOxCEPri[sPE,sCEPri] * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEPriIN [sPE,sCEPri,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEPriIN_YTime_indexed[sPE,sCEPri,sYear])    
     #tSOx                                              
     d['EQ_EmiSOxCEPri']            = Constraint(m.sQCEPriIN,m.sYear,        rule = EQ_EmiSOxCEPri,           doc = 'SOx emissions in Primary CE processes [tSOx]')
     
     
     def EQ_EmiSOxCESec         (m, sTE,sCESec,sYear        ):
-        return   m.vEmiSOxCESec[sTE,sCESec,sYear] == m.pEmiSOxCESec[sTE,sCESec] * sum(m.vQCESecIN [sTE,sCESec,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCESecIN_YTime_indexed[sTE,sCESec,sYear]) 
+        return   m.vEmiSOxCESec[sTE,sCESec,sYear] == m.pEmiSOxCESec[sTE,sCESec] * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCESecIN [sTE,sCESec,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCESecIN_YTime_indexed[sTE,sCESec,sYear]) 
     #tSOx                                              
     d['EQ_EmiSOxCESec']            = Constraint(m.sQCESecIN,m.sYear,        rule = EQ_EmiSOxCESec,           doc = 'SOx emissions in Secondary CE processes [tSOx]')
     
     
     def EQ_EmiSOxCESto         (m, sTE,sCESto,sYear        ):
-        return   m.vEmiSOxCESto[sTE,sCESto,sYear] == m.pEmiSOxCESto[sTE,sCESto] * sum(m.vQCEStoIN[sTE,sCESto,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEStoIN_YTime_indexed[sTE,sCESto,sYear])  
+        return   m.vEmiSOxCESto[sTE,sCESto,sYear] == m.pEmiSOxCESto[sTE,sCESto] * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEStoIN[sTE,sCESto,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEStoIN_YTime_indexed[sTE,sCESto,sYear])  
     #tSOx                                              
     d['EQ_EmiSOxCESto']            = Constraint(m.sQCEStoIN,m.sYear,        rule = EQ_EmiSOxCESto,           doc = 'SOx emissions in Storage CE processes [tSOx]')
     
@@ -1520,13 +1869,13 @@ def make_model():
     ##ST
     
     def EQ_EmiSOxSTTE         (m,sTE,sST,sES,sYear        ):
-        return   m.vEmiSOxSTTE[sTE,sST,sES,sYear] ==  m.pEmiSOxSTTE[sST,sTE] * (sum(m.vQSTInTE[sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,_,sVin,sSeason,sDay,sHour) in m.sSTESTESVinTime_indexed[sTE,sST,sES,sYear]))  
+        return   m.vEmiSOxSTTE[sTE,sST,sES,sYear] ==  m.pEmiSOxSTTE[sST,sTE] * (sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQSTInTE[sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,_,sVin,sSeason,sDay,sHour) in m.sSTESTESVinTime_indexed[sTE,sST,sES,sYear]))  
     #tSOx   
     d['EQ_EmiSOxSTTE']             = Constraint(m.sQTESTES,m.sYear,         rule = EQ_EmiSOxSTTE,            doc = 'SOx emissions in ST due to TE consumption [tSOx]')
     
     
     def EQ_EmiSOxSTPro         (m,sST,sES,sYear       ):
-        return   m.vEmiSOxSTPro[sST,sES,sYear] ==  m.pEmiSOxSTPro[sST,sES] * (sum(m.vQSTOut[sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,sVin,sSeason,sDay,sHour) in m.sQSTOUT_ST_ES_Year_indexed[sST,sES,sYear]))  
+        return   m.vEmiSOxSTPro[sST,sES,sYear] ==  m.pEmiSOxSTPro[sST,sES] * (sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQSTOut[sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,sVin,sSeason,sDay,sHour) in m.sQSTOUT_ST_ES_Year_indexed[sST,sES,sYear]))  
     #tSOx   
     d['EQ_EmiSOxSTPro']            = Constraint(m.sQSTOUT,m.sYear,          rule = EQ_EmiSOxSTPro,           doc = 'SOx emissions in ST due to TE consumption [kSOx]')
     
@@ -1540,18 +1889,23 @@ def make_model():
     ##ESNS
     
     def EQ_EmiSOxESNS         (m, sYear        ):
-        return   m.vEmiSOxESNS [sYear]  ==  m.pEmiSOxESNS * sum(m.vQESNS[sST,sES,sYear,sSeason,sDay,sHour] for (_,sST,sES,sSeason,sDay,sHour) in m.sQSTOUT_Time_indexed[sYear])*1e-3 
+        return   m.vEmiSOxESNS [sYear]  ==  m.pEmiSOxESNS * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQESNS[sST,sES,sYear,sSeason,sDay,sHour] for (_,sST,sES,sSeason,sDay,sHour) in m.sQSTOUT_Time_indexed[sYear])*1e-3 
     #ktSOx   
     d['EQ_EmiSOxESNS']             = Constraint(m.sYear,                    rule = EQ_EmiSOxESNS,            doc = 'SOx penalization emissions related to ENS (TE consumption and CE process) [ktSOx]')
     
     
     ##Total
      
-    def EQ_EmiSOxTot         (m, sYear        ):
-        return   m.vEmiSOxTot [sYear]  ==  (sum(m.vEmiSOxCE [sCE,sYear] for sCE in m.sCE) + sum(m.vEmiSOxST [sST,sES,sYear] for (sST,sES) in m.sQSTOUT) + m.vEmiSOxESNS[sYear])*1e-3
+    def EQ_EmiSOxYear         (m, sYear        ):
+        return   m.vEmiSOxYear [sYear]  ==  (sum(m.vEmiSOxCE [sCE,sYear] for sCE in m.sCE) + sum(m.vEmiSOxST [sST,sES,sYear] for (sST,sES) in m.sQSTOUT))*1e-3 #+ m.vEmiSOxESNS[sYear]
     #MtSOx
-    d['EQ_EmiSOxTot']              = Constraint(m.sYear,                    rule = EQ_EmiSOxTot,             doc = 'Total SOx emissions [MtSOx]')
-    
+    d['EQ_EmiSOxYear']              = Constraint(m.sYear,                    rule = EQ_EmiSOxYear,             doc = 'Annual SOx emissions [MtSOx]')
+
+
+    def EQ_EmiSOxTot         (m        ):
+        return   m.vEmiSOxTot  ==  sum(m.pYrGap*m.vEmiSOxYear [sYear] for sYear in m.sYear)
+    #MtSOx
+    d['EQ_EmiSOxTot']              = Constraint(                    rule = EQ_EmiSOxTot,             doc = 'Total SOx emissions [MtSOx]')
     
     # PM 2.5 emissions
     
@@ -1559,21 +1913,21 @@ def make_model():
     ##CE
     
     def EQ_EmiPM25CEPri         (m, sPE,sCEPri,sYear        ):
-        return   m.vEmiPM25CEPri[sPE,sCEPri,sYear] == m.pEmiPM25CEPri[sPE,sCEPri] * sum(m.vQCEPriIN [sPE,sCEPri,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEPriIN_YTime_indexed[sPE,sCEPri,sYear])    
+        return   m.vEmiPM25CEPri[sPE,sCEPri,sYear] == m.pEmiPM25CEPri[sPE,sCEPri] * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEPriIN [sPE,sCEPri,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEPriIN_YTime_indexed[sPE,sCEPri,sYear])    
     #tPM25                                              
     d['EQ_EmiPM25CEPri']            = Constraint(m.sQCEPriIN,m.sYear,        rule = EQ_EmiPM25CEPri,           doc = 'PM25 emissions in Primary CE processes [tPM25]')
     
     
     
     def EQ_EmiPM25CESec         (m, sTE,sCESec,sYear        ):
-        return   m.vEmiPM25CESec[sTE,sCESec,sYear] == m.pEmiPM25CESec[sTE,sCESec] * sum(m.vQCESecIN [sTE,sCESec,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCESecIN_YTime_indexed[sTE,sCESec,sYear]) 
+        return   m.vEmiPM25CESec[sTE,sCESec,sYear] == m.pEmiPM25CESec[sTE,sCESec] * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCESecIN [sTE,sCESec,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCESecIN_YTime_indexed[sTE,sCESec,sYear]) 
     #tPM25                                              
     d['EQ_EmiPM25CESec']            = Constraint(m.sQCESecIN,m.sYear,        rule = EQ_EmiPM25CESec,           doc = 'PM25 emissions in Secondary CE processes [tPM25]')
     
     
     
     def EQ_EmiPM25CESto         (m, sTE,sCESto,sYear        ):
-        return   m.vEmiPM25CESto[sTE,sCESto,sYear] == m.pEmiPM25CESto[sTE,sCESto] * sum(m.vQCEStoIN[sTE,sCESto,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEStoIN_YTime_indexed[sTE,sCESto,sYear])  
+        return   m.vEmiPM25CESto[sTE,sCESto,sYear] == m.pEmiPM25CESto[sTE,sCESto] * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQCEStoIN[sTE,sCESto,sYear,sSeason,sDay,sHour] for (_,_,_,sSeason,sDay,sHour) in m.sQCEStoIN_YTime_indexed[sTE,sCESto,sYear])  
     #tPM25                                              
     d['EQ_EmiPM25CESto']            = Constraint(m.sQCEStoIN,m.sYear,        rule = EQ_EmiPM25CESto,           doc = 'PM25 emissions in Storage CE processes [tPM25]')
     
@@ -1587,13 +1941,13 @@ def make_model():
     
     
     def EQ_EmiPM25STTE         (m,sTE,sST,sES,sYear        ):
-        return   m.vEmiPM25STTE[sTE,sST,sES,sYear] ==  m.pEmiPM25STTE[sST,sTE] * (sum(m.vQSTInTE[sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,_,sVin,sSeason,sDay,sHour) in m.sSTESTESVinTime_indexed[sTE,sST,sES,sYear]))  
+        return   m.vEmiPM25STTE[sTE,sST,sES,sYear] ==  m.pEmiPM25STTE[sST,sTE] * (sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQSTInTE[sTE,sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,_,sVin,sSeason,sDay,sHour) in m.sSTESTESVinTime_indexed[sTE,sST,sES,sYear]))  
     #tPM25   
     d['EQ_EmiPM25STTE']             = Constraint(m.sQTESTES,m.sYear,         rule = EQ_EmiPM25STTE,            doc = 'PM25 emissions in ST due to TE consumption [tPM25]')
     
     
     def EQ_EmiPM25STPro         (m,sST,sES,sYear       ):
-        return   m.vEmiPM25STPro[sST,sES,sYear] ==  m.pEmiPM25STPro[sST,sES] * (sum(m.vQSTOut[sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,sVin,sSeason,sDay,sHour) in m.sQSTOUT_ST_ES_Year_indexed[sST,sES,sYear]))  
+        return   m.vEmiPM25STPro[sST,sES,sYear] ==  m.pEmiPM25STPro[sST,sES] * (sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQSTOut[sST,sES,sVin,sYear,sSeason,sDay,sHour]  for (_,_,_,sVin,sSeason,sDay,sHour) in m.sQSTOUT_ST_ES_Year_indexed[sST,sES,sYear]))  
     #tPM25   
     d['EQ_EmiPM25STPro']            = Constraint(m.sQSTOUT,m.sYear,          rule = EQ_EmiPM25STPro,           doc = 'PM25 emissions in ST due to TE consumption [tPM25]')
     
@@ -1608,7 +1962,7 @@ def make_model():
     
     
     def EQ_EmiPM25ESNS         (m, sYear        ):
-        return   m.vEmiPM25ESNS [sYear]  ==  m.pEmiPM25ESNS * sum(m.vQESNS[sST,sES,sYear,sSeason,sDay,sHour] for (_,sST,sES,sSeason,sDay,sHour) in m.sQSTOUT_Time_indexed[sYear])*1e-3 
+        return   m.vEmiPM25ESNS [sYear]  ==  m.pEmiPM25ESNS * sum(m.pNumHours * m.pTimeSlice [sSeason,sDay,sHour] * m.vQESNS[sST,sES,sYear,sSeason,sDay,sHour] for (_,sST,sES,sSeason,sDay,sHour) in m.sQSTOUT_Time_indexed[sYear])*1e-3 
     #ktPM25   
     d['EQ_EmiPM25ESNS']             = Constraint(m.sYear,                    rule = EQ_EmiPM25ESNS,            doc = 'PM25 penalization emissions related to ENS (TE consumption and CE process) [ktPM25]')
     
@@ -1616,37 +1970,42 @@ def make_model():
     ##Total
     
      
-    def EQ_EmiPM25Tot         (m, sYear        ):
-        return   m.vEmiPM25Tot [sYear]  ==  (sum(m.vEmiPM25CE [sCE,sYear] for sCE in m.sCE) + sum(m.vEmiPM25ST [sST,sES,sYear] for (sST,sES) in m.sQSTOUT) + m.vEmiPM25ESNS[sYear])*1e-3
+    def EQ_EmiPM25Year         (m, sYear        ):
+        return   m.vEmiPM25Year [sYear]  ==  (sum(m.vEmiPM25CE [sCE,sYear] for sCE in m.sCE) + sum(m.vEmiPM25ST [sST,sES,sYear] for (sST,sES) in m.sQSTOUT))*1e-3 #+ m.vEmiPM25ESNS[sYear]
     #MtPM25
-    d['EQ_EmiPM25Tot']              = Constraint(m.sYear,                    rule = EQ_EmiPM25Tot,             doc = 'Total PM25 emissions [MtPM25]')
+    d['EQ_EmiPM25Year']              = Constraint(m.sYear,                    rule = EQ_EmiPM25Year,             doc = 'Annual PM25 emissions [MtPM25]')
     
-    
+
+    def EQ_EmiPM25Tot         (m        ):
+        return   m.vEmiPM25Tot  ==  sum( m.vEmiPM25Year [sYear] for sYear in m.sYear)
+    #MtPM25
+    d['EQ_EmiPM25Tot']              = Constraint(                    rule = EQ_EmiPM25Tot,             doc = 'Total PM25 emissions [MtPM25]')
+
     # ### Emission limits
     
     
     ##Cap
     
     def EQ_EmiCO2Cap         (m, sYear        ):
-        return   m.pEmiCO2Cap [sYear]  >=  m.vEmiCO2Tot [sYear] - m.vEmiCO2CapExc [sYear]
+        return   m.pEmiCO2Cap [sYear]  >=  m.vEmiCO2Year [sYear] - m.vEmiCO2CapExc [sYear]
     #MtCO2
     d['EQ_EmiCO2Cap']            = Constraint(m.sYear,        rule = EQ_EmiCO2Cap,           doc = 'Emission cap restriction [MtCO2]')
     
     
     def EQ_EmiNOxCap         (m, sYear        ):
-        return   m.pEmiNOxCap [sYear]  >=  m.vEmiNOxTot [sYear] - m.vEmiNOxCapExc [sYear]
+        return   m.pEmiNOxCap [sYear]  >=  m.vEmiNOxYear [sYear] - m.vEmiNOxCapExc [sYear]
     #MtNOx
     d['EQ_EmiNOxCap']            = Constraint(m.sYear,        rule = EQ_EmiNOxCap,           doc = 'Emission cap restriction [MtNOx]')
     
     
     def EQ_EmiSOxCap         (m, sYear        ):
-        return   m.pEmiSOxCap [sYear]  >=  m.vEmiSOxTot [sYear] - m.vEmiSOxCapExc [sYear]
+        return   m.pEmiSOxCap [sYear]  >=  m.vEmiSOxYear [sYear] - m.vEmiSOxCapExc [sYear]
     #MtSOx
     d['EQ_EmiSOxCap']            = Constraint(m.sYear,        rule = EQ_EmiSOxCap,           doc = 'Emission cap restriction [MtSOx]')
     
     
     def EQ_EmiPM25Cap         (m, sYear        ):
-        return   m.pEmiPM25Cap [sYear]  >=  m.vEmiPM25Tot [sYear] - m.vEmiPM25CapExc [sYear]
+        return   m.pEmiPM25Cap [sYear]  >=  m.vEmiPM25Year [sYear] - m.vEmiPM25CapExc [sYear]
     #MtPM25
     d['EQ_EmiPM25Cap']           = Constraint(m.sYear,        rule = EQ_EmiPM25Cap,          doc = 'Emission cap restriction [MtPM25]')
     
@@ -1655,7 +2014,7 @@ def make_model():
     ##Carbon budget
     
     def EQ_EmiCO2Budget         (m        ):
-        return   m.pEmiCO2Budget  >=  m.pYrGap * sum(m.vEmiCO2Tot[sYear] for sYear in m.sYear)- m.vEmiCO2BudgetExc
+        return   m.pEmiCO2Budget  >=  m.vEmiCO2Tot - m.vEmiCO2BudgetExc
     #MtCO2
     d['EQ_EmiCO2Budget']         = Constraint(                rule = EQ_EmiCO2Budget,        doc = 'Emission budget restriction for the Before Net-zero target year period [MtCO2]')
     
@@ -1667,7 +2026,7 @@ def make_model():
     
     ## Transport
     def EQ_EmiCO2CapTra         (m, sYear        ):
-        return    m.pEmiCO2CapTra [sYear] >=  sum(m.vEmiCO2ST [sST_Tra,sES_Tra,sYear] for (sST_Tra,sES_Tra) in m.sQSTOUT_Tra)*1e-3 - m.vEmiCO2CapTraExc [sYear]
+        return    m.pEmiCO2CapTra [sYear] >=  sum(m.vEmiCO2ST [sST_Tra,sES_Tra,sYear] for (sST_Tra,sES_Tra) in m.sQSTOUT_Tra)*1e-3 #- m.vEmiCO2CapTraExc [sYear]
     #MtCO2
     d['EQ_EmiCO2CapTra']            = Constraint(m.sYear,        rule = EQ_EmiCO2CapTra,           doc = 'Transport emission cap restriction [MtCO2]')
     
@@ -1675,14 +2034,14 @@ def make_model():
     
     ## Electric generation
     def EQ_EmiCO2CapEle         (m, sYear        ):
-        return    m.pEmiCO2CapEle [sYear] >= sum(m.vEmiCO2CE [sCE_Ele,sYear] for sCE_Ele in m.sCE_Ele)*1e-3 - m.vEmiCO2CapEleExc [sYear]
+        return    m.pEmiCO2CapEle [sYear] >= sum(m.vEmiCO2CE [sCE_Ele,sYear] for sCE_Ele in m.sCE_Ele)*1e-3 #- m.vEmiCO2CapEleExc [sYear]
     #MtCO2
     d['EQ_EmiCO2CapEle']            = Constraint(m.sYear,        rule = EQ_EmiCO2CapEle,           doc = 'Electricity generation emission cap restriction [MtCO2]')
     
     
     ## Industrial sector (energy)
     def EQ_EmiCO2CapIndTE       (m, sYear        ):
-        return    m.pEmiCO2CapIndTE [sYear] >= sum(m.vEmiCO2STTE[sTE,sST_Ind,sES_Ind,sYear] for (sTE,sST_Ind,sES_Ind) in m.sQTESTES_Ind)*1e-3 - m.vEmiCO2CapIndTEExc [sYear]
+        return    m.pEmiCO2CapIndTE [sYear] >= sum(m.vEmiCO2STTE[sTE,sST_Ind,sES_Ind,sYear] for (sTE,sST_Ind,sES_Ind) in m.sQTESTES_Ind)*1e-3 #- m.vEmiCO2CapIndTEExc [sYear]
     #MtCO2
     d['EQ_EmiCO2CapIndTE']            = Constraint(m.sYear,        rule = EQ_EmiCO2CapIndTE,           doc = 'Energy-related industrial emission cap restriction [MtCO2]')
     
@@ -1690,21 +2049,21 @@ def make_model():
     
     ## Industrial sector (process)
     def EQ_EmiCO2CapIndPro      (m, sYear        ):
-        return    m.pEmiCO2CapIndPro [sYear] >= sum(m.vEmiCO2STPro[sST_Ind,sES_Ind,sYear] for (sST_Ind,sES_Ind) in m.sQSTOUT_Ind)*1e-3 - m.vEmiCO2CapIndProExc [sYear]
+        return    m.pEmiCO2CapIndPro [sYear] >= sum(m.vEmiCO2STPro[sST_Ind,sES_Ind,sYear] for (sST_Ind,sES_Ind) in m.sQSTOUT_Ind)*1e-3 #- m.vEmiCO2CapIndProExc [sYear]
     #MtCO2
     d['EQ_EmiCO2CapIndPro']           = Constraint(m.sYear,        rule = EQ_EmiCO2CapIndPro,           doc = 'Process-related industrial emission cap restriction [MtCO2]')
     
     
     ## Residential and commercial
     def EQ_EmiCO2CapOth      (m, sYear        ):
-        return    m.pEmiCO2CapOth [sYear] >= sum(m.vEmiCO2ST [sST_Oth,sES_Oth,sYear] for (sST_Oth,sES_Oth) in m.sQSTOUT_Oth)*1e-3 - m.vEmiCO2CapOthExc [sYear]
+        return    m.pEmiCO2CapOth [sYear] >= sum(m.vEmiCO2ST [sST_Oth,sES_Oth,sYear] for (sST_Oth,sES_Oth) in m.sQSTOUT_Oth)*1e-3 #- m.vEmiCO2CapOthExc [sYear]
     #MtCO2
     d['EQ_EmiCO2CapOth']            = Constraint(m.sYear,        rule = EQ_EmiCO2CapOth,           doc = 'Residential&Commercial emission cap restriction [MtCO2]')
     
     
     ## Refine industry
     def EQ_EmiCO2CapRef         (m, sYear        ):
-        return    m.pEmiCO2CapRef [sYear] >= sum(m.vEmiCO2CE [sCE_Ref,sYear] for sCE_Ref in m.sCE_Ref)*1e-3 - m.vEmiCO2CapRefExc [sYear]
+        return    m.pEmiCO2CapRef [sYear] >= sum(m.vEmiCO2CE [sCE_Ref,sYear] for sCE_Ref in m.sCE_Ref)*1e-3 #- m.vEmiCO2CapRefExc [sYear]
     #MtCO2
     d['EQ_EmiCO2CapRef']            = Constraint(m.sYear,        rule = EQ_EmiCO2CapRef,           doc = 'Refinery production emission cap restriction [MtCO2]')
 
@@ -1724,8 +2083,10 @@ def make_model():
         
         'EQ_FObj',
         'EQ_SysCost',
-        'EQ_PenalCost',
+        'EQ_EmiCost',
+        #'EQ_PenalCost',
         'EQ_TotalCost',
+        'EQ_ResCost',
         'EQ_BMCost',
         'EQ_DMCost',
         'EQ_InvCostCE',
@@ -1735,19 +2096,29 @@ def make_model():
         'EQ_PEDomCap',
         'EQ_PEImpCap',
         'EQ_PEBalance',
-        'EQ_CEPriBalance',
-        'EQ_CEPriOutShareMin',
-        'EQ_CEPriOutShareMax',
-        'EQ_CESecBalance',
-        'EQ_CESecOutShareMin',
-        'EQ_CESecOutShareMax',
+        'EQ_CEPriBalance_Hour',
+        'EQ_CEPriBalance_Aggr',
+        'EQ_CEPriOutShareMin_Hour',
+        'EQ_CEPriOutShareMin_Aggr',
+        'EQ_CEPriOutShareMax_Hour',
+        'EQ_CEPriOutShareMax_Aggr',
+        'EQ_CESecBalance_Hour',
+        'EQ_CESecBalance_Aggr',
+        'EQ_CESecOutShareMin_Hour',
+        'EQ_CESecOutShareMin_Aggr',
+        'EQ_CESecOutShareMax_Hour',
+        'EQ_CESecOutShareMax_Aggr',
         'EQ_CEStoBalance',
         'EQ_CEStoLevel',
         'EQ_CEStoOutShareMin',
         'EQ_CEStoOutShareMax',
         'EQ_CEStoMaxSto',
-        'EQ_TEBalance',
-        'EQ_TELoss',
+        'EQ_CEHydroReservoir',
+        'EQ_CEHydroRunOfRiver',
+        'EQ_TEBalance_Hour',
+        'EQ_TEBalance_Aggr',
+        'EQ_TELoss_Hour',
+        'EQ_TELoss_Aggr',
         'EQ_STBalanceTE_Tra',
         'EQ_STBalanceTE_Oth',
         'EQ_STBalanceTE_Ind',
@@ -1767,15 +2138,15 @@ def make_model():
         'EQ_MaxMS_UrbanRail',
         'EQ_MaxMS_Air',
         'EQ_MaxMS_Sea',
-        #'EQ_TC_Car',
-        #'EQ_TC_Moped',
-        #'EQ_TC_RoadFreight',
-        #'EQ_TC_Bus',
-        #'EQ_TC_UrbanRail',
-        #'EQ_TC_IntRail',
-        #'EQ_TC_Air',    
-        #'EQ_TC_Sea',    
-        #'EQ_TC_Oth',
+        # 'EQ_TC_Car',
+        # 'EQ_TC_Moped',
+        # 'EQ_TC_RoadFreight',
+        # 'EQ_TC_Bus',
+        # 'EQ_TC_UrbanRail',
+        # 'EQ_TC_IntRail',
+        # 'EQ_TC_Air',    
+        # 'EQ_TC_Sea',    
+        # 'EQ_TC_Oth',
         'EQ_ESBalance',
         'EQ_AFTra',
         'EQ_BMTra',
@@ -1797,7 +2168,7 @@ def make_model():
         'EQ_CEMaxPro_Pri',
         'EQ_CEMaxPro_Sec',
         'EQ_CEMaxPro_Sto',
-        'EQ_CEMaxCap',
+        #'EQ_CEMaxCap',
         'EQ_CEInsCap',
         'EQ_CEDecCap',
         'EQ_CEActCap',
@@ -1805,11 +2176,11 @@ def make_model():
         'EQ_CEEleReserv',
         'EQ_EleMaxDem',
         'EQ_CEEleAdeq',
-        'EQ_NucCap',
-        'EQ_CoalCap',
+        #'EQ_NucCap',
+        #'EQ_CoalCap',
         'EQ_STMaxProCap',
         'EQ_STMaxProUni',
-        #'EQ_STMaxCap',
+        # 'EQ_STMaxCap',
         'EQ_STInsCap',
         'EQ_STDecCap',
         'EQ_EmiCO2CEPri',
@@ -1821,45 +2192,51 @@ def make_model():
         'EQ_EmiCO2STPro',
         'EQ_EmiCO2ST',
         #'EQ_EmiCO2ESNS',
+        'EQ_EmiCO2Year',
         'EQ_EmiCO2Tot',
-        #'EQ_EmiNOxCEPri',
-        #'EQ_EmiNOxCESec',
-        #'EQ_EmiNOxCESto',
-        #'EQ_EmiNOxCE',
-        #'EQ_EmiNOxSTTE',
-        #'EQ_EmiNOxSTPro',
-        #'EQ_EmiNOxST',
+        'EQ_EmiNOxCEPri',
+        'EQ_EmiNOxCESec',
+        'EQ_EmiNOxCESto',
+        'EQ_EmiNOxCE',
+        'EQ_EmiNOxSTTE',
+        'EQ_EmiNOxSTPro',
+        'EQ_EmiNOxST',
         #'EQ_EmiNOxESNS',
-        #'EQ_EmiNOxTot',
-        #'EQ_EmiSOxCEPri',
-        #'EQ_EmiSOxCESec',
-        #'EQ_EmiSOxCESto',
-        #'EQ_EmiSOxCE',
-        #'EQ_EmiSOxSTTE',
-        #'EQ_EmiSOxSTPro',
-        #'EQ_EmiSOxST',
+        'EQ_EmiNOxYear',
+        'EQ_EmiNOxTot',
+        'EQ_EmiSOxCEPri',
+        'EQ_EmiSOxCESec',
+        'EQ_EmiSOxCESto',
+        'EQ_EmiSOxCE',
+        'EQ_EmiSOxSTTE',
+        'EQ_EmiSOxSTPro',
+        'EQ_EmiSOxST',
         #'EQ_EmiSOxESNS',
-        #'EQ_EmiSOxTot',
-        #'EQ_EmiPM25CEPri',
-        #'EQ_EmiPM25CESec',
-        #'EQ_EmiPM25CESto',
-        #'EQ_EmiPM25CE',
-        #'EQ_EmiPM25STTE',
-        #'EQ_EmiPM25STPro',
-        #'EQ_EmiPM25ST',
+        'EQ_EmiSOxYear',
+        'EQ_EmiSOxTot',
+        'EQ_EmiPM25CEPri',
+        'EQ_EmiPM25CESec',
+        'EQ_EmiPM25CESto',
+        'EQ_EmiPM25CE',
+        'EQ_EmiPM25STTE',
+        'EQ_EmiPM25STPro',
+        'EQ_EmiPM25ST',
         #'EQ_EmiPM25ESNS',
-        #'EQ_EmiPM25Tot',
-        'EQ_EmiCO2Cap',
+        'EQ_EmiPM25Tot',
+        'EQ_EmiPM25Year',
+        #'EQ_EmiCO2Cap',
         #'EQ_EmiNOxCap',
         #'EQ_EmiSOxCap',
         #'EQ_EmiPM25Cap',
         #'EQ_EmiCO2Budget',
         #'EQ_EmiCO2CapTra',
-        #'EQ_EmiCO2CapEle',
-        #'EQ_EmiCO2CapIndTE',
-        #'EQ_EmiCO2CapIndPro',
+        #'EQ_EmiCO2CapEle',   #
+        #'EQ_EmiCO2CapIndTE',  #
+        #'EQ_EmiCO2CapIndPro',  #
         #'EQ_EmiCO2CapOth',
-        #'EQ_EmiCO2CapRef',
+        #'EQ_EmiCO2CapRef',   #
+        'EQ_CELimit',
+        #'EQ_STLimit',
     ]
     for eq in l_eq:
         setattr(m, eq, d[eq])
