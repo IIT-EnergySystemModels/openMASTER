@@ -83,7 +83,10 @@ python -m venv .venv
 .venv\Scripts\activate
 ```
 6. Install openMASTER via pip by ``pip install .``. The openMASTER package is contained in this repository, locally. Please note that the openMASTER package has optional dependencies for the graphic tools included to visualize results. To install these optional dependencies, it can also be done via pip by ``pip install .[graphicTool]``. Additionally, it's essential to have Jupyter Notebook installed as it is required for running the notebooks. If you don't have it installed already, you will need to install it via ``pip install notebook``.
-7. Be aware the openMASTER_Data.xlsx file has to be downloaded using [git-lfs](https://git-lfs.com/) or directly with this [link](https://github.com/IIT-EnergySystemModels/openMASTER/raw/main/data/input/openMASTER_Data.xlsx?download=).
+7. Be aware the openMASTER_Data.xlsx file has to be downloaded using this [link](https://pascua.iit.comillas.edu/mperezb/public_html/openMASTER_Data_2050.xlsx).
+8. Input data requirement:
+Before running the model, please download the latest input data file from this link and place it inside your local ".../openMASTER/data/input/" folder. This file contains all the necessary input data for the model to run properly.
+You do not need to create additional folders manually — the code will automatically generate the required subfolder structure during execution.
 
 # Solvers
 
